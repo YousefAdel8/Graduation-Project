@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
+import { ConfigProvider } from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DashboardOutlined,
-  UserOutlined,
-  ShoppingOutlined,
-  SettingOutlined,
   AppstoreOutlined,
   MessageOutlined,
   TeamOutlined,
@@ -15,23 +15,36 @@ import { Button, Layout, Menu, theme, Card, Row, Col, Statistic, Typography, Spa
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
 
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
+
+const data = {
+  labels: ["يناير", "فبراير", "مارس", "أبريل", "مايو"],
+  datasets: [
+    {
+      label: "المبيعات",
+      data: [10, 20, 15, 30, 25],
+      backgroundColor: "rgba(75, 192, 192, 0.6)",
+    },
+  ],
+};
+
 export default function Dashboard() {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  
+  const [En] = useState(false);
   const stats = [
-    { title: 'إجمالي الإيرادات', value: '45,231.89', prefix: '$', percentage: '+20.1', period: 'من الشهر الماضي' },
+    { title: 'إجمالي الإيرادات' , value: '45,231.89', prefix: '$', percentage: '+20.1', period: 'من الشهر الماضي' },
     { title: 'الاشتراكات', value: '2350', prefix: '+', percentage: '+180.1', period: 'من الشهر الماضي' },
     { title: 'المبيعات', value: '12,234', prefix: '+', percentage: '+19', period: 'من الشهر الماضي' },
     { title: 'نشط الآن', value: '573', prefix: '+', percentage: '+201', period: 'منذ الساعة الماضية' },
   ];
 
-  
-
   return (
+    <ConfigProvider direction={!En ? 'rtl' : 'ltr'}>
     <Layout style={{ minHeight: '100vh' }}>
       <Sider 
               trigger={null} 
@@ -41,8 +54,8 @@ export default function Dashboard() {
               width={250}
             >
               <div style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
-                <Avatar shape="square" size={36} style={{ backgroundColor: '#1890ff' }}>A</Avatar>
-                {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }}>Admin</Title>}
+                <Avatar shape="square" size={36} style={{ backgroundColor: '#1890ff' }}>أ</Avatar>
+                {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }} className='me-2'>أدمن</Title>}
               </div>
               <Menu
                 mode="inline"
@@ -56,14 +69,7 @@ export default function Dashboard() {
                   { key: '3', icon: <AppstoreOutlined />, label: 'التطبيقات' },
                   { key: '4', icon: <MessageOutlined />, label: 'المحادثات' },
                   { key: '5', icon: <TeamOutlined />, label: 'المستخدمين' },
-                  { type: 'divider', style: { margin: '8px 0' } },
-                  { label: 'الصفحات', type: 'group' },
-                  { key: '6', icon: <UserOutlined />, label: 'المصادقة' },
-                  { key: '7', icon: <ShoppingOutlined />, label: 'الأخطاء' },
-                  { type: 'divider', style: { margin: '8px 0' } },
-                  { label: 'أخرى', type: 'group' },
-                  { key: '8', icon: <SettingOutlined />, label: 'الإعدادات' },
-                  { key: '9', icon: <AppstoreOutlined />, label: 'مركز المساعدة' },
+                
                 ]}
               />
             </Sider>
@@ -94,13 +100,13 @@ export default function Dashboard() {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Title level={3} style={{ marginBottom: 24 }}>لوحة التحكم</Title>
+          <Title level={3} style={{ marginBottom: 24 }} >لوحة التحكم</Title>
           <Row gutter={[16, 16]}>
             {stats.map((stat, index) => (
               <Col xs={24} sm={12} lg={6} key={index}>
-                <Card bodyStyle={{ padding: '20px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' } }>
+                <Card bodyStyle={{ padding: '20px' }} className="shadow-sm">
                   <Statistic
-                    title={stat.title}
+                    title={<Typography.Text >{stat.title}</Typography.Text>}
                     value={stat.value}
                     prefix={stat.prefix}
                     style={{ marginBottom: 8 }}
@@ -117,22 +123,9 @@ export default function Dashboard() {
           {/* المحتوى الرئيسي */}
           <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
             <Col xs={24} lg={14}>
-              <Card title="نظرة عامة" bodyStyle={{ padding: '20px' }}>
-                {/* يمكن إضافة رسم بياني هنا باستخدام Recharts أو Chart.js */}
-                <div style={{ height: 250, display: 'flex', alignItems: 'flex-end', gap: 15 }}>
-                  {[60, 80, 40, 50, 75, 55, 70, 45, 35, 80, 40, 60].map((height, i) => (
-                    <div 
-                      key={i}
-                      style={{
-                        height: `${height * 2}px`,
-                        width: '100%',
-                        backgroundColor: '#111827',
-                        borderRadius: '4px',
-                      }}
-                    />
-                  ))}
-                </div>
-              </Card>
+            <Card title="نظرة عامة" bodyStyle={{ padding: '20px' }}>
+            <Bar data={data} />
+            </Card>
             </Col>
             <Col xs={24} lg={10}>
               <Card 
@@ -164,5 +157,7 @@ export default function Dashboard() {
         </Content>
       </Layout>
     </Layout>
+    </ConfigProvider>
   );
+ 
 }
