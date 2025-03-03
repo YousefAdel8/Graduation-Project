@@ -11,18 +11,18 @@ import {
   TeamOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Card, Row, Col, Statistic, Typography, Space, Avatar } from 'antd';
-//import SideBar from './SideBar/SideBar';
+import TableSearch  from './FeedbackTable/FeedbackTable';
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
 
-
+const En = true;
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const data = {
-  labels: ["يناير", "فبراير", "مارس", "أبريل", "مايو"],
+  labels: En?["January", "February", "March", "April", "May"]:["يناير", "فبراير", "مارس", "أبريل", "مايو"],
   datasets: [
     {
-      label: "المبيعات",
+      label: En?"Sales":"المبيعات",
       data: [10, 20, 15, 30, 25],
       backgroundColor: "rgba(75, 192, 192, 0.6)",
     },
@@ -35,12 +35,12 @@ export default function Dashboard() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const [En] = useState(false);
+  
   const stats = [
-    { title: 'إجمالي الإيرادات' , value: '45,231.89', prefix: '$', percentage: '+20.1', period: 'من الشهر الماضي' },
-    { title: 'الاشتراكات', value: '2350', prefix: '+', percentage: '+180.1', period: 'من الشهر الماضي' },
-    { title: 'المبيعات', value: '12,234', prefix: '+', percentage: '+19', period: 'من الشهر الماضي' },
-    { title: 'نشط الآن', value: '573', prefix: '+', percentage: '+201', period: 'منذ الساعة الماضية' },
+    { title: En?'Total Revenue':'إجمالي الإيرادات' , value: '45,231.89', prefix: '$', percentage: '+20.1', period: En?'Last Month':'من الشهر الماضي' },
+    { title: En?'Total Subscriptions':'الاشتراكات', value: '2350', prefix: '+', percentage: '+180.1', period: En?'Last Month':'من الشهر الماضي' },
+    { title: En?'Total Sales':'المبيعات', value: '12,234', prefix: '+', percentage: '+19', period: En?'Last Month':'من الشهر الماضي' },
+    { title: En?'Active Users':'نشط الآن', value: '573', prefix: '+', percentage: '+201', period: En?'Last Hour':'منذ الساعة الماضية' },
   ];
 
   return (
@@ -55,8 +55,8 @@ export default function Dashboard() {
                 
               >
                 <div style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
-                  <Avatar shape="square" size={36} style={{ backgroundColor: '#1890ff' }}>أ</Avatar>
-                  {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }} className='me-2'>أدمن</Title>}
+                  <Avatar shape="square" size={36} style={{ backgroundColor: '#1890ff' }}>{En?"A":"أ"}</Avatar>
+                  {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }} className='me-2'>{En?"Admin":"ادمن"}</Title>}
                 </div>
                 <Menu
                   mode="inline"
@@ -64,12 +64,12 @@ export default function Dashboard() {
                   style={{ borderRight: 0, background: colorBgContainer }}
                   items={[
                     { type: 'divider', style: { margin: '8px 0' } },
-                    { label: 'عام', type: 'group' },
-                    { key: '1', icon: <DashboardOutlined />, label: 'لوحة التحكم' },
-                    { key: '2', icon: <AppstoreOutlined />, label: 'المهام' },
-                    { key: '3', icon: <AppstoreOutlined />, label: 'التطبيقات' },
-                    { key: '4', icon: <MessageOutlined />, label: 'المحادثات' },
-                    { key: '5', icon: <TeamOutlined />, label: 'المستخدمين' },
+                    { label: En? 'General':'عام', type: 'group' },
+                    { key: '1', icon: <DashboardOutlined />, label: En?'Dashboard':'لوحة التحكم' },
+                    { key: '2', icon: <AppstoreOutlined />, label: En?'Tasks':'المهام' },
+                    { key: '3', icon: <AppstoreOutlined />, label: En?'Apps':'التطبيقات' },
+                    { key: '4', icon: <MessageOutlined />, label: En?'Chats':'المحادثات' },
+                    { key: '5', icon: <TeamOutlined />, label: En?'Users':'المستخدمين' },
                   
                   ]}
                 />
@@ -101,7 +101,7 @@ export default function Dashboard() {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Title level={3} style={{ marginBottom: 24 }} >لوحة التحكم</Title>
+          <Title level={3} style={{ marginBottom: 24 }} >{En?'Dashboard':'لوحة التحكم'}</Title>
           <Row gutter={[16, 16]}>
             {stats.map((stat, index) => (
               <Col xs={24} sm={12} lg={6} key={index}>
@@ -121,39 +121,45 @@ export default function Dashboard() {
             ))}
           </Row>
 
-          {/* المحتوى الرئيسي */}
           <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
             <Col xs={24} lg={14}>
-            <Card title="نظرة عامة" bodyStyle={{ padding: '20px' }}>
+            <Card title={En?"Sales Overview":"نظرة عامة"} bodyStyle={{ padding: '20px' }}>
             <Bar data={data} />
             </Card>
             </Col>
             <Col xs={24} lg={10}>
               <Card 
-                title="المبيعات الأخيرة" 
+                title={En?"Latest Sales":"المبيعات الأخيرة" }
                 bodyStyle={{ padding: '10px 20px' }}
-                extra={<Text type="secondary">قمت بإجراء 265 عملية بيع هذا الشهر</Text>}
+                extra={<Text type="secondary">{En?"You have made 265 sales this month":"قمت بإجراء 265 عملية بيع هذا الشهر "}</Text>}
               >
                 <Space direction="vertical" style={{ width: '100%' }} size="middle">
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Text type="secondary">المبيعات</Text>
-                    <Text type="secondary">التقارير</Text>
+                    <Text type="secondary">{En?"Sales":"المبيعات"}</Text>
+                    <Text type="secondary">{En?"Reports":"التقارير"}</Text>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Text strong>3,500</Text>
-                    <Text type="secondary">بيعات</Text>
+                    <Text type="secondary">{En?"Sales":"بيعات"}</Text>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Text strong>3,500</Text>
-                    <Text type="secondary">مبيعات</Text>
+                    <Text type="secondary">{En?"Sales":"مبيعات"}</Text>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Text strong>3,500</Text>
-                    <Text type="secondary">مبيعات</Text>
+                    <Text type="secondary">{En?"Sales":"مبيعات"}</Text>
                   </div>
                 </Space>
               </Card>
             </Col>
+          </Row>
+          <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+              <Col xs={24} sm={24} lg={24} >
+                
+              <TableSearch />
+                    
+              </Col>
           </Row>
         </Content>
       </Layout>
