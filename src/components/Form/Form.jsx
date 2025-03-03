@@ -1,18 +1,19 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import { CircleLoader } from "react-spinners";
 import styles from "./Form.module.css";
 import { useNavigate } from "react-router-dom";
-
+import { message } from "antd";
 export default function Form() {
 	const [loading, setLoading] = useState(false);
 	const [apiError, setApiError] = useState(false);
 	const [En] = useState(false);
 	const navigate = useNavigate();
-
+    const [messageApi, contextHolder] = message.useMessage();
+	const [successLogin, setSuccessLogin] = useState(false);
 	const SignInSubmit = async (values) => {
 		try {
 			setLoading(true);
@@ -25,7 +26,11 @@ export default function Form() {
 			if (data.isSuccess === true) {
 				localStorage.setItem("token", data.token);
 				setLoading(false);
-				navigate("/dashboard");
+				setSuccessLogin(true);
+				setTimeout(() => {
+					navigate("/dashboard");
+				}, 1000);
+				
 			} else {
 				setLoading(false);
 				setApiError(data.message || "Login failed. Please try again.");
@@ -34,29 +39,21 @@ export default function Form() {
 			if (error.response) {
 				switch (error.response.status) {
 					case 400:
-						setApiError("Invalid Email or Password");
-						console.log(error.message);
+						setApiError(En?"Invalid Email or Password":"البريد الالكتروني او كلمة المرور غير صحيحة");
 						break;
 					case 401:
-						setApiError("Unauthorized access");
-						console.log(error.message);
+						setApiError(En?"Unauthorized access":"غير مصرح لك بالوصول");
 						break;
 					case 404:
-						setApiError("Service not found");
-						console.log(error.message);
+						setApiError(En?"Service not found":"الخدمة غير موجودة");
 						break;
 					default:
-						setApiError("An error occurred. Please try again later");
-						console.log(error.message);
+						setApiError(En?"An error occurred. Please try again later":"حدث خطأ. يرجى المحاولة في وقت لاحق");
 						break;
 				}
 			} else if (error.request) {
-				console.log(error.request);
-				setApiError("Network error. Please check your internet connection.");
-			} else {
-				console.log("An unxpected error occurred:", error.message);
-			}
-			console.log("Login error:", error.response.status);
+				setApiError(En?"Network error. Please check your internet connection.":"خطأ في الشبكة. يرجى التحقق من اتصال الانترنت");
+			} 
 		} finally {
 			setLoading(false);
 		}
@@ -65,9 +62,9 @@ export default function Form() {
 	let validationSchema = yup.object({
 		email: yup
 			.string()
-			.required("Please enter your email")
-			.email("Invalid Email"),
-		password: yup.string().required("Please enter your password"),
+			.required(En?"Please enter your email":"يرجى ادخال البريد الالكتروني")
+			.email(En?"Invalid Email":"البريد الالكتروني غير صحيح"),
+		password: yup.string().required(En?"Please enter your password":"يرجى ادخال كلمة المرور"),
 	});
 
 	let formik = useFormik({
@@ -79,8 +76,21 @@ export default function Form() {
 		onSubmit: SignInSubmit,
 	});
 
+	const Success = () => {
+		messageApi.open({
+			type: "success",
+			content: En?"Login successful":"تم تسجيل الدخول بنجاح",
+		});
+	}
+	
+	useEffect(() => {
+		if (successLogin) {
+			Success();
+		}
+	} , [successLogin]);
 	return (
 		<>
+		 	{contextHolder}
 			<div className="min-vh-100 d-flex flex-column justify-content-center align-items-center bg-light" 
 			dir={En ? "ltr" : "rtl"}
 			>
@@ -192,16 +202,17 @@ export default function Form() {
 								{En ? "Login" : "تسجيل الدخول"}
 							</button>
 						)}
-						{apiError && (
+						{apiError &&  (
 							<div className="d-flex align-items-center gap-2 mt-3 p-3 rounded-2 bg-danger bg-opacity-10 border border-danger animate__animated animate__fadeIn">
 								<i className="bi bi-exclamation-circle-fill text-danger"></i>
 								<span
 									className="text-danger"
 									style={{ fontSize: "13px", fontWeight: "500" }}
 								>
-									{apiError}
+									{apiError} 
 								</span>
 							</div>
+							
 						)}
 					</form>
 				</div>

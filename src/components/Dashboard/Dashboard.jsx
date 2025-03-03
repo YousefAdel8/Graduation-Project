@@ -45,34 +45,35 @@ export default function Dashboard() {
 
   return (
     <ConfigProvider direction={!En ? 'rtl' : 'ltr'}>
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider 
-              trigger={null} 
-              collapsible 
-              collapsed={collapsed}
-              style={{ background: colorBgContainer }}
-              width={250}
-            >
-              <div style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
-                <Avatar shape="square" size={36} style={{ backgroundColor: '#1890ff' }}>أ</Avatar>
-                {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }} className='me-2'>أدمن</Title>}
-              </div>
-              <Menu
-                mode="inline"
-                defaultSelectedKeys={['1']}
-                style={{ borderRight: 0, background: colorBgContainer }}
-                items={[
-                  { type: 'divider', style: { margin: '8px 0' } },
-                  { label: 'عام', type: 'group' },
-                  { key: '1', icon: <DashboardOutlined />, label: 'لوحة التحكم' },
-                  { key: '2', icon: <AppstoreOutlined />, label: 'المهام' },
-                  { key: '3', icon: <AppstoreOutlined />, label: 'التطبيقات' },
-                  { key: '4', icon: <MessageOutlined />, label: 'المحادثات' },
-                  { key: '5', icon: <TeamOutlined />, label: 'المستخدمين' },
+      <Layout style={{ minHeight: '100vh' }} >
+        <Sider 
+                trigger={null} 
+                collapsible 
+                collapsed={collapsed}
+                style={{ background: colorBgContainer }}
+                width={250}
                 
-                ]}
-              />
-            </Sider>
+              >
+                <div style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
+                  <Avatar shape="square" size={36} style={{ backgroundColor: '#1890ff' }}>أ</Avatar>
+                  {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }} className='me-2'>أدمن</Title>}
+                </div>
+                <Menu
+                  mode="inline"
+                  defaultSelectedKeys={['1']}
+                  style={{ borderRight: 0, background: colorBgContainer }}
+                  items={[
+                    { type: 'divider', style: { margin: '8px 0' } },
+                    { label: 'عام', type: 'group' },
+                    { key: '1', icon: <DashboardOutlined />, label: 'لوحة التحكم' },
+                    { key: '2', icon: <AppstoreOutlined />, label: 'المهام' },
+                    { key: '3', icon: <AppstoreOutlined />, label: 'التطبيقات' },
+                    { key: '4', icon: <MessageOutlined />, label: 'المحادثات' },
+                    { key: '5', icon: <TeamOutlined />, label: 'المستخدمين' },
+                  
+                  ]}
+                />
+        </Sider>
       <Layout>
         <Header
           style={{
@@ -82,7 +83,7 @@ export default function Dashboard() {
         >
           <Button
             type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            icon={collapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
             style={{
               fontSize: '16px',
