@@ -15,7 +15,7 @@ import TableSearch  from './FeedbackTable/FeedbackTable';
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
 
-const En = true;
+const En = false;
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const data = {
@@ -28,7 +28,28 @@ const data = {
     },
   ],
 };
-
+const options = {
+  responsive: true,
+  maintainAspectRatio: true, // هذا مهم جدًا
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: false,
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        callback: function(value) {
+          return value; // تأكد من عرض القيم بشكل صحيح
+        }
+      }
+    }
+  }
+};
 export default function Dashboard() {
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -123,8 +144,26 @@ export default function Dashboard() {
 
           <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
             <Col xs={24} lg={14}>
-            <Card title={En?"Sales Overview":"نظرة عامة"} bodyStyle={{ padding: '20px' }}>
-            <Bar data={data} />
+            <Card 
+              title={En?"Sales Overview":"نظرة عامة"} 
+              bodyStyle={{ 
+                padding: '20px', 
+                height: '400px' // إضافة ارتفاع محدد للبطاقة
+              }}
+            >
+              <div style={{ 
+                width: '100%', 
+                height: '100%' 
+              }}>
+                <Bar 
+                  data={data} 
+                  options={options}
+                  style={{ 
+                    width: '100%', 
+                    height: '100%' 
+                  }}
+                />
+              </div>
             </Card>
             </Col>
             <Col xs={24} lg={10}>
@@ -166,5 +205,4 @@ export default function Dashboard() {
     </Layout>
     </ConfigProvider>
   );
- 
 }

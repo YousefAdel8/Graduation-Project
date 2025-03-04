@@ -8,7 +8,7 @@ const fieldTranslations = {
     'age': 'العمر',
     'address': 'العنوان'
   };
-const data = [
+const tableData = [
   {
     key: '1',
     name: En?'John Brown':'جون برون',
@@ -221,7 +221,27 @@ const TableSearch = () => {
       sorter: (a, b) => a.address.length - b.address.length,
       sortDirections: ['descend', 'ascend'],
     },
+    {
+      title: En?'Action':'العمليات',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <Button type="primary" danger ghost >
+            {En?'Delete':'حذف'}
+          </Button>
+        </Space>
+      ),
+    },
   ];
-  return <Table columns={columns} dataSource={data} />;
+  
+  return(
+  <>
+  <div style={{width:'100%',overflowX:'auto',maxWidth:'1200px',margin:'0 auto'}}>
+    <Table columns={columns} dataSource={tableData} scroll={{ x: 800,y:400 }} style={{width:'100%'}} pagination={{position: ['bottomCenter']}} />
+  </div>
+  </> 
+  );
+  
 };
 export default TableSearch;
