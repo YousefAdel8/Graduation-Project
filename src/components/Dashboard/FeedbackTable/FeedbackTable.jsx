@@ -2,7 +2,9 @@ import React, { useRef, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
-const En = true;
+import styles from './FeedbackTable.module.css'
+
+const En = false;
 const fieldTranslations = {
     'name': 'الاسم',
     'age': 'العمر',
@@ -142,19 +144,7 @@ const TableSearch = () => {
           >
             {En?"Reset":"اعادة تعيين"}
           </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            {En?"Filter":"تصفية"}
-          </Button>
+         
           <Button
             type="link"
             size="small"
@@ -236,12 +226,23 @@ const TableSearch = () => {
   ];
   
   return(
-  <>
-  <div style={{width:'100%',overflowX:'auto',maxWidth:'1200px',margin:'0 auto'}}>
-    <Table columns={columns} dataSource={tableData} scroll={{ x: 800,y:400 }} style={{width:'100%'}} pagination={{position: ['bottomCenter']}} />
-  </div>
-  </> 
-  );
+    <div className='w-100' style={{    height: '450px',  }}>
+      <Table 
+        columns={columns} 
+        dataSource={tableData} 
+        scroll={{ 
+          x: 500,
+        }} 
+        pagination={{
+          pageSize: 5,
+          position: ['bottomCenter'], 
+          className: 'custom-pagination'
+        }}
+        className={`w-100 ${styles.tableFeedback}`} 
+        style={{    height: '450px',  }}      
+      />
+    </div>
+  )
   
 };
 export default TableSearch;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
 import { ConfigProvider } from 'antd';
@@ -10,8 +10,9 @@ import {
   MessageOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Card, Row, Col, Statistic, Typography, Space, Avatar } from 'antd';
+import { Button,Drawer, Layout, Menu, theme, Card, Row, Col, Statistic, Typography, Space, Avatar } from 'antd';
 import TableSearch  from './FeedbackTable/FeedbackTable';
+
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
 
@@ -30,7 +31,7 @@ const data = {
 };
 const options = {
   responsive: true,
-  maintainAspectRatio: true, // هذا مهم جدًا
+  maintainAspectRatio: true, 
   plugins: {
     legend: {
       position: 'top',
@@ -44,7 +45,7 @@ const options = {
       beginAtZero: true,
       ticks: {
         callback: function(value) {
-          return value; // تأكد من عرض القيم بشكل صحيح
+          return value; 
         }
       }
     }
@@ -64,9 +65,58 @@ export default function Dashboard() {
     { title: En?'Active Users':'نشط الآن', value: '573', prefix: '+', percentage: '+201', period: En?'Last Hour':'منذ الساعة الماضية' },
   ];
 
+  const [open, setOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768); 
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
   return (
     <ConfigProvider direction={!En ? 'rtl' : 'ltr'}>
       <Layout style={{ minHeight: '100vh' }} >
+        {isMobile ?
+          <Drawer  trigger={null} title={<div style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
+          <Avatar shape="square" size={36} style={{ backgroundColor: '#1890ff' }}>{En?"A":"أ"}</Avatar>
+          {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }} className='me-2'>{En?"Admin":"ادمن"}</Title>}
+        </div>}
+         onClose={onClose} open={open}
+          placement={En?"left":"right"}
+          style={{ background: colorBgContainer }}
+          width={250}
+        >
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={['1']}
+            style={{ borderRight: 0, background: colorBgContainer }}
+            items={[
+              { type: 'divider', style: { margin: '8px 0' } },
+              { label: En? 'General':'عام', type: 'group' },
+              { key: '1', icon: <DashboardOutlined />, label: En?'Dashboard':'لوحة التحكم' },
+              { key: '2', icon: <AppstoreOutlined />, label: En?'Tasks':'المهام' },
+              { key: '3', icon: <AppstoreOutlined />, label: En?'Apps':'التطبيقات' },
+              { key: '4', icon: <MessageOutlined />, label: En?'Chats':'المحادثات' },
+              { key: '5', icon: <TeamOutlined />, label: En?'Users':'المستخدمين' },
+            
+            ]}
+          />
+          </Drawer>
+        :
         <Sider 
                 trigger={null} 
                 collapsible 
@@ -95,6 +145,8 @@ export default function Dashboard() {
                   ]}
                 />
         </Sider>
+        }
+        
       <Layout>
         <Header
           style={{
@@ -104,8 +156,9 @@ export default function Dashboard() {
         >
           <Button
             type="text"
-            icon={collapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
+            icon={isMobile ? <MenuFoldOutlined /> : collapsed ? <MenuFoldOutlined /> :  <MenuUnfoldOutlined />}
+            onClick={() =>
+              isMobile? setOpen(true) : setCollapsed(!collapsed)}
             style={{
               fontSize: '16px',
               width: 64,
@@ -142,14 +195,15 @@ export default function Dashboard() {
             ))}
           </Row>
 
-          <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+          <Row gutter={[16, 16]} style={{ marginTop: 16 } }>
             <Col xs={24} lg={14}>
             <Card 
               title={En?"Sales Overview":"نظرة عامة"} 
               bodyStyle={{ 
                 padding: '20px', 
-                height: '400px' // إضافة ارتفاع محدد للبطاقة
+                
               }}
+              className='shadow-sm'
             >
               <div style={{ 
                 width: '100%', 
@@ -170,8 +224,8 @@ export default function Dashboard() {
               <Card 
                 title={En?"Latest Sales":"المبيعات الأخيرة" }
                 bodyStyle={{ padding: '10px 20px' }}
-                extra={<Text type="secondary">{En?"You have made 265 sales this month":"قمت بإجراء 265 عملية بيع هذا الشهر "}</Text>}
-              >
+                className='shadow-sm'
+               >
                 <Space direction="vertical" style={{ width: '100%' }} size="middle">
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Text type="secondary">{En?"Sales":"المبيعات"}</Text>
@@ -193,11 +247,11 @@ export default function Dashboard() {
               </Card>
             </Col>
           </Row>
-          <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+          <Row gutter={[16, 16]} style={{ marginTop: 16 }} >
               <Col xs={24} sm={24} lg={24} >
-                
-              <TableSearch />
-                    
+                <Card bodyStyle={{ padding: '0px', width: '100%'}} className="shadow-sm">
+                  <TableSearch />
+                </Card> 
               </Col>
           </Row>
         </Content>
