@@ -226,7 +226,7 @@ const TableSearch = () => {
   ];
   
   return(
-    <div className='w-100' style={{    height: '450px',  }}>
+    <div className='w-100 mb-5' style={{    height: '450px',  }}>
       <Table 
         columns={columns} 
         dataSource={tableData} 

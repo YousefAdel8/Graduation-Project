@@ -1,54 +1,46 @@
 import React from 'react';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { BeatLoader	} from "react-spinners";
+import { BeatLoader } from "react-spinners";
+
+// Import components
 import Signin from './components/Form/Form.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
+import SideBar from './components/Dashboard/SideBar/SideBar.jsx';
+
+
 function App() {
-  //let user = localStorage.getItem('user');
-  let routers = createBrowserRouter([
-    
+  const routers = createBrowserRouter([
     {
       path: '/signin', 
       element: <Signin />,
-    }
-    ,
+    },
     {
-      path: '', 
+      path: '/', 
       element: <Signin />,
-      
-    }
-    ,
+    },
     {
-      path: '/dashboard', 
-      element: <Dashboard />,
-    }
-    /*,
-    {
-      path: '', 
-      element: <Tables />,
-      children: [ 
+      path: '/',
+      element: <SideBar />,
+      children: [
         {
-          path: '/',  
-          element: <ReportsTable />
+          path: '/dashboard',
+          element: <Dashboard />,
         },
-        {
-          path: 'charts',
-          element: <Charts />
-        },
+        
       ]
-    }*/,
+    },
     {
       path: '*',
       element: <div className='vh-100 d-flex justify-content-center align-items-center'>
-        <BeatLoader	 color="black" size={60} />
+        <BeatLoader color="#36d7b7" size={60}  />
       </div>
     }
   ]);
   
-  return <>
-    <RouterProvider router={routers} > </RouterProvider>
-  </>
+  return (
+    <RouterProvider router={routers} />
+  );
 }
 
 export default App;
