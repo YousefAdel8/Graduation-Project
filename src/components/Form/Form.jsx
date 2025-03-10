@@ -6,7 +6,9 @@ import axios from "axios";
 import { CircleLoader } from "react-spinners";
 import styles from "./Form.module.css";
 import { useNavigate } from "react-router-dom";
-import { message } from "antd";
+import { message,Spin } from "antd";
+import { LoadingOutlined } from '@ant-design/icons';
+
 export default function Form() {
 	const [loading, setLoading] = useState(false);
 	const [apiError, setApiError] = useState(false);
@@ -186,7 +188,7 @@ export default function Form() {
 									padding: "10px",
 								}}
 							>
-								<CircleLoader color="white" size={15} />
+								<Spin indicator={<LoadingOutlined spin />} className="text-white" />
 							</button>
 						) : (
 							<button

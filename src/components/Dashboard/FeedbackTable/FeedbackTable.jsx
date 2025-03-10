@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, Space, Table,Popconfirm } from 'antd';
 import Highlighter from 'react-highlight-words';
 import styles from './FeedbackTable.module.css'
 
-const En = false;
+const En = true;
 const fieldTranslations = {
     'name': 'الاسم',
     'age': 'العمر',
@@ -91,6 +91,13 @@ const tableData = [
   },
   
 ];
+
+const confirmDelete=(e)=>{
+  console.log("delete");
+}
+const cancelDelete=(e)=>{
+  console.log("cancel");
+}
 const TableSearch = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -195,6 +202,8 @@ const TableSearch = () => {
       key: 'name',
       width: '30%',
       ...getColumnSearchProps('name'),
+      sorter: (a, b) => a.address.length - b.address.length,
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: En?'Age':'العمر',
@@ -208,8 +217,7 @@ const TableSearch = () => {
       dataIndex: 'address',
       key: 'address',
       ...getColumnSearchProps('address'),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ['descend', 'ascend'],
+      
     },
     {
       title: En?'Action':'العمليات',
@@ -217,9 +225,16 @@ const TableSearch = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" danger ghost >
-            {En?'Delete':'حذف'}
-          </Button>
+          <Popconfirm
+            title={En?"Delete the report?":"حذف التقرير؟"}
+            description={En?"Are you sure to delete this report?":"هل انت متاكد من حذف هذا التقرير؟"}
+            onConfirm={confirmDelete}
+            onCancel={cancelDelete}
+            okText={En?"Yes":"نعم"}
+            cancelText={En?"No":"لا"}
+          >
+            <Button danger>{En?"Delete":"حذف"}</Button>
+          </Popconfirm>
         </Space>
       ),
     },

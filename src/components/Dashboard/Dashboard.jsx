@@ -8,14 +8,14 @@ const { Title, Text } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-const Dashboard = ({ En = false }) => {
+const Dashboard = ({ En = true }) => {
   const data = {
     labels: En ? ["January", "February", "March", "April", "May"] : ["يناير", "فبراير", "مارس", "أبريل", "مايو"],
     datasets: [
       {
-        label: En ? "Sales" : "المبيعات",
+        label: En ? "Reports" : "التقارير",
         data: [10, 20, 15, 30, 25],
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        backgroundColor: "rgb(2, 8, 23)",
       },
     ],
   };
@@ -81,7 +81,7 @@ const Dashboard = ({ En = false }) => {
   
   return (
     <>
-      <Title level={3} style={{ marginBottom: 24 }}>{En ? 'Dashboard' : 'لوحة التحكم'}</Title>
+      <Title level={3} style={{ marginBottom: 24 }} className='fw-bold'>{En ? 'Dashboard' : 'لوحة التحكم'}</Title>
       <Row gutter={[16, 16]}>
         {stats.map((stat, index) => (
           <Col xs={24} sm={12} lg={6} key={index}>
@@ -102,15 +102,15 @@ const Dashboard = ({ En = false }) => {
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={14}>
           <Card 
-            title={En ? "Monthly rate of receiving reports" : "معدل استقبال البلاغات شهريا"} 
+            title={En ? "Monthly rate of receiving reports" : "معدل استقبال التقارير شهريا"} 
             bodyStyle={{ padding: '20px' }}
             className='shadow-sm'
           >
-            <div style={{ width: '100%', height: '100%' }}>
+            <div className='w-100 h-100' >
               <Bar 
                 data={data} 
                 options={options}
-                style={{ width: '100%', height: '100%' }}
+                className='w-100 h-100'
               />
             </div>
           </Card>
