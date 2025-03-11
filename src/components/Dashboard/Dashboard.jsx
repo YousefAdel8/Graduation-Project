@@ -1,14 +1,97 @@
 import React from 'react';
+import {useState} from 'react';
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
-import { Card, Row, Col, Statistic, Typography, Space } from 'antd';
+import { Card, Row, Col, Statistic, Typography, Space,Badge, Select,Progress,Divider , } from 'antd';
 import TableSearch from './FeedbackTable/FeedbackTable.jsx';
+import { AlertOutlined, ClockCircleOutlined, ArrowUpOutlined, ArrowDownOutlined, LineChartOutlined } from '@ant-design/icons';
+
+
+
 const { Title, Text } = Typography;
+
+
+
+
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const Dashboard = ({ En = true }) => {
+
+
+
+
+
+  const { Option } = Select;
+
+
+  const [timeRange, setTimeRange] = useState('day');
+  
+  
+  const reportData = {
+    day: {
+      criticalReports: 17,
+      responseTime: 34,
+      change: 5,
+      improvementDirection: 'down',
+      emergencyTypes: [
+        { type: 'Electricity', count: 8, color: '#1677ff' },
+        { type: 'Gas', count: 5, color: '#ff4d4f' },
+        { type: 'Water', count: 4, color: '#52c41a' }
+      ]
+    },
+    week: {
+      criticalReports: 86,
+      responseTime: 38,
+      change: 2,
+      improvementDirection: 'down',
+      emergencyTypes: [
+        { type: 'Electricity', count: 38, color: '#1677ff' },
+        { type: 'Gas', count: 22, color: '#ff4d4f' },
+        { type: 'Water', count: 26, color: '#52c41a' }
+      ]
+    },
+    month: {
+      criticalReports: 253,
+      responseTime: 41,
+      change: 8,
+      improvementDirection: 'up',
+      emergencyTypes: [
+        { type: 'Electricity', count: 112, color: '#1677ff' },
+        { type: 'Gas', count: 86, color: '#ff4d4f' },
+        { type: 'Water', count: 55, color: '#52c41a' }
+      ]
+    }
+  };
+
+  const currentData = reportData[timeRange];
+  
+  
+  const totalEmergencies = currentData.emergencyTypes.reduce((acc, item) => acc + item.count, 0);
+  const emergencyTypeWithPercent = currentData.emergencyTypes.map(item => ({
+    ...item,
+    percent: Math.round((item.count / totalEmergencies) * 100)
+  }));
+  
+  const mostCommonType = [...currentData.emergencyTypes].sort((a, b) => b.count - a.count)[0];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const data = {
     labels: En ? ["January", "February", "March", "April", "May"] : ["يناير", "فبراير", "مارس", "أبريل", "مايو"],
     datasets: [
@@ -100,23 +183,114 @@ const Dashboard = ({ En = true }) => {
       </Row>
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-        <Col xs={24} lg={14}>
+        <Col xs={24} lg={14} >
           <Card 
             title={En ? "Monthly rate of receiving reports" : "معدل استقبال التقارير شهريا"} 
             bodyStyle={{ padding: '20px' }}
-            className='shadow-sm'
+            className='shadow-sm h-100'
           >
-            <div className='w-100 h-100' >
+            <div className=' overflow-hidden' style={{ height: '400px' }}>
               <Bar 
                 data={data} 
                 options={options}
-                className='w-100 h-100'
+                className='w-100 h-100 '
+
               />
             </div>
           </Card>
         </Col>
         <Col xs={24} lg={10}>
-          <Card 
+        <Card 
+      title={
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+             <span style={{ marginRight: 8, fontWeight: 'bold' }}> {En?'Emergency Reports':'التقارير الطارئة'}</span>
+          </div>
+          <Select 
+            defaultValue={timeRange} 
+            style={{ width: 100 }} 
+            onChange={setTimeRange}
+          >
+            <Option value="day">{En?'Day':'يوم'}</Option>
+            <Option value="week">{En?'Week':'أسبوع'}</Option>
+            <Option value="month">{En?'Month':'شهر'}</Option>
+          </Select>
+        </div>
+      }
+      bodyStyle={{ padding: '16px' }}
+      className='shadow-sm'
+    >
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12}>
+          <Card bordered={false} style={{ backgroundColor: '#fff7e6', borderRadius: 6 }}>
+            <Statistic 
+              title={<Text strong style={{ fontSize: 16 }}> {En?'Critical Reports':'التقارير الحرجة'}</Text>}
+              value={currentData.criticalReports}
+              valueStyle={{ color: '#fa8c16', fontWeight: 'bold' }}
+              prefix={<Badge status="error" />}
+            />
+          </Card>
+        </Col>
+        
+        <Col xs={24} sm={12}>
+          <Card bordered={false} style={{ backgroundColor: '#f6ffed', borderRadius: 6 }}>
+            <Statistic 
+              title={<Text strong style={{ fontSize: 16 }}>{En?'Average Response Time':'متوسط وقت الاستجابة'}</Text>}
+              value={currentData.responseTime}
+              valueStyle={{ color: '#52c41a', fontWeight: 'bold' }}
+              prefix={<ClockCircleOutlined style={{ fontSize: '18px' }} />}
+              suffix={En?"min":"دقيقة"}
+            />
+            <div style={{ marginTop: 5, display: 'flex', alignItems: 'center' }}>
+              {currentData.improvementDirection === 'down' ? (
+                <>
+                  <ArrowDownOutlined style={{ color: '#52c41a', fontSize: '14px' }} />
+                  <Text type="success" style={{ marginRight: 4 }}>
+                    {En?' Decrease ':'انخفاض'} {currentData.change}%
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <ArrowUpOutlined style={{ color: '#ff4d4f', fontSize: '14px' }} />
+                  <Text type="danger" style={{ marginRight: 4 }}>
+                    {En?' Increase ':'ارتفاع'} {currentData.change}%
+                  </Text>
+                </>
+              )}
+            </div>
+          </Card>
+        </Col>
+      </Row>
+      
+      <Divider style={{ margin: '16px 0' }} />
+      
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
+          <LineChartOutlined style={{ fontSize: '18px' }} />
+          <Title level={5} style={{ margin: '0 8px' }}>{En?' Most Common Types of Emergencies ':' أكثر أنواع المشاكل الطارئة'}</Title>
+          <Badge 
+            count={mostCommonType.type} 
+            style={{ backgroundColor: mostCommonType.color, marginRight: 'auto' }} 
+          />
+        </div>
+        
+        {emergencyTypeWithPercent.map((item, index) => (
+          <div key={index} style={{ marginBottom: 10 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <Text>{item.type}</Text>
+              <Text strong>{item.count} ({item.percent}%)</Text>
+            </div>
+            <Progress 
+              percent={item.percent} 
+              showInfo={false} 
+              strokeColor={item.color}
+              size="small"
+            />
+          </div>
+        ))}
+      </div>
+    </Card>
+          {/*<Card 
             title={En ? "Service Issue Distribution" : "توزيع مشكلات الخدمات" }
             bodyStyle={{ padding: '10px 20px' }}
             className='shadow-sm'
@@ -129,7 +303,7 @@ const Dashboard = ({ En = true }) => {
                 </div>
               ))}
             </Space>
-          </Card>
+          </Card>*/}
         </Col>
       </Row>
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>

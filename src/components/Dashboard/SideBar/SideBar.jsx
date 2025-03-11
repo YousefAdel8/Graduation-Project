@@ -46,7 +46,7 @@ const AppLayout = ({ En = true }) => {
     const path = location.pathname.split('/')[1] || 'dashboard';
     switch (path) {
       case 'dashboard': return '1';
-      case 'tasks': return '2';
+      case 'tables': return '2';
       case 'apps': return '3';
       case 'chats': return '4';
       case 'users': return '5';
@@ -58,7 +58,7 @@ const AppLayout = ({ En = true }) => {
     { type: 'divider', style: { margin: '8px 0' } },
     { label: En ? 'General' : 'عام', type: 'group' },
     { key: '1', icon: <DashboardOutlined />, label: En ? 'Dashboard' : 'لوحة التحكم' },
-    { key: '2', icon: <AppstoreOutlined />, label: En ? 'Tasks' : 'المهام' },
+    { key: '2', icon: <AppstoreOutlined />, label: En ? 'Tables' : 'الجداول' },
     { key: '3', icon: <AppstoreOutlined />, label: En ? 'Apps' : 'التطبيقات' },
     { key: '4', icon: <MessageOutlined />, label: En ? 'Chats' : 'المحادثات' },
     { key: '5', icon: <TeamOutlined />, label: En ? 'Users' : 'المستخدمين' },
@@ -71,7 +71,7 @@ const AppLayout = ({ En = true }) => {
         navigate('/dashboard');
         break;
       case '2':
-        navigate('/tasks');
+        navigate('/tables');
         break;
       case '3':
         navigate('/apps');
@@ -95,7 +95,7 @@ const AppLayout = ({ En = true }) => {
             trigger={null}
             title={
               <div style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
-                <Avatar shape="square" size={36} style={{ backgroundColor: '#1890ff' }}>{En ? "A" : "أ"}</Avatar>
+                <Avatar shape="square" size={36} style={{ backgroundColor: 'rgb(2, 8, 23)' }}>{En ? "A" : "أ"}</Avatar>
                 {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }} className='me-2'>{En ? "Admin" : "ادمن"}</Title>}
               </div>
             }
@@ -121,9 +121,10 @@ const AppLayout = ({ En = true }) => {
             collapsed={collapsed}
             style={{ background: colorBgContainer }}
             width={250}
+            
           >
             <div style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
-              <Avatar shape="square" size={36} style={{ backgroundColor: '#1890ff' }}>{En ? "A" : "أ"}</Avatar>
+              <Avatar shape="square" size={36} style={{ backgroundColor: "rgb(2, 8, 23)" }}>{En ? "A" : "أ"}</Avatar>
               {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }} className='me-2'>{En ? "Admin" : "ادمن"}</Title>}
             </div>
             <Menu
@@ -133,6 +134,7 @@ const AppLayout = ({ En = true }) => {
               style={{ borderRight: 0, background: colorBgContainer }}
               onClick={handleMenuClick}
               items={menuItems}
+              
             />
           </Sider>
         )}
