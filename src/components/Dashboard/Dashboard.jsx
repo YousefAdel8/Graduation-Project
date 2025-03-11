@@ -189,7 +189,7 @@ const Dashboard = ({ En = true }) => {
             bodyStyle={{ padding: '20px' }}
             className='shadow-sm h-100'
           >
-            <div className=' overflow-hidden' style={{ height: '400px' }}>
+            <div className='w-100 h-100'>
               <Bar 
                 data={data} 
                 options={options}
