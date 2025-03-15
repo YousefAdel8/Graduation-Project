@@ -294,7 +294,7 @@ const Dashboard = ({ En = false }) => {
 								</Select>
 							</div>
 						}
-						bodyStyle={{ padding: "16px" ,height: "440px"}}
+						bodyStyle={{ padding: "16px" ,height:isMobile?"": "440px"}}
 						className="shadow-sm"
 					>
 						<Row gutter={[16, 16]}>
