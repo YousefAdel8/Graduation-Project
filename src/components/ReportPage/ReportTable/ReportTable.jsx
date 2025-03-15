@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table,Popconfirm,Rate } from 'antd';
 import Highlighter from 'react-highlight-words';
-import styles from './FeedbackTable.module.css'
 
 const En = false;
 const fieldTranslations = {
@@ -19,7 +18,7 @@ const fieldTranslations = {
       service: En ? 'Street Light' : 'ضوء الشارع',
       resolutionTime: En ? '1 hour' : 'ساعة واحدة',
       date: '01/01/2023',
-      rating: '3',
+      
     },
     {
       key: '2',
@@ -27,15 +26,13 @@ const fieldTranslations = {
       service: En ? 'Water Leakage' : 'تسرب المياه',
       resolutionTime: En ? '2 hours' : 'ساعتين',
       date: '03/02/2023',
-      rating: '4',
     },
     {
       key: '3',
       name: En ? 'Michael Johnson' : 'مايكل جونسون',
       service: En ? 'Road Repair' : 'إصلاح الطرق',
       resolutionTime: En ? '5 hours' : 'خمس ساعات',
-      date: '15/02/2023',
-      rating: '5',
+      date: '15/02/2023'
     },
     {
       key: '4',
@@ -43,7 +40,6 @@ const fieldTranslations = {
       service: En ? 'Electricity Outage' : 'انقطاع الكهرباء',
       resolutionTime: En ? '3 hours' : 'ثلاث ساعات',
       date: '20/03/2023',
-      rating: '2',
     },
     {
       key: '5',
@@ -51,7 +47,6 @@ const fieldTranslations = {
       service: En ? 'Garbage Collection' : 'جمع القمامة',
       resolutionTime: En ? '6 hours' : 'ست ساعات',
       date: '10/04/2023',
-      rating: '4',
     },
     {
       key: '6',
@@ -59,7 +54,6 @@ const fieldTranslations = {
       service: En ? 'Tree Trimming' : 'تقليم الأشجار',
       resolutionTime: En ? '4 hours' : 'أربع ساعات',
       date: '25/04/2023',
-      rating: '5',
     },
     {
       key: '7',
@@ -67,7 +61,6 @@ const fieldTranslations = {
       service: En ? 'Sewer Blockage' : 'انسداد المجاري',
       resolutionTime: En ? '8 hours' : 'ثماني ساعات',
       date: '05/05/2023',
-      rating: '3',
     },
     {
       key: '8',
@@ -75,7 +68,6 @@ const fieldTranslations = {
       service: En ? 'Pothole Repair' : 'إصلاح الحفر',
       resolutionTime: En ? '7 hours' : 'سبع ساعات',
       date: '12/06/2023',
-      rating: '4',
     },
     {
       key: '9',
@@ -83,7 +75,6 @@ const fieldTranslations = {
       service: En ? 'Gas Leak' : 'تسرب الغاز',
       resolutionTime: En ? '30 minutes' : '30 دقيقة',
       date: '20/07/2023',
-      rating: '5',
     },
     {
       key: '10',
@@ -91,7 +82,6 @@ const fieldTranslations = {
       service: En ? 'Internet Issue' : 'مشكلة الإنترنت',
       resolutionTime: En ? '2 hours' : 'ساعتين',
       date: '03/08/2023',
-      rating: '2',
     },
     {
       key: '11',
@@ -99,7 +89,6 @@ const fieldTranslations = {
       service: En ? 'Street Cleaning' : 'تنظيف الشوارع',
       resolutionTime: En ? '5 hours' : 'خمس ساعات',
       date: '14/09/2023',
-      rating: '4',
     },
     {
       key: '12',
@@ -107,7 +96,6 @@ const fieldTranslations = {
       service: En ? 'Park Maintenance' : 'صيانة الحدائق',
       resolutionTime: En ? '6 hours' : 'ست ساعات',
       date: '27/10/2023',
-      rating: '5',
     },
     {
       key: '13',
@@ -115,7 +103,6 @@ const fieldTranslations = {
       service: En ? 'Traffic Signal Repair' : 'إصلاح إشارات المرور',
       resolutionTime: En ? '3 hours' : 'ثلاث ساعات',
       date: '05/11/2023',
-      rating: '3',
     },
   ];
   
@@ -126,7 +113,7 @@ const confirmDelete=(e)=>{
 const cancelDelete=(e)=>{
   console.log("cancel");
 }
-const FeedbackTable = () => {
+const ReportTable = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -252,26 +239,8 @@ const FeedbackTable = () => {
       key: 'date',
       //width: '20%',
     },
-    {
-      title: En?'Rate':'تقييم المستخدم',
-      dataIndex: 'rate',
-      key: 'rate',
-      //width: '20%',
-      
-      render: (_, record) => (
-        <space style={{whiteSpace:'nowrap'}}> 
-        <Rate disabled defaultValue={record.rating} />
-        </space>
-      ),
-    },
     
-    /*{
-      title: En?'Comment':'التعليق',
-      dataIndex: 'comment',
-      key: 'comment',
-      //width: '20%',
-    },*/
-    /*{
+    {
       title: En?'Action':'العمليات',
       dataIndex: 'action',
       key: 'action',
@@ -289,7 +258,7 @@ const FeedbackTable = () => {
           </Popconfirm>
         </Space>
       ),
-    },*/
+    },
   ];
   
   return(
@@ -305,11 +274,10 @@ const FeedbackTable = () => {
           position: ['bottomCenter'], 
           className: 'custom-pagination'
         }}
-        className={`w-100 ${styles.tableFeedback}`} 
         style={{    height: '450px',  }}      
       />
     </div>
   )
   
 };
-export default FeedbackTable;
+export default ReportTable;

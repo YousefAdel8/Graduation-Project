@@ -47,7 +47,7 @@ const AppLayout = ({ En = false }) => {
     switch (path) {
       case 'dashboard': return '1';
       case 'feedback': return '2';
-      case 'reports': return '3';
+      case 'report': return '3';
       case 'chats': return '4';
       case 'users': return '5';
       default: return '1';
