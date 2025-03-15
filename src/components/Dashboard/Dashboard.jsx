@@ -2,10 +2,8 @@ import React from 'react';
 import {useState} from 'react';
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
-import { Card, Row, Col, Statistic, Typography, Space,Badge, Select,Progress,Divider , } from 'antd';
-import TableSearch from './FeedbackTable/FeedbackTable.jsx';
-import { AlertOutlined, ClockCircleOutlined, ArrowUpOutlined, ArrowDownOutlined, LineChartOutlined } from '@ant-design/icons';
-
+import { Card, Row, Col, Statistic, Typography,Badge, Select,Progress,Divider , } from 'antd';
+import { ClockCircleOutlined, ArrowUpOutlined, ArrowDownOutlined, LineChartOutlined } from '@ant-design/icons';
 
 
 const { Title, Text } = Typography;
@@ -17,7 +15,7 @@ const { Title, Text } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-const Dashboard = ({ En = true }) => {
+const Dashboard = ({ En = false }) => {
 
 
 
@@ -36,9 +34,9 @@ const Dashboard = ({ En = true }) => {
       change: 5,
       improvementDirection: 'down',
       emergencyTypes: [
-        { type: 'Electricity', count: 8, color: '#1677ff' },
-        { type: 'Gas', count: 5, color: '#ff4d4f' },
-        { type: 'Water', count: 4, color: '#52c41a' }
+        { type: En?'Electricity':'كهرباء', count: 8, color: '#1677ff' },
+        { type: En?'Gas':'غاز', count: 5, color: '#ff4d4f' },
+        { type: En?'Water':'مياه', count: 4, color: '#52c41a' }
       ]
     },
     week: {
@@ -47,9 +45,9 @@ const Dashboard = ({ En = true }) => {
       change: 2,
       improvementDirection: 'down',
       emergencyTypes: [
-        { type: 'Electricity', count: 38, color: '#1677ff' },
-        { type: 'Gas', count: 22, color: '#ff4d4f' },
-        { type: 'Water', count: 26, color: '#52c41a' }
+        { type: En?'Electricity':'كهرباء', count: 38, color: '#1677ff' },
+        { type: En?'Gas':'غاز', count: 22, color: '#ff4d4f' },
+        { type: En?'Water':'مياه', count: 26, color: '#52c41a' }
       ]
     },
     month: {
@@ -58,9 +56,9 @@ const Dashboard = ({ En = true }) => {
       change: 8,
       improvementDirection: 'up',
       emergencyTypes: [
-        { type: 'Electricity', count: 112, color: '#1677ff' },
-        { type: 'Gas', count: 86, color: '#ff4d4f' },
-        { type: 'Water', count: 55, color: '#52c41a' }
+        { type: En?'Electricity':'كهرباء', count: 112, color: '#1677ff' },
+        { type: En?'Gas':'غاز', count: 86, color: '#ff4d4f' },
+        { type: En?'Water':'مياه', count: 55, color: '#52c41a' }
       ]
     }
   };
@@ -132,7 +130,7 @@ const Dashboard = ({ En = true }) => {
     { title: En ? 'Resolved Reports' : 'التقارير التي تم حلها', value: '430', percentage: '+19', period: En ? 'Last Month' : 'من الشهر الماضي' },
     { title: En ? 'Pending Reports' : 'تقارير قيد المراجعة', value: '30', percentage: '+201', period: En ? 'Last Hour' : 'منذ الساعة الماضية' },
   ];
-
+/*
   const dataServiceIssue = [
     {
       key: '1',
@@ -161,7 +159,7 @@ const Dashboard = ({ En = true }) => {
     },
   ];
   
-  
+  */
   return (
     <>
       <Title level={3} style={{ marginBottom: 24 }} className='fw-bold'>{En ? 'Dashboard' : 'لوحة التحكم'}</Title>
@@ -189,14 +187,14 @@ const Dashboard = ({ En = true }) => {
             bodyStyle={{ padding: '20px' }}
             className='shadow-sm h-100'
           >
-            <div className='w-100 h-100'>
+            {<div className='w-100 h-100'>
               <Bar 
                 data={data} 
                 options={options}
-                className='w-100 h-100 '
-
+                className={`w-100 h-100 `}
+            
               />
-            </div>
+            </div>}
           </Card>
         </Col>
         <Col xs={24} lg={10}>
@@ -306,13 +304,7 @@ const Dashboard = ({ En = true }) => {
           </Card>*/}
         </Col>
       </Row>
-      <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-        <Col xs={24} sm={24} lg={24}>
-          <Card bodyStyle={{ padding: '0px', width: '100%'}} className="shadow-sm">
-            <TableSearch /> 
-          </Card> 
-        </Col>
-      </Row>
+      
     </>
   );
 };

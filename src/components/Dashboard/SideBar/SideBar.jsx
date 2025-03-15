@@ -4,9 +4,10 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DashboardOutlined,
-  AppstoreOutlined,
   MessageOutlined,
   TeamOutlined,
+  StarOutlined,
+  FormOutlined,
 } from '@ant-design/icons';
 import { Button, Drawer, Layout, Menu, theme, Avatar, Typography } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -14,7 +15,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
-const AppLayout = ({ En = true }) => {
+const AppLayout = ({ En = false }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -41,13 +42,12 @@ const AppLayout = ({ En = true }) => {
     setOpen(false);
   };
 
-  // Extract the current path to highlight the correct menu item
   const getCurrentPath = () => {
     const path = location.pathname.split('/')[1] || 'dashboard';
     switch (path) {
       case 'dashboard': return '1';
-      case 'tables': return '2';
-      case 'apps': return '3';
+      case 'feedback': return '2';
+      case 'reports': return '3';
       case 'chats': return '4';
       case 'users': return '5';
       default: return '1';
@@ -55,11 +55,11 @@ const AppLayout = ({ En = true }) => {
   };
 
   const menuItems = [
-    { type: 'divider', style: { margin: '8px 0' } },
-    { label: En ? 'General' : 'عام', type: 'group' },
+    isMobile?null:{ type: 'divider', style: { margin: '8px 0' } },
+    //{ label: En ? 'General' : 'عام', type: 'group' },
     { key: '1', icon: <DashboardOutlined />, label: En ? 'Dashboard' : 'لوحة التحكم' },
-    { key: '2', icon: <AppstoreOutlined />, label: En ? 'Tables' : 'الجداول' },
-    { key: '3', icon: <AppstoreOutlined />, label: En ? 'Apps' : 'التطبيقات' },
+    { key: '2', icon: <StarOutlined  />, label: En ? 'Feedback' : 'التقييمات' },
+    { key: '3', icon: <FormOutlined />, label: En ? 'Reports' : 'التقارير' },
     { key: '4', icon: <MessageOutlined />, label: En ? 'Chats' : 'المحادثات' },
     { key: '5', icon: <TeamOutlined />, label: En ? 'Users' : 'المستخدمين' },
   ];
@@ -71,10 +71,10 @@ const AppLayout = ({ En = true }) => {
         navigate('/dashboard');
         break;
       case '2':
-        navigate('/tables');
+        navigate('/feedback');
         break;
       case '3':
-        navigate('/apps');
+        navigate('/report');
         break;
       case '4':
         navigate('/chats');
@@ -94,9 +94,9 @@ const AppLayout = ({ En = true }) => {
           <Drawer
             trigger={null}
             title={
-              <div style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
+              <div  style={{ padding: '16px', display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start' }}>
                 <Avatar shape="square" size={36} style={{ backgroundColor: 'rgb(2, 8, 23)' }}>{En ? "A" : "أ"}</Avatar>
-                {!collapsed && <Title level={5} style={{ margin: '0 0 0 10px' }} className='me-2'>{En ? "Admin" : "ادمن"}</Title>}
+                {!collapsed && <Title level={5} style={{  margin: En ? '0 0 0 10px' : '0 10px 0 0' }} >{En ? "Admin" : "ادمن"}</Title>}
               </div>
             }
             onClose={onClose}
@@ -104,12 +104,13 @@ const AppLayout = ({ En = true }) => {
             placement={En ? "left" : "right"}
             style={{ background: colorBgContainer }}
             width={250}
+            
           >
             <Menu
               mode="inline"
               defaultSelectedKeys={[getCurrentPath()]}
               selectedKeys={[getCurrentPath()]}
-              style={{ borderRight: 0, background: colorBgContainer }}
+              style={{ borderRight: 0, background: colorBgContainer,width: '100%'  }}
               onClick={handleMenuClick}
               items={menuItems}
             />

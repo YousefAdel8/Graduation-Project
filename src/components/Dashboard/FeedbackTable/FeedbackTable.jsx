@@ -1,96 +1,124 @@
 import React, { useRef, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table,Popconfirm } from 'antd';
+import { Button, Input, Space, Table,Popconfirm,Rate } from 'antd';
 import Highlighter from 'react-highlight-words';
 import styles from './FeedbackTable.module.css'
 
-const En = true;
+const En = false;
 const fieldTranslations = {
     'name': 'الاسم',
-    'age': 'العمر',
-    'address': 'العنوان'
+    'service': 'نوع الخدمة',
+    'resolutionTime': 'وقت التحليل',
+    'date': 'التاريخ',
+    'rating': 'التقييم',
   };
-const tableData = [
-  {
-    key: '1',
-    name: En?'John Brown':'جون برون',
-    age: 32,
-    address: En?'New York No. 1 Lake Park':'نيويورك نو. 1 ليك بارك',
-  },
-  {
-    key: '2',
-    name: En?'Joe Black':'جوي بلاك',
-    age: 42,
-    address: En?'London No. 1 Lake Park':'لندن نو. 1 ليك بارك',
-  },
-  {
-    key: '3',
-    name: En?'Jim Green':'جيم جرين',
-    age: 32,
-    address: En?'Sydney No. 1 Lake Park':'سيدن نو. 1 ليك بارك',
-  },
-  {
-    key: '4',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },
-  {
-    key: '5',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },
-  {
-    key: '6',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },
-  {
-    key: '7',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },
-  {
-    key: '8',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },    
-  {
-    key: '9',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },
-  {
-    key: '10',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },
-  {
-    key: '11',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },
-  {
-    key: '12',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },
-  {
-    key: '13',
-    name: En?'Jim Red':'جيم ريد',
-    age: 32,
-    address: En?'London No. 2 Lake Park':'لندن نو. 2 ليك بارك',
-  },
+  const tableData = [
+    {
+      key: '1',
+      name: En ? 'John Brown' : 'جون براون',
+      service: En ? 'Street Light' : 'ضوء الشارع',
+      resolutionTime: En ? '1 hour' : 'ساعة واحدة',
+      date: '01/01/2023',
+      rating: '3',
+    },
+    {
+      key: '2',
+      name: En ? 'Alice Smith' : 'أليس سميث',
+      service: En ? 'Water Leakage' : 'تسرب المياه',
+      resolutionTime: En ? '2 hours' : 'ساعتين',
+      date: '03/02/2023',
+      rating: '4',
+    },
+    {
+      key: '3',
+      name: En ? 'Michael Johnson' : 'مايكل جونسون',
+      service: En ? 'Road Repair' : 'إصلاح الطرق',
+      resolutionTime: En ? '5 hours' : 'خمس ساعات',
+      date: '15/02/2023',
+      rating: '5',
+    },
+    {
+      key: '4',
+      name: En ? 'Sara Connor' : 'سارة كونور',
+      service: En ? 'Electricity Outage' : 'انقطاع الكهرباء',
+      resolutionTime: En ? '3 hours' : 'ثلاث ساعات',
+      date: '20/03/2023',
+      rating: '2',
+    },
+    {
+      key: '5',
+      name: En ? 'James Wilson' : 'جيمس ويلسون',
+      service: En ? 'Garbage Collection' : 'جمع القمامة',
+      resolutionTime: En ? '6 hours' : 'ست ساعات',
+      date: '10/04/2023',
+      rating: '4',
+    },
+    {
+      key: '6',
+      name: En ? 'Emma Watson' : 'إيما واتسون',
+      service: En ? 'Tree Trimming' : 'تقليم الأشجار',
+      resolutionTime: En ? '4 hours' : 'أربع ساعات',
+      date: '25/04/2023',
+      rating: '5',
+    },
+    {
+      key: '7',
+      name: En ? 'Liam Miller' : 'ليام ميلر',
+      service: En ? 'Sewer Blockage' : 'انسداد المجاري',
+      resolutionTime: En ? '8 hours' : 'ثماني ساعات',
+      date: '05/05/2023',
+      rating: '3',
+    },
+    {
+      key: '8',
+      name: En ? 'Olivia Davis' : 'أوليفيا ديفيس',
+      service: En ? 'Pothole Repair' : 'إصلاح الحفر',
+      resolutionTime: En ? '7 hours' : 'سبع ساعات',
+      date: '12/06/2023',
+      rating: '4',
+    },
+    {
+      key: '9',
+      name: En ? 'Noah Carter' : 'نوح كارتر',
+      service: En ? 'Gas Leak' : 'تسرب الغاز',
+      resolutionTime: En ? '30 minutes' : '30 دقيقة',
+      date: '20/07/2023',
+      rating: '5',
+    },
+    {
+      key: '10',
+      name: En ? 'Sophia White' : 'صوفيا وايت',
+      service: En ? 'Internet Issue' : 'مشكلة الإنترنت',
+      resolutionTime: En ? '2 hours' : 'ساعتين',
+      date: '03/08/2023',
+      rating: '2',
+    },
+    {
+      key: '11',
+      name: En ? 'Benjamin Harris' : 'بنيامين هاريس',
+      service: En ? 'Street Cleaning' : 'تنظيف الشوارع',
+      resolutionTime: En ? '5 hours' : 'خمس ساعات',
+      date: '14/09/2023',
+      rating: '4',
+    },
+    {
+      key: '12',
+      name: En ? 'Charlotte Brown' : 'شارلوت براون',
+      service: En ? 'Park Maintenance' : 'صيانة الحدائق',
+      resolutionTime: En ? '6 hours' : 'ست ساعات',
+      date: '27/10/2023',
+      rating: '5',
+    },
+    {
+      key: '13',
+      name: En ? 'Ethan Martinez' : 'إيثان مارتينيز',
+      service: En ? 'Traffic Signal Repair' : 'إصلاح إشارات المرور',
+      resolutionTime: En ? '3 hours' : 'ثلاث ساعات',
+      date: '05/11/2023',
+      rating: '3',
+    },
+  ];
   
-];
 
 const confirmDelete=(e)=>{
   console.log("delete");
@@ -98,7 +126,7 @@ const confirmDelete=(e)=>{
 const cancelDelete=(e)=>{
   console.log("cancel");
 }
-const TableSearch = () => {
+const FeedbackTable = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
@@ -197,29 +225,53 @@ const TableSearch = () => {
   });
   const columns = [
     {
-      title: En?'Name':'الاسم',
+      title: En?'User Name':'اسم المستخدم',
       dataIndex: 'name',
       key: 'name',
-      width: '30%',
+      //width: '30%',
       ...getColumnSearchProps('name'),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ['descend', 'ascend'],
+      //sorter: (a, b) => a.address.length - b.address.length,
+      //sortDirections: ['descend', 'ascend'],
     },
     {
-      title: En?'Age':'العمر',
-      dataIndex: 'age',
-      key: 'age',
-      width: '20%',
-      ...getColumnSearchProps('age'),
+      title: En?'Service Type':'نوع الخدمة',
+      dataIndex: 'service',
+      key: 'service',
+      //width: '20%',
+      ...getColumnSearchProps('service'),
     },
     {
-      title: En?'Address':'العنوان',
-      dataIndex: 'address',
-      key: 'address',
-      ...getColumnSearchProps('address'),
+      title: En?'Resolution Time':'وقت الحل',
+      dataIndex: 'resolutionTime',
+      key: 'resolutionTime',
+      //width: '20%',
+    },
+    {
+      title:En?'Date Submitted':'تاريخ الاضافة',
+      dataIndex: 'date',
+      key: 'date',
+      //width: '20%',
+    },
+    {
+      title: En?'Rate':'تقييم المستخدم',
+      dataIndex: 'rate',
+      key: 'rate',
+      //width: '20%',
       
+      render: (_, record) => (
+        <space style={{whiteSpace:'nowrap'}}> 
+        <Rate disabled defaultValue={record.rating} />
+        </space>
+      ),
     },
-    {
+    
+    /*{
+      title: En?'Comment':'التعليق',
+      dataIndex: 'comment',
+      key: 'comment',
+      //width: '20%',
+    },*/
+    /*{
       title: En?'Action':'العمليات',
       dataIndex: 'action',
       key: 'action',
@@ -237,11 +289,11 @@ const TableSearch = () => {
           </Popconfirm>
         </Space>
       ),
-    },
+    },*/
   ];
   
   return(
-    <div className='w-100 mb-5' style={{    height: '450px',  }}>
+    <div className='w-100 mb-5' style={{    height: '470px',  }}>
       <Table 
         columns={columns} 
         dataSource={tableData} 
@@ -249,7 +301,7 @@ const TableSearch = () => {
           x: 500,
         }} 
         pagination={{
-          pageSize: 5,
+          pageSize: 7,
           position: ['bottomCenter'], 
           className: 'custom-pagination'
         }}
@@ -260,4 +312,4 @@ const TableSearch = () => {
   )
   
 };
-export default TableSearch;
+export default FeedbackTable;

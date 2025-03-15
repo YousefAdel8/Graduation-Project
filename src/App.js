@@ -7,7 +7,7 @@ import { BeatLoader } from "react-spinners";
 import Signin from './components/Form/Form.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import SideBar from './components/Dashboard/SideBar/SideBar.jsx';
-import Tables from './components/Dashboard/Tables/Tables.jsx';
+import Tables from './components/Dashboard/FeedbackTable/Tables.jsx';
 
 function App() {
   const routers = createBrowserRouter([
@@ -28,7 +28,7 @@ function App() {
           element: <Dashboard />,
         },
         {
-          path: '/tables',
+          path: '/feedback',
           element: <Tables />,
         },
       ]
