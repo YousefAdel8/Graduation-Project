@@ -3,7 +3,6 @@ import { useState,useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
-import { CircleLoader } from "react-spinners";
 import styles from "./Form.module.css";
 import { useNavigate } from "react-router-dom";
 import { message,Spin } from "antd";
@@ -12,7 +11,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 export default function Form() {
 	const [loading, setLoading] = useState(false);
 	const [apiError, setApiError] = useState(false);
-	const [En] = useState(true);
+	const [En] = useState(false);
 	const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
 	const [successLogin, setSuccessLogin] = useState(false);
@@ -161,7 +160,7 @@ export default function Form() {
 									type="password"
 									name="password"
 									className="form-control"
-									placeholder="••••••••"
+									placeholder="********"
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									style={{ fontSize: "14px", padding: "8px 12px" }}
