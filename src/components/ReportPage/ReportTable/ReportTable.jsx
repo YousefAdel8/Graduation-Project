@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table,Popconfirm,Rate } from 'antd';
+import { CheckCircleOutlined, ExclamationCircleOutlined, SearchOutlined, SyncOutlined } from '@ant-design/icons';
+import { Button, Input, Space, Table,Popconfirm, Tag  } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-const En = false;
+const En = true;
 const fieldTranslations = {
     'name': 'الاسم',
     'service': 'نوع الخدمة',
@@ -11,108 +11,10 @@ const fieldTranslations = {
     'date': 'التاريخ',
     'rating': 'التقييم',
   };
-  const tableData = [
-    {
-      key: '1',
-      name: En ? 'John Brown' : 'جون براون',
-      service: En ? 'Street Light' : 'ضوء الشارع',
-      resolutionTime: En ? '1 hour' : 'ساعة واحدة',
-      date: '01/01/2023',
-      
-    },
-    {
-      key: '2',
-      name: En ? 'Alice Smith' : 'أليس سميث',
-      service: En ? 'Water Leakage' : 'تسرب المياه',
-      resolutionTime: En ? '2 hours' : 'ساعتين',
-      date: '03/02/2023',
-    },
-    {
-      key: '3',
-      name: En ? 'Michael Johnson' : 'مايكل جونسون',
-      service: En ? 'Road Repair' : 'إصلاح الطرق',
-      resolutionTime: En ? '5 hours' : 'خمس ساعات',
-      date: '15/02/2023'
-    },
-    {
-      key: '4',
-      name: En ? 'Sara Connor' : 'سارة كونور',
-      service: En ? 'Electricity Outage' : 'انقطاع الكهرباء',
-      resolutionTime: En ? '3 hours' : 'ثلاث ساعات',
-      date: '20/03/2023',
-    },
-    {
-      key: '5',
-      name: En ? 'James Wilson' : 'جيمس ويلسون',
-      service: En ? 'Garbage Collection' : 'جمع القمامة',
-      resolutionTime: En ? '6 hours' : 'ست ساعات',
-      date: '10/04/2023',
-    },
-    {
-      key: '6',
-      name: En ? 'Emma Watson' : 'إيما واتسون',
-      service: En ? 'Tree Trimming' : 'تقليم الأشجار',
-      resolutionTime: En ? '4 hours' : 'أربع ساعات',
-      date: '25/04/2023',
-    },
-    {
-      key: '7',
-      name: En ? 'Liam Miller' : 'ليام ميلر',
-      service: En ? 'Sewer Blockage' : 'انسداد المجاري',
-      resolutionTime: En ? '8 hours' : 'ثماني ساعات',
-      date: '05/05/2023',
-    },
-    {
-      key: '8',
-      name: En ? 'Olivia Davis' : 'أوليفيا ديفيس',
-      service: En ? 'Pothole Repair' : 'إصلاح الحفر',
-      resolutionTime: En ? '7 hours' : 'سبع ساعات',
-      date: '12/06/2023',
-    },
-    {
-      key: '9',
-      name: En ? 'Noah Carter' : 'نوح كارتر',
-      service: En ? 'Gas Leak' : 'تسرب الغاز',
-      resolutionTime: En ? '30 minutes' : '30 دقيقة',
-      date: '20/07/2023',
-    },
-    {
-      key: '10',
-      name: En ? 'Sophia White' : 'صوفيا وايت',
-      service: En ? 'Internet Issue' : 'مشكلة الإنترنت',
-      resolutionTime: En ? '2 hours' : 'ساعتين',
-      date: '03/08/2023',
-    },
-    {
-      key: '11',
-      name: En ? 'Benjamin Harris' : 'بنيامين هاريس',
-      service: En ? 'Street Cleaning' : 'تنظيف الشوارع',
-      resolutionTime: En ? '5 hours' : 'خمس ساعات',
-      date: '14/09/2023',
-    },
-    {
-      key: '12',
-      name: En ? 'Charlotte Brown' : 'شارلوت براون',
-      service: En ? 'Park Maintenance' : 'صيانة الحدائق',
-      resolutionTime: En ? '6 hours' : 'ست ساعات',
-      date: '27/10/2023',
-    },
-    {
-      key: '13',
-      name: En ? 'Ethan Martinez' : 'إيثان مارتينيز',
-      service: En ? 'Traffic Signal Repair' : 'إصلاح إشارات المرور',
-      resolutionTime: En ? '3 hours' : 'ثلاث ساعات',
-      date: '05/11/2023',
-    },
-  ];
+  
   
 
-const confirmDelete=(e)=>{
-  console.log("delete");
-}
-const cancelDelete=(e)=>{
-  console.log("cancel");
-}
+
 const ReportTable = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -126,6 +28,50 @@ const ReportTable = () => {
     clearFilters();
     setSearchText('');
   };
+  const [tableData, setTableData] = useState([
+    {
+      key: '1',
+      name: En ? 'John Brown' : 'جون براون',
+      service: En ? 'Street Light' : 'ضوء الشارع',
+      priority: En ? 'High' : 'عالي',
+      status: En ? 'In progress' : 'قيد التنفيذ',
+      date: '01/01/2023',
+    },
+    {
+      key: '2',
+      name: En ? 'Jane Doe' : 'جان دو',
+      service: En ? 'Water Leak' : 'تسرب المياة',
+      priority: En ? 'Medium' : 'متوسط',
+      status: En ? 'Reported' : 'تم الإبلاغ عنه',
+      date: '02/02/2023',
+    },
+    {
+      key: '3',
+      name: En ? 'Bob Smith' : 'بوب سميث',
+      service: En ? 'Electricity Outage' : 'انقطاع الكهرباء',
+      priority: En ? 'Low' : 'منخفضة',
+      status: En ? 'Resolved' : 'تم الحل',
+      date: '03/03/2023',
+    },
+  ]);
+  const confirmDelete=(record)=>{
+    console.log(record);
+    const newData=tableData.filter((item) => item.key !== record.key);
+    setTableData(newData);
+    
+  }
+  const cancelDelete=(e)=>{
+    console.log("cancel");
+  }
+  const [showUpdateDiv, setShowUpdateDiv] = useState(false);
+  const handleEdit = (record) => {
+    setSelectedRowId(record.key); 
+    setSelectedStatus(record.status);
+    setShowUpdateDiv(true);
+  }
+  const handleView = (record) => {
+    console.log(record);
+  }
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div
@@ -215,7 +161,6 @@ const ReportTable = () => {
       title: En?'User Name':'اسم المستخدم',
       dataIndex: 'name',
       key: 'name',
-      //width: '30%',
       ...getColumnSearchProps('name'),
       //sorter: (a, b) => a.address.length - b.address.length,
       //sortDirections: ['descend', 'ascend'],
@@ -228,13 +173,40 @@ const ReportTable = () => {
       ...getColumnSearchProps('service'),
     },
     {
-      title: En?'Resolution Time':'وقت الحل',
-      dataIndex: 'resolutionTime',
-      key: 'resolutionTime',
+      title: En?'Priority':'الأولوية',
+      dataIndex: 'priority',
+      key: 'priority',
       //width: '20%',
     },
     {
-      title:En?'Date Submitted':'تاريخ الاضافة',
+      title:En?'Status':'الحالة',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status) => {
+        let color='';
+        let icon=null;
+        if(status===(En?'In progress':'قيد التنفيذ')){
+          color='orange';
+          icon = <SyncOutlined />;
+        }else if(status===(En?'Reported':'تم الإبلاغ عنه')){
+          color='blue';
+          icon=<ExclamationCircleOutlined  />;
+        }else{
+          
+          color='green';
+          icon=<CheckCircleOutlined  />;
+        }
+        return <Tag icon={icon} color={color}>{status}</Tag>;
+      },
+    },
+    /*{
+      title:En?'Location':'الموقع',
+      dataIndex: 'location',
+      key: 'location',
+      //width: '20%',
+    },*/
+    {
+      title:En?'Date':'التاريخ',
       dataIndex: 'date',
       key: 'date',
       //width: '20%',
@@ -249,20 +221,104 @@ const ReportTable = () => {
           <Popconfirm
             title={En?"Delete the report?":"حذف التقرير؟"}
             description={En?"Are you sure to delete this report?":"هل انت متاكد من حذف هذا التقرير؟"}
-            onConfirm={confirmDelete}
+            onConfirm={() => confirmDelete(record)}
             onCancel={cancelDelete}
             okText={En?"Yes":"نعم"}
             cancelText={En?"No":"لا"}
           >
-            <Button danger>{En?"Delete":"حذف"}</Button>
+            <Button color='danger'variant="filled" >{En?"Delete":"حذف"}</Button>
           </Popconfirm>
+          
+          <Button color="primary" variant="filled" onClick={() => handleEdit(record)}>{En?"Edit":"تعديل"}</Button>
+          <Button color="cyan"    variant="filled"  onClick={() => handleView(record)}>{En?"View":"عرض"}</Button>
+        
         </Space>
+        
       ),
     },
   ];
-  
+
+  const [matchedItems,setMatchedItems]=useState(tableData); //items that match the search term
+  const [selectedRowId, setSelectedRowId] = useState(null); // State to store the selected row ID
+  const [selectedStatus, setSelectedStatus] = useState('');
+
+  const updateStatus = () => {
+    if (selectedRowId) { 
+      setTableData(prevData =>
+        prevData.map(row =>
+          row.key === selectedRowId 
+            ? { ...row, status: selectedStatus }
+            : row
+        )
+      );
+      
+      setMatchedItems(prevRows =>
+        prevRows.map(row =>
+          row.key === selectedRowId 
+            ? { ...row, status: selectedStatus }
+            : row
+        )
+      );
+      setShowUpdateDiv(false);
+      setSelectedRowId(null);
+    }
+  };
+
+
+
+
   return(
-    <div className='w-100 mb-5' style={{    height: '470px',  }}>
+    <>
+    {showUpdateDiv && (
+        <div 
+        style={{ 
+          position: 'fixed', top: 0,left: 0,bottom: 0,right: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+          display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000,
+        }} onClick={() => setShowUpdateDiv(false)}
+      >
+        <div 
+          className="bg-white p-4 rounded  text-center" 
+          style={{ 
+            width: '400px', 
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', 
+          }} onClick={(e) => e.stopPropagation()}
+        >
+          
+          <h3 className="text-lg font-semibold mb-4">{En?"Update Status":"تحديث الحالة"}</h3>
+      
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2 ms-2">{En?"Select Status ":" حدد الحالة "} : </label>
+            <select 
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)
+              }
+            >
+              <option value={En?"Reported":"تم الإبلاغ عنه"}>{En?"Reported":"تم الإبلاغ عنه"}</option>
+              <option value={En?"In progress":"قيد التنفيذ"}>{En?"In Progress":"قيد التنفيذ"}</option>
+              <option value={En?"Resolved":"تم الحل"}>{En?"Resolved":"تم الحل"}</option>
+            </select>
+          </div>
+      
+        
+          <div className="flex justify-end ">
+            <button 
+              className="px-4 py-2 btn btn-outline-danger ms-3"
+              onClick={() => setShowUpdateDiv(false)}
+            >
+              Cancel
+            </button>
+            <button 
+              className="px-4 py-2  btn btn-outline-success"
+              onClick={updateStatus}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+        )}
+      <div className='w-100 mb-3' >
       <Table 
         columns={columns} 
         dataSource={tableData} 
@@ -272,11 +328,12 @@ const ReportTable = () => {
         pagination={{
           pageSize: 7,
           position: ['bottomCenter'], 
-          className: 'custom-pagination'
-        }}
-        style={{    height: '450px',  }}      
+          className: 'custom-pagination',
+        }}     
       />
     </div>
+    
+    </>
   )
   
 };

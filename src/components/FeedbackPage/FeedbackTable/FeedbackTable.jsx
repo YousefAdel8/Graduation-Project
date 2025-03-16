@@ -293,7 +293,7 @@ const FeedbackTable = () => {
   ];
   
   return(
-    <div className='w-100 mb-5' style={{    height: '470px',  }}>
+    <div className='w-100 mb-3' >
       <Table 
         columns={columns} 
         dataSource={tableData} 
@@ -304,8 +304,7 @@ const FeedbackTable = () => {
           pageSize: 7,
           position: ['bottomCenter'], 
           className: 'custom-pagination'
-        }}
-        style={{    height: '450px',  }}      
+        }}    
       />
     </div>
   )

@@ -11,7 +11,7 @@ export default function FeedbackPage({En = false}) {
 			<Row gutter={[16, 16]} style={{ marginTop: 16 }}>
 				<Col xs={24} sm={24} lg={24}>
 					<Card
-						bodyStyle={{ padding: "0px", width: "100%" }}
+						bodyStyle={{ padding: "0px", width: "100%",minHeight:"535px" }}
 						className="shadow-sm"
 					>
 						<FeedbackTable />

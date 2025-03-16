@@ -7,12 +7,12 @@ export default function ReportPage({En = false}) {
     return (
         <>
             <Title level={3} style={{ marginBottom: 24 }} className="fw-bold">
-                {En?"Report":"التقارير"}
+                {En?"Reports":"التقارير"}
             </Title>
             <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
                 <Col xs={24} sm={24} lg={24}>
                     <Card
-                        bodyStyle={{ padding: "0px", width: "100%" }}
+                        bodyStyle={{ padding: "0px", width: "100%",minHeight:"590px" }}
                         className="shadow-sm"
                     >
                         <ReportTable />
