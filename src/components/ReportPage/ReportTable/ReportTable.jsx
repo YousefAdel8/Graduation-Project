@@ -238,8 +238,8 @@ const ReportTable = () => {
     },
   ];
 
-  const [matchedItems,setMatchedItems]=useState(tableData); //items that match the search term
-  const [selectedRowId, setSelectedRowId] = useState(null); // State to store the selected row ID
+  const [matchedItems,setMatchedItems]=useState(tableData); 
+  const [selectedRowId, setSelectedRowId] = useState(null); 
   const [selectedStatus, setSelectedStatus] = useState('');
 
   const updateStatus = () => {

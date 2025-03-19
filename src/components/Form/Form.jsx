@@ -48,8 +48,12 @@ export default function Form() {
 					case 404:
 						setApiError(En?"Service not found":"الخدمة غير موجودة");
 						break;
+					case 500:
+						setApiError(En?"Internal server error":"خطأ في الخادم");
+						break;
 					default:
-						setApiError(En?"An error occurred. Please try again later":"حدث خطأ. يرجى المحاولة في وقت لاحق");
+						setApiError(error.response.data.message);
+						console.log(error.response);
 						break;
 				}
 			} else if (error.request) {
