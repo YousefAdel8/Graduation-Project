@@ -4,7 +4,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DashboardOutlined,
-  MessageOutlined,
+  CommentOutlined,
   TeamOutlined,
   StarOutlined,
   FormOutlined,
@@ -15,7 +15,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
-const AppLayout = ({ En = false }) => {
+const AppLayout = ({ En = true }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -48,7 +48,7 @@ const AppLayout = ({ En = false }) => {
       case 'dashboard': return '1';
       case 'feedback': return '2';
       case 'report': return '3';
-      case 'chats': return '4';
+      case 'socialmedia': return '4';
       case 'users': return '5';
       default: return '1';
     }
@@ -60,7 +60,7 @@ const AppLayout = ({ En = false }) => {
     { key: '1', icon: <DashboardOutlined />, label: En ? 'Dashboard' : 'لوحة التحكم' },
     { key: '2', icon: <StarOutlined  />, label: En ? 'Feedback' : 'التقييمات' },
     { key: '3', icon: <FormOutlined />, label: En ? 'Reports' : 'التقارير' },
-    { key: '4', icon: <MessageOutlined />, label: En ? 'Chats' : 'المحادثات' },
+    { key: '4', icon: <CommentOutlined />, label: En ? 'Social Media' : 'منصة المجتمع' },
     { key: '5', icon: <TeamOutlined />, label: En ? 'Users' : 'المستخدمين' },
   ];
 
@@ -77,7 +77,7 @@ const AppLayout = ({ En = false }) => {
         navigate('/report');
         break;
       case '4':
-        navigate('/chats');
+        navigate('/socialmedia');
         break;
       case '5':
         navigate('/users');

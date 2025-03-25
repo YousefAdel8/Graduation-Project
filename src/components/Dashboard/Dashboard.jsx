@@ -19,7 +19,6 @@ import {
 	Select,
 	Progress,
 	Divider,
-  Layout,
 } from "antd";
 import {
 	ClockCircleOutlined,
@@ -32,7 +31,7 @@ const { Title, Text } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-const Dashboard = ({ En = false }) => {
+const Dashboard = ({ En = true }) => {
 	const { Option } = Select;
 
 	const [timeRange, setTimeRange] = useState("day");
@@ -118,6 +117,11 @@ const Dashboard = ({ En = false }) => {
         grid: {
           drawerBorder:false,
         },
+		ticks: {
+			callback: function (value) {
+				return value;
+			},
+		},
       },
     },
 		plugins: {
@@ -128,16 +132,7 @@ const Dashboard = ({ En = false }) => {
 				display: false,
 			},
 		},
-		scales: {
-			y: {
-				beginAtZero: true,
-				ticks: {
-					callback: function (value) {
-						return value;
-					},
-				},
-			},
-		},
+		
 	};
 
 	const stats = [

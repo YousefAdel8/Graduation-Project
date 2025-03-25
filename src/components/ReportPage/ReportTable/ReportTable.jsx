@@ -3,7 +3,7 @@ import { CheckCircleOutlined, ExclamationCircleOutlined, SearchOutlined, SyncOut
 import { Button, Input, Space, Table,Popconfirm, Tag  } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-const En = false;
+const En = true;
 const fieldTranslations = {
     'name': 'الاسم',
     'service': 'نوع الخدمة',
@@ -238,7 +238,7 @@ const ReportTable = () => {
     },
   ];
 
-  const [matchedItems,setMatchedItems]=useState(tableData); 
+  const [setMatchedItems]=useState(tableData); 
   const [selectedRowId, setSelectedRowId] = useState(null); 
   const [selectedStatus, setSelectedStatus] = useState('');
 

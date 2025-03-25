@@ -9,7 +9,7 @@ import Dashboard from './components/Dashboard/Dashboard.jsx';
 import SideBar from './components/SideBar/SideBar.jsx';
 import FeedbackPage from './components/FeedbackPage/FeedbackPage.jsx';
 import ReportPage from './components/ReportPage/ReportPage.jsx';
-
+import SocialMedia from './components/SocialMedia/SocialMedia.jsx'
 function App() {
   const routers = createBrowserRouter([
     {
@@ -35,7 +35,11 @@ function App() {
         {
           path: '/report',
           element: <ReportPage />,
-        }
+        },
+        {
+          path: '/socialmedia',
+          element:<SocialMedia />,
+        },
       ]
     },
     {

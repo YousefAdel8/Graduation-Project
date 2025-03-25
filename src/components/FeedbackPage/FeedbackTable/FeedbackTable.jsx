@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table,Popconfirm,Rate } from 'antd';
+import { Button, Input, Space, Table,Rate } from 'antd';
 import Highlighter from 'react-highlight-words';
-import styles from './FeedbackTable.module.css'
 
-const En = false;
+const En = true;
 const fieldTranslations = {
     'name': 'الاسم',
     'service': 'نوع الخدمة',

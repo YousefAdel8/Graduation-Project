@@ -3,7 +3,7 @@ import { Card, Row, Col ,Typography} from "antd";
 import ReportTable from "./ReportTable/ReportTable";
 
 const { Title } = Typography;
-export default function ReportPage({En = false}) {
+export default function ReportPage({En = true}) {
     return (
         <>
             <Title level={3} style={{ marginBottom: 24 }} className="fw-bold">
