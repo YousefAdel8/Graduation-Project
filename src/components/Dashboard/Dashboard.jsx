@@ -31,7 +31,7 @@ const { Title, Text } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-const Dashboard = ({ En = true }) => {
+const Dashboard = ({ En = false }) => {
 	const { Option } = Select;
 
 	const [timeRange, setTimeRange] = useState("day");

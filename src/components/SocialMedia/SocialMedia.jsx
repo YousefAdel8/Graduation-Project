@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Row, Col, Typography, Avatar } from "antd";
 
 const { Title, Text } = Typography;
-export default function SocialMedia(En = true) {
+export default function SocialMedia(En = false) {
 	const posts = [
 		{
 			id: 1,

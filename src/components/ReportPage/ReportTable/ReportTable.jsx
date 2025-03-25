@@ -3,7 +3,7 @@ import { CheckCircleOutlined, ExclamationCircleOutlined, SearchOutlined, SyncOut
 import { Button, Input, Space, Table,Popconfirm, Tag  } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-const En = true;
+const En = false;
 const fieldTranslations = {
     'name': 'الاسم',
     'service': 'نوع الخدمة',

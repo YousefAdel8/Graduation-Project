@@ -3,7 +3,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table,Rate } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-const En = true;
+const En = false;
 const fieldTranslations = {
     'name': 'الاسم',
     'service': 'نوع الخدمة',
