@@ -2,13 +2,13 @@ import React from "react";
 import { Card, Row, Col, Typography, Avatar } from "antd";
 
 const { Title, Text } = Typography;
-export default function SocialMedia(En = false) {
+const SocialMedia = ({ En = false }) => {
 	const posts = [
 		{
 			id: 1,
 			name: "Ahmed Hassan",
 			icon: "https://img.icons8.com/office/80/000000/user-male-circle.png",
-			time: "2 hours ago",
+			time: En?"2 hours ago":"قبل ساعتين",
 			discription:
 				"التكدس المروري في شارع الملك فيصل ",
 			isPicture: true,
@@ -19,7 +19,7 @@ export default function SocialMedia(En = false) {
 			id: 2,
 			name: "Fatima Ali",
 			icon: "https://img.icons8.com/office/80/000000/user-female-circle.png",
-			time: "1 day ago",
+			time: En?"1 day ago":"قبل 1 يوم",
 			discription:
 				"مشكلة تراكم القمامة في حي السلام مستمرة. نطالب بتحسين خدمات النظافة والبلدية. #نظافة_المدينة",
 			isPicture: true,
@@ -30,7 +30,7 @@ export default function SocialMedia(En = false) {
 			id: 3,
 			name: "Mohamed Khalid",
 			icon: "https://img.icons8.com/office/80/000000/user-male-circle.png",
-			time: "6 hours ago",
+			time: En?"6 hours ago":"قبل 6 ساعات",
 			discription:
 				"إنارة الشوارع متقطعة في منطقة المعادي. خطر على سلامة المواطنين وقت الليل. #إنارة_الشوارع",
 			isPicture: true,
@@ -41,7 +41,7 @@ export default function SocialMedia(En = false) {
 			id: 4,
 			name: "Laila Ibrahim",
 			icon: "https://img.icons8.com/office/80/000000/user-female-circle.png",
-			time: "3 days ago",
+			time: En?"3 days ago":"قبل 3 ايام",
 			discription:
 				"المواصلات العامة في حالة مزرية. الحافلات متهالكة وغير منتظمة. نحتاج لمواصلات عامة آمنة وموثوقة. #المواصلات_العامة",
 			isPicture: false,
@@ -50,7 +50,7 @@ export default function SocialMedia(En = false) {
 			id: 5,
 			name: "Omar Samy",
 			icon: "https://img.icons8.com/office/80/000000/user-male-circle.png",
-			time: "12 hours ago",
+			time: En?"12 hours ago":"قبل 12 ساعات",
 			discription:
 				"تسريب المياه في شبكة الصرف الصحي بحي الزمالك يهدد بكارثة بيئية. سريعًا يا مسؤولين! #الصرف_الصحي",
 			isPicture: true,
@@ -61,7 +61,7 @@ export default function SocialMedia(En = false) {
 			id: 6,
 			name: "Nada Mahmoud",
 			icon: "https://img.icons8.com/office/80/000000/user-female-circle.png",
-			time: "1 day ago",
+			time: En?"1 day ago":"قبل 1 يوم",
 			discription:
 				"عدم وجود أماكن آمنة للمشاة وركوب الدراجات. المدينة غير صديقة للمشاة. #المشاة_والدراجات",
 			isPicture: false,
@@ -70,7 +70,7 @@ export default function SocialMedia(En = false) {
 			id: 7,
 			name: "Kareem Osama",
 			icon: "https://img.icons8.com/office/80/000000/user-male-circle.png",
-			time: "2 days ago",
+			time: En?"2 days ago":"قبل 2 ايام",
 			discription:
 				`الزحام المروري أصبح مشكلة يومية تؤرق الجميع، سواء كنت سائقًا، راكبًا في المواصلات العامة، أو حتى مشاة تحاول عبور الطريق بأمان. الطرق أصبحت أشبه بساحات انتظار ضخمة، والسيارات تتحرك بسرعة السلحفاة، بينما تتزايد معاناة المواطنين يومًا بعد يوم.
 
@@ -92,7 +92,7 @@ export default function SocialMedia(En = false) {
 			id: 8,
 			name: "Sarah Ahmed",
 			icon: "https://img.icons8.com/office/80/000000/user-female-circle.png",
-			time: "6 hours ago",
+			time: En?"6 hours ago":"قبل 6 ساعات",
 			discription:
 				"النفايات الإلكترونية مشكلة متزايدة. نحتاج لنظام إعادة تدوير فعال. #إعادة_التدوير",
 			isPicture: false,
@@ -101,7 +101,7 @@ export default function SocialMedia(En = false) {
 			id: 9,
 			name: "Mohamed Hassan",
 			icon: "https://img.icons8.com/office/80/000000/user-male-circle.png",
-			time: "1 week ago",
+			time: En?"1 week ago":"قبل 1 اسبوع",
 			discription:
 				"ازدحام المستشفيات العامة وعدم كفاية الخدمات الصحية. نحتاج لتحسين البنية التحتية الصحية. #الخدمات_الصحية",
 			isPicture: false,
@@ -110,7 +110,7 @@ export default function SocialMedia(En = false) {
 			id: 10,
 			name: "Amira Farouk",
 			icon: "https://img.icons8.com/office/80/000000/user-female-circle.png",
-			time: "3 days ago",
+			time: En?"3 days ago":"قبل 3 ايام",
 			discription:
 				"مشكلة التسرب الكهربائي في الأحياء السكنية. خطر حقيقي يهدد سلامة المواطنين. #السلامة_الكهربائية",
 			isPicture: true,
@@ -138,7 +138,7 @@ export default function SocialMedia(En = false) {
 						>
 							<div className="d-flex align-items-center mb-3">
 								<Avatar src={post.icon} size={44} className="me-3 shadow-sm" />
-								<div>
+								<div className="me-2">
 									<Text strong>{post.name}</Text>
 									<div>
 										<Text type="secondary" style={{ fontSize: "12px" }}>
@@ -207,3 +207,4 @@ export default function SocialMedia(En = false) {
 		</>
 	);
 }
+export default SocialMedia;
