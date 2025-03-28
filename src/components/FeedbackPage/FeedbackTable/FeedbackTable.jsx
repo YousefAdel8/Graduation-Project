@@ -318,9 +318,17 @@ const FeedbackTable = () => {
   </Tooltip>
 </Button.Group>
 
-<div ref={componentRef} style={{ padding: 20, border: "1px solid black" }}>
-        <h1>Hello, Print Me!</h1>
-        <p>This is a test print component.</p>
+<div ref={componentRef}>
+        <Table
+          columns={columns}
+          dataSource={tableData}
+          scroll={{ x: 500 }}
+          pagination={{
+            pageSize: 7,
+            position: ["bottomCenter"],
+            className: "custom-pagination",
+          }}
+        />
       </div>
     </div>
   )
