@@ -1,7 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table,Rate } from 'antd';
+import { FileExcelOutlined, FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Input, Space, Table,Rate, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
+import { exportToExcel, exportToPDF } from "../../../utils/exportFunctions";
+import { useReactToPrint } from 'react-to-print';
 
 const En = false;
 const fieldTranslations = {
@@ -291,20 +293,35 @@ const FeedbackTable = () => {
     },*/
   ];
   
+  const componentRef = useRef(null);
+
+  const handlePrint = useReactToPrint({
+    content: () => {
+      console.log("Component ref:", componentRef.current);
+      return componentRef.current;
+    },
+    documentTitle: "التقرير",
+  });
   return(
-    <div className='w-100 mb-3' >
-      <Table 
-        columns={columns} 
-        dataSource={tableData} 
-        scroll={{ 
-          x: 500,
-        }} 
-        pagination={{
-          pageSize: 7,
-          position: ['bottomCenter'], 
-          className: 'custom-pagination'
-        }}    
-      />
+    <div className="w-100 my-3">
+      <Button.Group style={{ marginBottom: 16 }}>
+  <Tooltip title={En ? "Export table to Excel" : "تصدير الجدول إلى Excel"} className='mx-2'>
+    <Button type="primary" icon={<FileExcelOutlined />} onClick={() => exportToExcel(columns,tableData,false)}>
+      {En ? "Export to Excel" : "تصدير إلى Excel"}
+    </Button>
+  </Tooltip>
+
+  <Tooltip title={En ? "Print" : "طباعة"} >
+    <Button onClick={handlePrint}  danger icon={<FilePdfOutlined />} >
+      {En ? "Print" : "طباعة"}
+    </Button>
+  </Tooltip>
+</Button.Group>
+
+<div ref={componentRef} style={{ padding: 20, border: "1px solid black" }}>
+        <h1>Hello, Print Me!</h1>
+        <p>This is a test print component.</p>
+      </div>
     </div>
   )
   

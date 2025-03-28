@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { CheckCircleOutlined, ExclamationCircleOutlined, SearchOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table,Popconfirm, Tag  } from 'antd';
+import { CheckCircleOutlined, ExclamationCircleOutlined, FileExcelOutlined, FilePdfOutlined, SearchOutlined, SyncOutlined } from '@ant-design/icons';
+import { Button, Input, Space, Table,Popconfirm, Tag, Tooltip  } from 'antd';
 import Highlighter from 'react-highlight-words';
+import { exportToExcel, exportToPDF } from '../../../utils/exportFunctions';
 
 const En = false;
 const fieldTranslations = {
@@ -318,7 +319,21 @@ const ReportTable = () => {
         </div>
       </div>
         )}
-      <div className='w-100 mb-3' >
+      <div className='w-100 my-3' >
+      <Button.Group style={{ marginBottom: 16 }}>
+  <Tooltip title={En ? "Export table to Excel" : "تصدير الجدول إلى Excel"} className='mx-2'>
+    <Button type="primary" icon={<FileExcelOutlined />} onClick={() => exportToExcel(tableData)}>
+      {En ? "Export to Excel" : "تصدير إلى Excel"}
+    </Button>
+  </Tooltip>
+
+  <Tooltip title={En ? "Export table to PDF" : "تصدير الجدول إلى PDF"} >
+    <Button danger icon={<FilePdfOutlined />} onClick={() => exportToPDF(columns, tableData)}>
+      {En ? "Export to PDF" : "تصدير إلى PDF"}
+    </Button>
+  </Tooltip>
+</Button.Group>
+
       <Table 
         columns={columns} 
         dataSource={tableData} 

@@ -177,8 +177,8 @@ const SocialMedia = ({ En = false }) => {
 											alt="post"
 											style={{
 												width: "100%",
-												height: "300px",
-												objectFit: "cover",
+												height: "400px",
+												objectFit: "contain",
 												borderRadius: "8px",
 											}}
 										/>
@@ -190,7 +190,7 @@ const SocialMedia = ({ En = false }) => {
 												display: "flex",
 												alignItems: "center",
 												justifyContent: "center",
-                                                height: "300px",
+                                                height: "378px",
 											}}
 										>
 											<Text type="secondary" className="text-center">
