@@ -15,14 +15,14 @@ export default function Form() {
 	const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
 	const [successLogin, setSuccessLogin] = useState(false);
-	const errorTranslations = {
+	/*const errorTranslations = {
 		"Can't Find This User": "لم يتم العثور على المستخدم",
 		"Invalid Email Or Password": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
 
 	}
 	const translateError = (error) => {
 		return errorTranslations[error] || error;
-	}
+	}*/
 	const SignInSubmit = async (values) => {
 		try {
 			setLoading(true);
@@ -47,7 +47,8 @@ export default function Form() {
 		} catch (error) {
 			//console.log(error.response.data);
 			if (error.response) {
-				setApiError(En?error.response.data?.detail:translateError(error.response.data?.detail)); //"?" is optional chaining operator (Runtime error protection)
+				//setApiError(En?error.response.data?.detail:translateError(error.response.data?.detail)); //"?" is optional chaining operator (Runtime error protection)
+				setApiError(error.response.data.message);
 				/*switch (error.response.status) {
 					
 					case 400:
