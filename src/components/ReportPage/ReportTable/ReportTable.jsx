@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { CheckCircleOutlined, ExclamationCircleOutlined, FileExcelOutlined, FilePdfOutlined, SearchOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table,Popconfirm, Tag, Tooltip, DatePicker   } from 'antd';
+import { Button, Input, Space, Table,Popconfirm, Tag, Tooltip, DatePicker ,Select  } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { exportToExcel, exportToPDF } from '../../../utils/exportFunctions';
 import dayjs from 'dayjs';
@@ -25,6 +25,7 @@ const fieldTranslations = {
 
 
 const ReportTable = () => {
+  const { Option } = Select;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [tableData, setTableData] = useState([
@@ -315,16 +316,16 @@ const ReportTable = () => {
       
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2 ms-2">{En?"Select Status ":" حدد الحالة "} : </label>
-            <select 
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={selectedStatus}
+            <Select 
+              className=""
+              defaultValue={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)
               }
             >
-              <option value={En?"Reported":"تم الإبلاغ عنه"}>{En?"Reported":"تم الإبلاغ عنه"}</option>
-              <option value={En?"In progress":"قيد التنفيذ"}>{En?"In Progress":"قيد التنفيذ"}</option>
-              <option value={En?"Resolved":"تم الحل"}>{En?"Resolved":"تم الحل"}</option>
-            </select>
+              <Option value={En?"Reported":"تم الإبلاغ عنه"}>{En?"Reported":"تم الإبلاغ عنه"}</Option>
+              <Option value={En?"In progress":"قيد التنفيذ"}>{En?"In Progress":"قيد التنفيذ"}</Option>
+              <Option value={En?"Resolved":"تم الحل"}>{En?"Resolved":"تم الحل"}</Option>
+            </Select>
           </div>
       
         

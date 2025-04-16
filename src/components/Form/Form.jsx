@@ -48,7 +48,7 @@ export default function Form() {
 			//console.log(error.response.data);
 			if (error.response) {
 				//setApiError(En?error.response.data?.detail:translateError(error.response.data?.detail)); //"?" is optional chaining operator (Runtime error protection)
-				setApiError(error.response.data.message);
+				setApiError(error.response.data?.detail);
 				/*switch (error.response.status) {
 					
 					case 400:
