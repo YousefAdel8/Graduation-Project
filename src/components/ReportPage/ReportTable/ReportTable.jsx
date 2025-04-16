@@ -1,8 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { CheckCircleOutlined, ExclamationCircleOutlined, FileExcelOutlined, FilePdfOutlined, SearchOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table,Popconfirm, Tag, Tooltip  } from 'antd';
+import { Button, Input, Space, Table,Popconfirm, Tag, Tooltip, DatePicker   } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { exportToExcel, exportToPDF } from '../../../utils/exportFunctions';
+import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+const { RangePicker } = DatePicker;
+
+
 
 const En = false;
 const fieldTranslations = {
@@ -19,16 +27,6 @@ const fieldTranslations = {
 const ReportTable = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInput = useRef(null);
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText('');
-  };
   const [tableData, setTableData] = useState([
     {
       key: '1',
@@ -55,15 +53,26 @@ const ReportTable = () => {
       date: '03/03/2023',
     },
   ]);
+   const [dateRange, setDateRange] = useState([null, null]);
+    const [filteredData, setFilteredData] = useState(tableData);
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+  
   const confirmDelete=(record)=>{
     console.log(record);
     const newData=tableData.filter((item) => item.key !== record.key);
     setTableData(newData);
     
   }
-  const cancelDelete=(e)=>{
-    console.log("cancel");
-  }
+
   const [showUpdateDiv, setShowUpdateDiv] = useState(false);
   const handleEdit = (record) => {
     setSelectedRowId(record.key); 
@@ -223,7 +232,6 @@ const ReportTable = () => {
             title={En?"Delete the report?":"حذف التقرير؟"}
             description={En?"Are you sure to delete this report?":"هل انت متاكد من حذف هذا التقرير؟"}
             onConfirm={() => confirmDelete(record)}
-            onCancel={cancelDelete}
             okText={En?"Yes":"نعم"}
             cancelText={En?"No":"لا"}
           >
@@ -266,7 +274,25 @@ const ReportTable = () => {
   };
 
 
-
+  //filter by range picker (date)
+    const dateFormat = 'DD/MM/YYYY';
+    const handleDateRangeChange = (dates) => {
+      if (!dates || dates.length !== 2) {
+        setFilteredData(tableData);
+        setDateRange([null, null]);
+        return;
+      }
+  
+      const [start, end] = dates;
+      setDateRange([start, end]);
+      const filtered = tableData.filter(item => {
+        const itemDate = dayjs(item.date, dateFormat);
+        return itemDate.isSameOrAfter(start, 'day') && 
+               itemDate.isSameOrBefore(end, 'day');
+      });
+  
+      setFilteredData(filtered);
+    };
 
   return(
     <>
@@ -320,7 +346,16 @@ const ReportTable = () => {
       </div>
         )}
       <div className='w-100 my-3' >
-      <Button.Group style={{ marginBottom: 16 }}>
+      <RangePicker
+        format={dateFormat}
+        onChange={handleDateRangeChange}
+        style={{ marginBottom: 16 }}
+        placeholder={['تاريخ البداية', 'تاريخ النهاية']}
+        allowClear={true}
+        showToday={true}
+        className='me-2'
+      />
+      <Space.Compact style={{ marginBottom: 16 }}>
   <Tooltip title={En ? "Export table to Excel" : "تصدير الجدول إلى Excel"} className='mx-2'>
     <Button type="primary" icon={<FileExcelOutlined />} onClick={() => exportToExcel(tableData)}>
       {En ? "Export to Excel" : "تصدير إلى Excel"}
@@ -332,7 +367,7 @@ const ReportTable = () => {
       {En ? "Export to PDF" : "تصدير إلى PDF"}
     </Button>
   </Tooltip>
-</Button.Group>
+</Space.Compact>
 
       <Table 
         columns={columns} 

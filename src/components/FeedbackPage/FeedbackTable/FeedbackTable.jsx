@@ -1,9 +1,17 @@
 import React, { useRef, useState } from 'react';
 import { FileExcelOutlined, FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table,Rate, Tooltip } from 'antd';
+import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { Button, Input, Space, Table,Rate, Tooltip,DatePicker } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { exportToExcel, exportToPDF } from "../../../utils/exportFunctions";
 import { useReactToPrint } from 'react-to-print';
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+const { RangePicker } = DatePicker;
+
+
 
 const En = false;
 const fieldTranslations = {
@@ -130,6 +138,8 @@ const cancelDelete=(e)=>{
 const FeedbackTable = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [filteredData, setFilteredData] = useState(tableData);
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -293,18 +303,49 @@ const FeedbackTable = () => {
     },*/
   ];
   
+  //print with react-to-print
   const componentRef = useRef(null);
-
-  const handlePrint = useReactToPrint({
+  const handlePrint = useReactToPrint({ //Print (didn't work)
     content: () => {
       console.log("Component ref:", componentRef.current);
       return componentRef.current;
     },
     documentTitle: "التقرير",
   });
+  //filter by range picker (date)
+  const dateFormat = 'DD/MM/YYYY';
+  const handleDateRangeChange = (dates) => {
+    if (!dates || dates.length !== 2) {
+      setFilteredData(tableData);
+      setDateRange([null, null]);
+      return;
+    }
+
+    const [start, end] = dates;
+    setDateRange([start, end]);
+    const filtered = tableData.filter(item => {
+      const itemDate = dayjs(item.date, dateFormat);
+      return itemDate.isSameOrAfter(start, 'day') && 
+             itemDate.isSameOrBefore(end, 'day');
+    });
+
+    setFilteredData(filtered);
+  };
+
+
+
   return(
     <div className="w-100 my-3">
-      <Button.Group style={{ marginBottom: 16 }}>
+      <RangePicker
+        format={dateFormat}
+        onChange={handleDateRangeChange}
+        style={{ marginBottom: 16 }}
+        placeholder={['تاريخ البداية', 'تاريخ النهاية']}
+        allowClear={true}
+        showToday={true}
+        className='me-2'
+      />
+      <Space.Compact style={{ marginBottom: 16 }}>
   <Tooltip title={En ? "Export table to Excel" : "تصدير الجدول إلى Excel"} className='mx-2'>
     <Button type="primary" icon={<FileExcelOutlined />} onClick={() => exportToExcel(columns,tableData,false)}>
       {En ? "Export to Excel" : "تصدير إلى Excel"}
@@ -316,12 +357,12 @@ const FeedbackTable = () => {
       {En ? "Print" : "طباعة"}
     </Button>
   </Tooltip>
-</Button.Group>
+</Space.Compact>
 
 <div ref={componentRef}>
         <Table
           columns={columns}
-          dataSource={tableData}
+          dataSource={filteredData}
           scroll={{ x: 500 }}
           pagination={{
             pageSize: 7,

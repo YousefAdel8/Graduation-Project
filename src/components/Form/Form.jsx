@@ -15,6 +15,14 @@ export default function Form() {
 	const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
 	const [successLogin, setSuccessLogin] = useState(false);
+	const errorTranslations = {
+		"Can't Find This User": "لم يتم العثور على المستخدم",
+		"Invalid Email Or Password": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+
+	}
+	const translateError = (error) => {
+		return errorTranslations[error] || error;
+	}
 	const SignInSubmit = async (values) => {
 		try {
 			setLoading(true);
@@ -23,7 +31,7 @@ export default function Form() {
 				"https://cms-reporting.runasp.net/api/Auth/login",
 				values
 			);
-			console.log(data);
+			//console.log(data);
 			if (data.isSuccess === true) {
 				localStorage.setItem("token", data.token);
 				setLoading(false);
@@ -37,13 +45,16 @@ export default function Form() {
 				setApiError(data.message || "Login failed. Please try again.");
 			}
 		} catch (error) {
+			//console.log(error.response.data);
 			if (error.response) {
-				switch (error.response.status) {
+				setApiError(En?error.response.data?.detail:translateError(error.response.data?.detail)); //"?" is optional chaining operator (Runtime error protection)
+				/*switch (error.response.status) {
+					
 					case 400:
 						setApiError(En?"Invalid Email or Password":"البريد الالكتروني او كلمة المرور غير صحيحة");
 						break;
 					case 401:
-						setApiError(En?"Unauthorized access":"غير مصرح لك بالوصول");
+						setApiError(error);
 						break;
 					case 404:
 						setApiError(En?"Service not found":"الخدمة غير موجودة");
@@ -55,10 +66,10 @@ export default function Form() {
 						setApiError(error.response.data.message);
 						console.log(error.response);
 						break;
-				}
+				}*/
 			} else if (error.request) {
 				setApiError(En?"Network error. Please check your internet connection.":"خطأ في الشبكة. يرجى التحقق من اتصال الانترنت");
-			} 
+			}
 		} finally {
 			setLoading(false);
 		}
@@ -164,7 +175,7 @@ export default function Form() {
 									type="password"
 									name="password"
 									className="form-control"
-									placeholder="********"
+									placeholder="Password"
 									onChange={formik.handleChange}
 									onBlur={formik.handleBlur}
 									style={{ fontSize: "14px", padding: "8px 12px" }}

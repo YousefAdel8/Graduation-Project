@@ -129,7 +129,7 @@ const SocialMedia = ({ En = false }) => {
 					<Col xs={24} sm={24} md={12} lg={12} key={index} className="mb-3">
 						<Card
 							className="shadow-sm"
-							bodyStyle={{
+							Style={{
 								padding: "20px",
 								display: "flex",
 								flexDirection: "column",

@@ -26,7 +26,7 @@ import {
 	ArrowDownOutlined,
 	LineChartOutlined,
 } from "@ant-design/icons";
-
+import axios from "axios";
 const { Title, Text } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
@@ -135,67 +135,23 @@ const Dashboard = ({ En = false }) => {
 		
 	};
 
-	const stats = [
-		{
-			title: En ? "Total Reports Received" : "التقارير المستلمة",
-			value: "445",
-			percentage: "+20.1",
-			period: En ? "Last Month" : "من الشهر الماضي",
-		},
-		{
-			title: En ? "Critical Reports" : "التقارير الحرجة",
-			value: "167",
-			percentage: "+180.1",
-			period: En ? "Last Month" : "من الشهر الماضي",
-		},
-		{
-			title: En ? "Resolved Reports" : "التقارير التي تم حلها",
-			value: "430",
-			percentage: "+19",
-			period: En ? "Last Month" : "من الشهر الماضي",
-		},
-		{
-			title: En ? "Pending Reports" : "تقارير قيد المراجعة",
-			value: "30",
-			percentage: "+201",
-			period: En ? "Last Hour" : "منذ الساعة الماضية",
-		},
-	];
-	/*
-  const dataServiceIssue = [
-    {
-      key: '1',
-      name: En?'Electricity':'الكهرباء',
-      percentage: 32,
-    },
-    {
-      key: '2',
-      name: En?'Gas':'الغاز',
-      percentage: 42,
-    },
-    {
-      key: '3',
-      name: En?'Water':'المياه',
-      percentage: 42,
-    },
-    {
-      key: '4',
-      name: En?'Internet':'الانترنت',
-      percentage: 42,
-    },
-    {
-      key: '5',
-      name: En?'Telecom':'الاتصالات',
-      percentage: 42,
-    },
-  ];
-  
-  */
+	
+	const [summaryData,setSummaryData]=useState(null);
+	const summaryCardsApi=async()=>{
+		
+			let { data } = await axios.get(
+				"https://cms-reporting.runasp.net/api/home/summary"
+		)
+		//console.log(data);
+		setSummaryData(data);
+		
+	}
 
-
+	useEffect(() => {
+		summaryCardsApi();
+	}, []);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-    
     
     useEffect(() => {
       const handleResize = () => {
@@ -209,16 +165,33 @@ const Dashboard = ({ En = false }) => {
       };
     }, []);
 
-
-
-
-
-
-
-
-
-
-
+	const stats = summaryData?
+	[
+		{
+			title: En ? "Total Reports Received" : "التقارير المستلمة",
+			value: summaryData.totalReports,
+			percentage: "+20.1",
+			period: En ? "Last Month" : "من الشهر الماضي",
+		},
+		{
+			title: En ? "Active Reports" : "التقارير النشطة",
+			value: summaryData.active,
+			percentage: "+180.1",
+			period: En ? "Last Month" : "من الشهر الماضي",
+		},
+		{
+			title: En ? "Resolved Reports" : "التقارير التي تم حلها",
+			value: summaryData.resolved,
+			percentage: "+19",
+			period: En ? "Last Month" : "من الشهر الماضي",
+		},
+		{
+			title: En ? "Pending Reports" : "تقارير قيد المراجعة",
+			value: summaryData.inProgress,
+			percentage: "+201",
+			period: En ? "Last Hour" : "منذ الساعة الماضية",
+		},
+	]: [];
 
 
 	return (
@@ -229,7 +202,7 @@ const Dashboard = ({ En = false }) => {
 			<Row gutter={[16, 16]}>
 				{stats.map((stat, index) => (
 					<Col xs={24} sm={12} lg={6} key={index}>
-						<Card bodyStyle={{ padding: "20px" }} className="shadow-sm">
+						<Card Style={{ padding: "20px" }} className="shadow-sm">
 							<Statistic
 								title={<Typography.Text>{stat.title}</Typography.Text>}
 								value={stat.value}
@@ -251,7 +224,7 @@ const Dashboard = ({ En = false }) => {
 								? "Monthly rate of receiving reports"
 								: "معدل استقبال التقارير شهريا"
 						}
-						bodyStyle={{ padding: isMobile?"10px": "30px", height:isMobile?"230px": "400px" }} 
+						Style={{ padding: isMobile?"10px": "30px", height:isMobile?"230px": "400px" }} 
 						className="shadow-sm" 
 					>
 						{
@@ -289,7 +262,7 @@ const Dashboard = ({ En = false }) => {
 								</Select>
 							</div>
 						}
-						bodyStyle={{ padding: "16px" ,height:isMobile?"": "440px"}}
+						Style={{ padding: "16px" ,height:isMobile?"": "440px"}}
 						className="shadow-sm"
 					>
 						<Row gutter={[16, 16]}>
