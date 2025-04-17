@@ -4,7 +4,6 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import styles from "./Form.module.css";
-import { useNavigate } from "react-router-dom";
 import { message,Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 import { UserContext } from '../../context/usercontext';
@@ -12,7 +11,6 @@ export default function Form() {
 	const [loading, setLoading] = useState(false);
 	const [apiError, setApiError] = useState(false);
 	const [En] = useState(false);
-	const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
 	const [SuccessMessageLogin, setSuccessMessageLogin] = useState(false);
 	const { setUserToken } = useContext(UserContext);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { ConfigProvider } from 'antd';
 import {
   MenuFoldOutlined,
@@ -11,6 +11,8 @@ import {
 } from '@ant-design/icons';
 import { Button, Drawer, Layout, Menu, theme, Avatar, Typography } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+
+import { PermissionContext  } from "../../context/PermissionContext.jsx";
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -42,6 +44,9 @@ const AppLayout = ({ En = false }) => {
     setOpen(false);
   };
 
+
+  //const permissions = ['dashboard', 'feedback', 'report', 'users', 'social media'];
+  const { permissions } = useContext(PermissionContext );
   const getCurrentPath = () => {
     const path = location.pathname.split('/')[1] || '';
     switch (path) {
@@ -54,15 +59,16 @@ const AppLayout = ({ En = false }) => {
     }
   };
 
+  
   const menuItems = [
     isMobile?null:{ type: 'divider', style: { margin: '8px 0' } },
     //{ label: En ? 'General' : 'عام', type: 'group' },
-    { key: '1', icon: <DashboardOutlined />, label: En ? 'Dashboard' : 'لوحة التحكم' },
-    { key: '2', icon: <StarOutlined  />, label: En ? 'Feedback' : 'التقييمات' },
-    { key: '3', icon: <FormOutlined />, label: En ? 'Reports' : 'التقارير' },
-    { key: '4', icon: <CommentOutlined />, label: En ? 'Social Media' : 'منصة المجتمع' },
-    { key: '5', icon: <TeamOutlined />, label: En ? 'Users' : 'المستخدمين' },
-  ];
+    permissions.includes('dashboard') && ({ key: '1', icon: <DashboardOutlined />, label: En ? 'Dashboard' : 'لوحة التحكم' }),
+    permissions.includes('feedback') && ({ key: '2', icon: <StarOutlined  />, label: En ? 'Feedback' : 'التقييمات' }),
+    permissions.includes('report') && ({ key: '3', icon: <FormOutlined />, label: En ? 'Reports' : 'التقارير' }),
+    permissions.includes('social media') && ({ key: '4', icon: <CommentOutlined />, label: En ? 'Social Media' : 'منصة المجتمع' }),
+    permissions.includes('users') && ({ key: '5', icon: <TeamOutlined />, label: En ? 'Users' : 'المستخدمين' }),
+  ].filter(Boolean);
 
   const handleMenuClick = ({ key }) => {
     setOpen(false);
