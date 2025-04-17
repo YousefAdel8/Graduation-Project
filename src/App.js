@@ -1,12 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { BeatLoader } from "react-spinners";
 
 // Import components
-import Signin from './components/Form/Form.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
-import SideBar from './components/SideBar/SideBar.jsx';
 import FeedbackPage from './components/FeedbackPage/FeedbackPage.jsx';
 import ReportPage from './components/ReportPage/ReportPage.jsx';
 import SocialMedia from './components/SocialMedia/SocialMedia.jsx'
