@@ -55,7 +55,7 @@ const AppLayout = ({ En = false }) => {
       case 'report': return '3';
       case 'socialmedia': return '4';
       case 'users': return '5';
-      default: return '1';
+      default: return '0';
     }
   };
 
