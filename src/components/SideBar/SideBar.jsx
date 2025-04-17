@@ -14,6 +14,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 import { PermissionContext  } from "../../context/PermissionContext.jsx";
 
+import { UserContext } from "../../context/usercontext.jsx";
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
@@ -47,6 +48,8 @@ const AppLayout = ({ En = false }) => {
 
   //const permissions = ['dashboard', 'feedback', 'report', 'users', 'social media'];
   const { permissions } = useContext(PermissionContext );
+  //handle User Token to logout
+  const {setUserToken}=useContext(UserContext);
   const getCurrentPath = () => {
     const path = location.pathname.split('/')[1] || '';
     switch (path) {
@@ -93,6 +96,13 @@ const AppLayout = ({ En = false }) => {
     }
   };
 
+
+  //Handle Logout
+  const handleLogout = () => {
+    localStorage.removeItem('userToken');
+    setUserToken(null);
+    navigate('/');
+  }
   return (
     <ConfigProvider direction={!En ? 'rtl' : 'ltr'}>
       <Layout style={{ minHeight: '100vh' }}>
@@ -151,8 +161,10 @@ const AppLayout = ({ En = false }) => {
             style={{
               padding: '0 16px',
               background: colorBgContainer,
+              
             }}
           >
+            <div className='d-flex flex-row'>
             <Button
               type="text"
               icon={En ?
@@ -167,6 +179,13 @@ const AppLayout = ({ En = false }) => {
                 height: 64,
               }}
             />
+            <div className='d-flex justify-content-end ps-5 align-items-center w-100'>
+              <button className='btn btn-danger' onClick={handleLogout}>Logout</button>
+              </div>
+            
+            </div>
+            
+            
           </Header>
           <Content
             style={{
