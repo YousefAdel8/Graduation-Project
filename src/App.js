@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { BeatLoader } from "react-spinners";
@@ -10,22 +10,17 @@ import SideBar from './components/SideBar/SideBar.jsx';
 import FeedbackPage from './components/FeedbackPage/FeedbackPage.jsx';
 import ReportPage from './components/ReportPage/ReportPage.jsx';
 import SocialMedia from './components/SocialMedia/SocialMedia.jsx'
+
+//Auth
+import RequireAuth from './components/Auth/RequireAuth.jsx';
 function App() {
   const routers = createBrowserRouter([
     {
-      path: '/signin', 
-      element: <Signin />,
-    },
-    {
-      path: '/', 
-      element: <Signin />,
-    },
-    {
       path: '/',
-      element: <SideBar />,
+      element: <RequireAuth />,
       children: [
         {
-          path: '/dashboard',
+          path: '/',
           element: <Dashboard />,
         },
         {

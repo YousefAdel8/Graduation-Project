@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState,useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -7,14 +7,16 @@ import styles from "./Form.module.css";
 import { useNavigate } from "react-router-dom";
 import { message,Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
-
+import { UserContext } from '../../context/usercontext';
 export default function Form() {
 	const [loading, setLoading] = useState(false);
 	const [apiError, setApiError] = useState(false);
 	const [En] = useState(false);
 	const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
-	const [successLogin, setSuccessLogin] = useState(false);
+	const [SuccessMessageLogin, setSuccessMessageLogin] = useState(false);
+	const { setUserToken } = useContext(UserContext);
+
 	/*const errorTranslations = {
 		"Can't Find This User": "لم يتم العثور على المستخدم",
 		"Invalid Email Or Password": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
@@ -31,21 +33,24 @@ export default function Form() {
 				"https://cms-reporting.runasp.net/api/Auth/login",
 				values
 			);
-			//console.log(data);
+			//console.log(data.value.token);
 			if (data.isSuccess === true) {
-				localStorage.setItem("token", data.token);
 				setLoading(false);
-				setSuccessLogin(true);
+				setSuccessMessageLogin(true);
 				setTimeout(() => {
-					navigate("/dashboard");
+					localStorage.setItem("userToken", data.value.token);
+					setUserToken(data.value.token);
+					//navigate("/");
 				}, 1000);
+				
+				
 				
 			} else {
 				setLoading(false);
 				setApiError(data.message || "Login failed. Please try again.");
 			}
 		} catch (error) {
-			//console.log(error.response.data);
+			console.log(error.response.data);
 			if (error.response) {
 				//setApiError(En?error.response.data?.detail:translateError(error.response.data?.detail)); //"?" is optional chaining operator (Runtime error protection)
 				setApiError(error.response.data?.detail);
@@ -101,10 +106,10 @@ export default function Form() {
 	}
 	
 	useEffect(() => {
-		if (successLogin) {
+		if (SuccessMessageLogin) {
 			Success();
 		}
-	} , [successLogin]);
+	} , [SuccessMessageLogin]);
 	return (
 		<>
 		 	{contextHolder}

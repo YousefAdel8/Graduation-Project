@@ -43,9 +43,9 @@ const AppLayout = ({ En = false }) => {
   };
 
   const getCurrentPath = () => {
-    const path = location.pathname.split('/')[1] || 'dashboard';
+    const path = location.pathname.split('/')[1] || '';
     switch (path) {
-      case 'dashboard': return '1';
+      case '': return '1';
       case 'feedback': return '2';
       case 'report': return '3';
       case 'socialmedia': return '4';
@@ -68,7 +68,7 @@ const AppLayout = ({ En = false }) => {
     setOpen(false);
     switch (key) {
       case '1':
-        navigate('/dashboard');
+        navigate('/');
         break;
       case '2':
         navigate('/feedback');
