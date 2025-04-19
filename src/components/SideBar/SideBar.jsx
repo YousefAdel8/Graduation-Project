@@ -135,29 +135,33 @@ const AppLayout = ({ En = false }) => {
 						trigger={null}
 						title={
 							<div
-								style={{
-									padding: "16px",
-									display: "flex",
-									alignItems: "center",
-									justifyContent: collapsed ? "center" : "flex-start",
-								}}
-							>
-								<Avatar
-									shape="square"
-									size={36}
-									style={{ backgroundColor: "rgb(2, 8, 23)" }}
+							style={{
+								padding: "10px",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: collapsed ? "center" : "flex-start",
+							}}
+						>
+              {!collapsed && (
+								<Title
+									level={3}
+									style={{ margin: "0 0 0 10px" ,color:"#03333d" }}
+									className="me-2"
 								>
-									{En ? "A" : "أ"}
-								</Avatar>
-								{!collapsed && (
-									<Title
-										level={5}
-										style={{ margin: En ? "0 0 0 10px" : "0 10px 0 0" }}
-									>
-										Citio
-									</Title>
-								)}
-							</div>
+									Citio
+								</Title>
+							)}
+              <div className="d-flex justify-content-center align-content-center ">
+              <Image
+								width={40}
+                src={logo}
+                preview={false}
+							/>
+              </div>
+							
+							{/*<Avatar shape="square" size={36} style={{ backgroundColor: "rgb(2, 8, 23)" }}>{En ? "A" : "أ"}</Avatar>*/}
+							
+						</div>
 						}
 						onClose={onClose}
 						open={open}
@@ -188,7 +192,7 @@ const AppLayout = ({ En = false }) => {
 					>
 						<div
 							style={{
-								padding: "16px",
+								padding: "12px",
 								display: "flex",
 								alignItems: "center",
 								justifyContent: collapsed ? "center" : "flex-start",
@@ -197,7 +201,7 @@ const AppLayout = ({ En = false }) => {
               {!collapsed && (
 								<Title
 									level={6}
-									style={{ margin: "0 0 0 10px" }}
+									style={{ margin: "0 0 0 10px" ,color:"#03333d" }}
 									className="me-2"
 								>
 									Citio
