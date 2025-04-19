@@ -8,6 +8,7 @@ import FeedbackPage from "./components/FeedbackPage/FeedbackPage.jsx";
 import ReportPage from "./components/ReportPage/ReportPage.jsx";
 import SocialMedia from "./components/SocialMedia/SocialMedia.jsx";
 import Loading from "./components/LoadingPage/LoadingPage.jsx";
+import UserManagment from "./components/UserManagment/UserManagment.jsx";
 //Auth
 import RequireAuth from "./components/Auth/RequireAuth.jsx";
 //Auth Permissions
@@ -50,6 +51,14 @@ function App() {
 					element: (
 						<RequirePermission permission="social media">
 							<SocialMedia />
+						</RequirePermission>
+					),
+				},
+				{
+					path: "/users",
+					element: (
+						<RequirePermission permission="users">
+							<UserManagment />
 						</RequirePermission>
 					),
 				},

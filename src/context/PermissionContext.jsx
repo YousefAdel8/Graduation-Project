@@ -6,7 +6,9 @@ export const PermissionProvider = ({ children }) => {
         "dashboard",
         "feedback",
         "report",
+		"social media",
         "users",
+		
       ]);
 	return (
 		<PermissionContext.Provider value={{ permissions }}>
