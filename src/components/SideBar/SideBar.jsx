@@ -205,7 +205,7 @@ const AppLayout = ({ En = false }) => {
 							)}
               <div className="d-flex justify-content-center align-content-center ">
               <Image
-								width={42}
+								width={40}
                 src={logo}
                 preview={false}
 							/>
