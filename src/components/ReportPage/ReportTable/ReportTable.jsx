@@ -380,7 +380,8 @@ const ReportTable = () => {
           pageSize: 7,
           position: ['bottomCenter'], 
           className: 'custom-pagination',
-        }}     
+        }}    
+         
       />
     </div>
     

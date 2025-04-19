@@ -14,7 +14,7 @@ export default function FeedbackPage({En = false}) {
 						Style={{ padding: "0px", width: "100%",minHeight:"535px" }}
 						className="shadow-sm"
 					>
-						<FeedbackTable />
+						<FeedbackTable className="shadow-sm"/>
 					</Card>
 				</Col>
 			</Row>
