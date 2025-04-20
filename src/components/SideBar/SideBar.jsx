@@ -15,10 +15,10 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { PermissionContext } from "../../context/PermissionContext.jsx";
 
 import { UserContext } from "../../context/usercontext.jsx";
-import logo from "../../assests/citio.png"
+import logo from "../../assests/citio.png";
 
 import DropdownProfile from "../DropdownProfile/DropdownProfile.jsx";
-
+import FullScreen from "../FullScreenFeature/FullScreen.jsx";
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
@@ -138,33 +138,28 @@ const AppLayout = ({ En = false }) => {
 						trigger={null}
 						title={
 							<div
-							style={{
-								padding: "10px",
-								display: "flex",
-								alignItems: "center",
-								justifyContent: collapsed ? "center" : "flex-start",
-							}}
-						>
-              {!collapsed && (
-								<Title
-									level={3}
-									style={{ margin: "0 0 0 10px" ,color:"#03333d" }}
-									className="me-2"
-								>
-									Citio
-								</Title>
-							)}
-              <div className="d-flex justify-content-center align-content-center ">
-              <Image
-								width={40}
-                src={logo}
-                preview={false}
-							/>
-              </div>
-							
-							{/*<Avatar shape="square" size={36} style={{ backgroundColor: "rgb(2, 8, 23)" }}>{En ? "A" : "أ"}</Avatar>*/}
-							
-						</div>
+								style={{
+									padding: "10px",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: collapsed ? "center" : "flex-start",
+								}}
+							>
+								{!collapsed && (
+									<Title
+										level={3}
+										style={{ margin: "0 0 0 10px", color: "#03333d" }}
+										className="me-2"
+									>
+										Citio
+									</Title>
+								)}
+								<div className="d-flex justify-content-center align-content-center ">
+									<Image width={40} src={logo} preview={false} />
+								</div>
+
+								{/*<Avatar shape="square" size={36} style={{ backgroundColor: "rgb(2, 8, 23)" }}>{En ? "A" : "أ"}</Avatar>*/}
+							</div>
 						}
 						onClose={onClose}
 						open={open}
@@ -201,25 +196,20 @@ const AppLayout = ({ En = false }) => {
 								justifyContent: collapsed ? "center" : "flex-start",
 							}}
 						>
-              {!collapsed && (
+							{!collapsed && (
 								<Title
 									level={6}
-									style={{ margin: "0 0 0 10px" ,color:"#03333d" }}
+									style={{ margin: "0 0 0 10px", color: "#03333d" }}
 									className="me-2"
 								>
 									Citio
 								</Title>
 							)}
-              <div className="d-flex justify-content-center align-content-center ">
-              <Image
-								width={40}
-                src={logo}
-                preview={false}
-							/>
-              </div>
-							
+							<div className="d-flex justify-content-center align-content-center ">
+								<Image width={40} src={logo} preview={false} />
+							</div>
+
 							{/*<Avatar shape="square" size={36} style={{ backgroundColor: "rgb(2, 8, 23)" }}>{En ? "A" : "أ"}</Avatar>*/}
-							
 						</div>
 						<Menu
 							mode="inline"
@@ -239,7 +229,7 @@ const AppLayout = ({ En = false }) => {
 							background: colorBgContainer,
 						}}
 					>
-						<div className="d-flex flex-row">
+						<div className="d-flex flex-row align-items-center justify-content-between">
 							<Button
 								type="text"
 								icon={
@@ -268,13 +258,10 @@ const AppLayout = ({ En = false }) => {
 									height: 64,
 								}}
 							/>
-							{/*<div className="d-flex justify-content-end ps-5 align-items-center w-100">
-								<button className="btn btn-danger" onClick={handleLogout}>
-									Logout
-								</button>
-							</div>*/}
-							<div className="d-flex justify-content-end ps-5 align-items-center w-100">
-								<DropdownProfile/>
+
+							<div className="d-flex align-items-center gap-5 ms-4">
+								<FullScreen />
+								<DropdownProfile />
 							</div>
 						</div>
 					</Header>
