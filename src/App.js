@@ -9,6 +9,8 @@ import ReportPage from "./components/ReportPage/ReportPage.jsx";
 import SocialMedia from "./components/SocialMedia/SocialMedia.jsx";
 import Loading from "./components/LoadingPage/LoadingPage.jsx";
 import UserManagment from "./components/UserManagment/UserManagment.jsx";
+import NewUser from "./components/NewUser/NewUser.jsx";
+import Profile from "./components/Profile/Profile.jsx";
 //Auth
 import RequireAuth from "./components/Auth/RequireAuth.jsx";
 //Auth Permissions
@@ -18,7 +20,6 @@ import RequirePermission from "./components/Auth/RequirePermission.jsx";
 function App() {
 	const routers = createBrowserRouter([
 		{
-      
 			path: "/",
 			element: <RequireAuth />,
 			children: [
@@ -62,18 +63,31 @@ function App() {
 						</RequirePermission>
 					),
 				},
-        {
-          path: "/unauthorized",
-          element: <UnAuthorized />,
-        },
+				{
+					path: "/users/new",
+					element: (
+						<RequirePermission permission="users">
+							<NewUser />
+						</RequirePermission>
+					),
+				},
+				{
+					path: "/profile",
+					element: (
+						<RequirePermission permission="dashboard">
+							<Profile />
+						</RequirePermission>
+					),
+				},
+				{
+					path: "/unauthorized",
+					element: <UnAuthorized />,
+				},
 			],
 		},
 		{
 			path: "*",
-			element: (
-				<Loading />
-
-			),
+			element: <Loading />,
 		},
 	]);
 
