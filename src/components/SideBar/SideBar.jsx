@@ -16,6 +16,9 @@ import { PermissionContext } from "../../context/PermissionContext.jsx";
 
 import { UserContext } from "../../context/usercontext.jsx";
 import logo from "../../assests/citio.png"
+
+import DropdownProfile from "../DropdownProfile/DropdownProfile.jsx";
+
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
@@ -265,10 +268,13 @@ const AppLayout = ({ En = false }) => {
 									height: 64,
 								}}
 							/>
-							<div className="d-flex justify-content-end ps-5 align-items-center w-100">
+							{/*<div className="d-flex justify-content-end ps-5 align-items-center w-100">
 								<button className="btn btn-danger" onClick={handleLogout}>
 									Logout
 								</button>
+							</div>*/}
+							<div className="d-flex justify-content-end ps-5 align-items-center w-100">
+								<DropdownProfile/>
 							</div>
 						</div>
 					</Header>

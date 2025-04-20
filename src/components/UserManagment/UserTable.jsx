@@ -7,6 +7,7 @@ export default function UserTable({ En = false }) {
           title: "#",
           dataIndex: "index",
           key: "index",
+          width: 50,
         },
         {
           title: En ? "Username" : "اسم المستخدم",
