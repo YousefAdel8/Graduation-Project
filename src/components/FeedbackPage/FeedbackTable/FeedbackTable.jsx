@@ -1,12 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { FileExcelOutlined, FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
+import { FileExcelOutlined, FilePdfOutlined, PrinterOutlined, SearchOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { Button, Input, Space, Table,Rate, Tooltip,DatePicker } from 'antd';
+//import { Print } from "../../../utils/exportFunctions";
 import Highlighter from 'react-highlight-words';
-import { exportToExcel, exportToPDF } from "../../../utils/exportFunctions";
-import { useReactToPrint } from 'react-to-print';
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 const { RangePicker } = DatePicker;
@@ -129,12 +128,12 @@ const fieldTranslations = {
   ];
   
 
-const confirmDelete=(e)=>{
+/*const confirmDelete=(e)=>{
   console.log("delete");
 }
 const cancelDelete=(e)=>{
   console.log("cancel");
-}
+}*/
 const FeedbackTable = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -303,15 +302,7 @@ const FeedbackTable = () => {
     },*/
   ];
   
-  //print with react-to-print
-  const componentRef = useRef(null);
-  const handlePrint = useReactToPrint({ //Print (didn't work)
-    content: () => {
-      console.log("Component ref:", componentRef.current);
-      return componentRef.current;
-    },
-    documentTitle: "التقرير",
-  });
+  
   //filter by range picker (date)
   const dateFormat = 'DD/MM/YYYY';
   const handleDateRangeChange = (dates) => {
@@ -345,21 +336,16 @@ const FeedbackTable = () => {
         showToday={true}
         className='me-2'
       />
-      <Space.Compact style={{ marginBottom: 16 }}>
-  <Tooltip title={En ? "Export table to Excel" : "تصدير الجدول إلى Excel"} className='mx-2'>
-    <Button type="primary" icon={<FileExcelOutlined />} onClick={() => exportToExcel(columns,tableData,false)}>
-      {En ? "Export to Excel" : "تصدير إلى Excel"}
-    </Button>
-  </Tooltip>
-
-  <Tooltip title={En ? "Print" : "طباعة"} >
-    <Button onClick={handlePrint}  danger icon={<FilePdfOutlined />} >
+      {/*<Space.Compact style={{ marginBottom: 16 }}>
+  
+  <Tooltip title={En ? "Print" : "طباعة"} className='me-2'>
+    <Button onClick={() => Print(columns, tableData, En)}  danger icon={<PrinterOutlined />} >
       {En ? "Print" : "طباعة"}
     </Button>
   </Tooltip>
-</Space.Compact>
+</Space.Compact>*/}
 
-<div ref={componentRef}>
+<div >
         <Table
           columns={columns}
           dataSource={filteredData}
