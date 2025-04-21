@@ -5,6 +5,7 @@ import AddNewUser from "./AddNewUser";
 const { Title } = Typography;
 
 export default function UserManagment({ En = false }) {
+	
 	return (
 		<>
 			<Title level={3} style={{ marginBottom: 24 }} className="fw-bold">

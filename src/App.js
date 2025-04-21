@@ -9,7 +9,7 @@ import ReportPage from "./components/ReportPage/ReportPage.jsx";
 import SocialMedia from "./components/SocialMedia/SocialMedia.jsx";
 import Loading from "./components/LoadingPage/LoadingPage.jsx";
 import UserManagment from "./components/UserManagment/UserManagment.jsx";
-import NewUser from "./components/NewUser/NewUser.jsx";
+import NewUserPage from "./components/NewUser/NewUserPage.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 //Auth
 import RequireAuth from "./components/Auth/RequireAuth.jsx";
@@ -67,7 +67,7 @@ function App() {
 					path: "/users/new",
 					element: (
 						<RequirePermission permission="users">
-							<NewUser />
+							<NewUserPage />
 						</RequirePermission>
 					),
 				},

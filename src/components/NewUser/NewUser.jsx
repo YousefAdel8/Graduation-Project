@@ -1,43 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
 	Card,
 	Row,
 	Col,
-	Typography,
 	Form,
 	Input,
 	Radio,
-	Checkbox,
 	Button,
 	Upload,
 	Select,
-	Space,
 } from "antd";
 import { UserOutlined, UploadOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
-
-export default function NewUser({ En = false }) {
-	const [form] = Form.useForm();
+export default function NewUser({
+	En = false, 
+  selectedItemforEdit = null, 
+  form: externalForm = null,
+  hideSubmitButton = false,
+}) {
+	const [localForm] = Form.useForm();
 	const userTypes = ["Admin", "Manager", "User", "Guest"];
-	const roles = ["Feedback", "Reports", "Social Media", "Users"].map((role) => ({
-		label: role,
-		value: role,
-	}));
+	const roles = ["Feedback", "Reports", "Social Media", "Users"].map(
+		(role) => ({
+			label: role,
+			value: role,
+		})
+	);
 
+	const formInstance = externalForm || localForm; //take the form instance from the ref(edit) or from here(new user)
 	const onFinish = (values) => {
-		console.log("Form values:", values);
+		console.log("Form1 values:", values);
 	};
-
+	useEffect(() => {
+		if (selectedItemforEdit) {
+		  formInstance.setFieldsValue(selectedItemforEdit);
+		}
+	  }, [selectedItemforEdit, formInstance]);
 	return (
 		<>
-			<Title level={3} className="fw-bold mb-6">
-				{En ? "New User" : "مستخدم جديد"}
-			</Title>
-
 			<Card className="shadow-sm p-4">
 				<Form
-					form={form}
+					form={formInstance}
 					layout="vertical"
 					onFinish={onFinish}
 					initialValues={{ userType: userTypes[0] }}
@@ -142,23 +145,29 @@ export default function NewUser({ En = false }) {
 						</Col>
 
 						<Col xs={24} md={12}>
-							<Form.Item name="roles" label={En ? "Roles" : "الأدوار"} rules={[
+							<Form.Item
+								name="roles"
+								label={En ? "Roles" : "الأدوار"}
+								rules={[
 									{
 										required: true,
+										type: "array",
+										min: 1,
 										message: En
 											? "At least one role must be selected"
-											: "الرجاء اختيار الادواريجب اختيار دور واحد على الأقل",
-									},]} >
-								<Space style={{ width: "100%" }} direction="vertical">
-									<Select
-										mode="multiple"
-										allowClear
-										style={{ width: "100%" }}
-										placeholder={En ? "Select one or more roles" : "اختر دورًا أو أكثر"}
-										defaultValue={[]}
-										options={roles}
-									/>
-								</Space>
+											: "يجب اختيار دور واحد على الأقل",
+									},
+								]}
+							>
+								<Select
+									mode="multiple"
+									allowClear
+									style={{ width: "100%" }}
+									placeholder={
+										En ? "Select one or more roles" : "اختر دورًا أو أكثر"
+									}
+									options={roles}
+								/>
 							</Form.Item>
 						</Col>
 
@@ -181,13 +190,15 @@ export default function NewUser({ En = false }) {
 						</Col>
 
 						{/* Submit Button */}
-						<Col xs={24}>
-							<Form.Item>
-								<Button type="primary" htmlType="submit" className="mt-4">
-									{En ? "Submit" : "إرسال"}
-								</Button>
-							</Form.Item>
-						</Col>
+						{!hideSubmitButton && (
+							<Col xs={24}>
+								<Form.Item>
+									<Button type="primary" htmlType="submit" className="mt-4">
+										{En ? "Submit" : "إرسال"}
+									</Button>
+								</Form.Item>
+							</Col>
+						)}
 					</Row>
 				</Form>
 			</Card>

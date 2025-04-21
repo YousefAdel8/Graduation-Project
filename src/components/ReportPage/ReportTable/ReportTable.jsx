@@ -68,10 +68,8 @@ const ReportTable = () => {
   };
   
   const confirmDelete=(record)=>{
-    console.log(record);
     const newData=tableData.filter((item) => item.key !== record.key);
     setTableData(newData);
-    
   }
 
   const [showUpdateDiv, setShowUpdateDiv] = useState(false);
