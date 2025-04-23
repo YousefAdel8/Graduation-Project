@@ -1,9 +1,32 @@
-import React from "react";
-import { Card, Col, Row, Typography, Avatar, Button } from "antd";
+import React, { useState } from "react";
+import { Card, Col, Row, Typography, Avatar, Button, Modal } from "antd";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
+import EditProfile from "./EditProfile";
 
 const { Title } = Typography;
 export default function Profile({ En = false }) {
+	const profileData = {
+		firstName: "Yousef",
+		lastName: "Adel",
+		email: "yousefadel7474@gmail",
+		phone: "01028228362",
+		role: "Team Manager",
+		image: "https://i.pravatar.cc/150?img=3",
+	};
+	const userName = profileData.firstName + " " + profileData.lastName;
+	const [isEditOpen, setIsEditOpen] = useState(false);
+
+	const handleEditProfile = () => {
+		setIsEditOpen(true);
+	};
+
+	const handleCancel = () => {
+		setIsEditOpen(false);
+	};
+
+	const handleOk = () => {
+		setIsEditOpen(false);
+	};
 	return (
 		<>
 			<Title level={3} style={{ marginBottom: 24 }} className="fw-bold">
@@ -19,7 +42,7 @@ export default function Profile({ En = false }) {
 						<div style={{ display: "flex", alignItems: "center" }}>
 							<Avatar
 								size={64}
-								src="https://i.pravatar.cc/150?img=3"
+								src={profileData.image}
 								icon={<UserOutlined />}
 							/>
 							<div
@@ -29,10 +52,10 @@ export default function Profile({ En = false }) {
 								}}
 							>
 								<Title level={4} style={{ margin: 0 }}>
-									Yousef Adel
+									{userName}
 								</Title>
 								<Typography.Text type="secondary">
-									{En ? "Team Manager" : "مدير الفريق"}
+									{profileData.role}
 								</Typography.Text>
 							</div>
 						</div>
@@ -55,7 +78,11 @@ export default function Profile({ En = false }) {
 							<Title level={4} style={{ margin: 0 }}>
 								{En ? "Personal Information" : "معلومات شخصية"}
 							</Title>
-							<Button type="text" icon={<EditOutlined />}>
+							<Button
+								type="text"
+								icon={<EditOutlined />}
+								onClick={handleEditProfile}
+							>
 								{En ? "Edit" : "تعديل"}
 							</Button>
 						</div>
@@ -66,7 +93,7 @@ export default function Profile({ En = false }) {
 									{En ? "First Name" : "الاسم الأول"}
 								</Typography.Text>
 								<Typography.Text style={{ display: "block", marginTop: "4px" }}>
-									Yousef
+									{profileData.firstName}
 								</Typography.Text>
 							</Col>
 
@@ -75,7 +102,7 @@ export default function Profile({ En = false }) {
 									{En ? "Last Name" : "الاسم الأخير"}
 								</Typography.Text>
 								<Typography.Text style={{ display: "block", marginTop: "4px" }}>
-									Adel
+									{profileData.lastName}
 								</Typography.Text>
 							</Col>
 
@@ -84,7 +111,7 @@ export default function Profile({ En = false }) {
 									{En ? "Email address" : "البريد الإلكتروني"}
 								</Typography.Text>
 								<Typography.Text style={{ display: "block", marginTop: "4px" }}>
-									youremail@example.com
+									{profileData.email}
 								</Typography.Text>
 							</Col>
 
@@ -93,22 +120,32 @@ export default function Profile({ En = false }) {
 									{En ? "Phone" : "رقم الهاتف"}
 								</Typography.Text>
 								<Typography.Text style={{ display: "block", marginTop: "4px" }}>
-									+XX XXX XXX XX
+									{profileData.phone}
 								</Typography.Text>
 							</Col>
 
 							<Col xs={24}>
 								<Typography.Text type="secondary" style={{ display: "block" }}>
-									{En ? "Bio" : "نبذة"}
+									{En ? "Role" : "الدور"}
 								</Typography.Text>
 								<Typography.Text style={{ display: "block", marginTop: "4px" }}>
-									{En ? "Team Manager" : "مدير الفريق"}
+									{profileData.role}
 								</Typography.Text>
 							</Col>
 						</Row>
 					</Card>
 				</Col>
 			</Row>
+			<Modal
+				title={En ? "Edit Profile" : "تعديل الملف الشخصي"}
+				open={isEditOpen}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				okText={En ? "Submit" : "إرسال"}
+				cancelText={En ? "Cancel" : "إلغاء"}
+			>
+				<EditProfile En={En} initialValues={profileData} />
+			</Modal>
 		</>
 	);
 }
