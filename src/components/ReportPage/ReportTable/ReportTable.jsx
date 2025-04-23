@@ -331,7 +331,7 @@ const ReportTable = () => {
 
 		setFilteredData(filtered);
 	};
-
+	
 	return (
 		<>
 			{showUpdateDiv && (
