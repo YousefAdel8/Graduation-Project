@@ -124,10 +124,8 @@ const AppLayout = ({ En = false }) => {
 		}
 	};
 
-	//Handle Logout
-	const handleLogout = () => {
-		localStorage.removeItem("userToken");
-		setUserToken(null);
+	//Handle Logo on Click to go the main page
+	const handleLogoClick = () => {
 		navigate("/");
 	};
 	return (
@@ -193,8 +191,11 @@ const AppLayout = ({ En = false }) => {
 								padding: "12px",
 								display: "flex",
 								alignItems: "center",
+								cursor:"pointer",
 								justifyContent: collapsed ? "center" : "flex-start",
 							}}
+							onClick={handleLogoClick}
+							
 						>
 							{!collapsed && (
 								<Title
