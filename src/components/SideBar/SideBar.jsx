@@ -9,16 +9,16 @@ import {
 	StarOutlined,
 	FormOutlined,
 } from "@ant-design/icons";
-import { Button, Drawer, Layout, Menu, theme, Avatar, Typography } from "antd";
+import { Button, Drawer, Layout, Menu, theme, Typography } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 import { PermissionContext } from "../../context/PermissionContext.jsx";
 
-import { UserContext } from "../../context/usercontext.jsx";
 import logo from "../../assests/citio.png";
 
 import DropdownProfile from "../DropdownProfile/DropdownProfile.jsx";
 import FullScreen from "../FullScreenFeature/FullScreen.jsx";
+import LanguageToggle from "../LanguageButton/LanguageButton.jsx";
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
@@ -51,8 +51,6 @@ const AppLayout = ({ En = false }) => {
 
 	//const permissions = ['dashboard', 'feedback', 'report', 'users', 'social media'];
 	const { permissions } = useContext(PermissionContext);
-	//handle User Token to logout
-	const { setUserToken } = useContext(UserContext);
 	const getCurrentPath = () => {
 		const path = location.pathname.split("/")[1] || "";
 		switch (path) {
@@ -260,7 +258,8 @@ const AppLayout = ({ En = false }) => {
 								}}
 							/>
 
-							<div className="d-flex align-items-center gap-5 ms-4">
+							<div className="d-flex align-items-center gap-3 ms-4">
+								<LanguageToggle />
 								<FullScreen />
 								<DropdownProfile />
 							</div>
