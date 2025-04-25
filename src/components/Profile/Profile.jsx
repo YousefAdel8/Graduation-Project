@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Card, Col, Row, Typography, Avatar, Button, Modal } from "antd";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
 import EditProfile from "./EditProfile";
+import { useLanguage } from "../../context/LanguageContext";
 
 const { Title } = Typography;
-export default function Profile({ En = false }) {
+export default function Profile() {
+	const { isEnglish: En } = useLanguage();
 	const profileData = {
 		firstName: "Yousef",
 		lastName: "Adel",

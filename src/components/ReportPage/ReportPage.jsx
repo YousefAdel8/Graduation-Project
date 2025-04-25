@@ -1,9 +1,11 @@
 import React from "react";
 import { Card, Row, Col ,Typography} from "antd";
 import ReportTable from "./ReportTable/ReportTable";
+import { useLanguage } from "../../context/LanguageContext";
 
 const { Title } = Typography;
-export default function ReportPage({En = false}) {
+export default function ReportPage() {
+    const { isEnglish: En } = useLanguage();
     return (
         <>
             <Title level={3} style={{ marginBottom: 24 }} className="fw-bold">

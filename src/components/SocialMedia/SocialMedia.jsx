@@ -5,10 +5,12 @@ import {
 	faThumbsUp,
 	faUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
+import { useLanguage } from "../../context/LanguageContext";
 
 const { Title, Text, Paragraph } = Typography;
 
-const SocialMedia = ({ En = false }) => {
+const SocialMedia = () => {
+	const { isEnglish: En } = useLanguage();
 	const formatHashtags = (text) => {
 		if (!text) return text;
 		const parts = text.split(/(#[^\s]+)/g);

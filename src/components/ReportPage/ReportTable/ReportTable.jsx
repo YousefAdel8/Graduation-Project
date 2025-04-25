@@ -73,35 +73,6 @@ const ReportTable = () => {
 	const searchInput = useRef(null);
 
 	useEffect(() => {
-		setTableData([
-			{
-				key: "1",
-				name: En ? "John Brown" : "جون براون",
-				service: En ? "Street Light" : "ضوء الشارع",
-				priority: En ? "High" : "عالي",
-				status: En ? "In progress" : "قيد التنفيذ",
-				date: "01/01/2023",
-			},
-			{
-				key: "2",
-				name: En ? "Jane Doe" : "جان دو",
-				service: En ? "Water Leak" : "تسرب المياة",
-				priority: En ? "Medium" : "متوسط",
-				status: En ? "Reported" : "تم الإبلاغ عنه",
-				date: "02/02/2023",
-			},
-			{
-				key: "3",
-				name: En ? "Bob Smith" : "بوب سميث",
-				service: En ? "Electricity Outage" : "انقطاع الكهرباء",
-				priority: En ? "Low" : "منخفضة",
-				status: En ? "Resolved" : "تم الحل",
-				date: "03/03/2023",
-			},
-		]);
-	}, [En]);
-
-	useEffect(() => {
 		if (dateRange[0] && dateRange[1]) {
 			const [start, end] = dateRange;
 			const dateFormat = "DD/MM/YYYY";

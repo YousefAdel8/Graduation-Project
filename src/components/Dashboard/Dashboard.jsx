@@ -27,11 +27,13 @@ import {
 	LineChartOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import { useLanguage } from "../../context/LanguageContext";
 const { Title, Text } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-const Dashboard = ({ En = false }) => {
+const Dashboard = () => {
+	const { isEnglish: En } = useLanguage();
 	const { Option } = Select;
 
 	const [timeRange, setTimeRange] = useState("day");
@@ -196,13 +198,13 @@ const Dashboard = ({ En = false }) => {
 
 	return (
 		<>
-			<Title level={3} style={{ marginBottom: 24 }} className="fw-bold">
+			<Title level={3} style={{ marginBottom: 24 }} className={En ? "text-start fw-bold" : "text-end fw-bold"} >
 				{En ? "Dashboard" : "لوحة التحكم"}
 			</Title>
-			<Row gutter={[16, 16]}>
+			<Row gutter={[16, 16]} dir={En ? "ltr" : "rtl"}>
 				{stats.map((stat, index) => (
 					<Col xs={24} sm={12} lg={6} key={index}>
-						<Card Style={{ padding: "20px" }} className="shadow-sm">
+						<Card Style={{ padding: "20px" }} className="shadow-sm" >
 							<Statistic
 								title={<Typography.Text>{stat.title}</Typography.Text>}
 								value={stat.value}
@@ -216,7 +218,7 @@ const Dashboard = ({ En = false }) => {
 				))}
 			</Row>
 
-			<Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+			<Row gutter={[16, 16]} style={{ marginTop: 16 }} dir={En ? "ltr" : "rtl"}>
 				<Col xs={24} lg={14}>
 					<Card
 						title={

@@ -7,10 +7,11 @@ import styles from "./Form.module.css";
 import { message,Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 import { UserContext } from '../../context/usercontext';
+import { useLanguage } from "../../context/LanguageContext";
 export default function Form() {
 	const [loading, setLoading] = useState(false);
 	const [apiError, setApiError] = useState(false);
-	const [En] = useState(false);
+	const { isEnglish: En } = useLanguage();
     const [messageApi, contextHolder] = message.useMessage();
 	const [SuccessMessageLogin, setSuccessMessageLogin] = useState(false);
 	const { setUserToken } = useContext(UserContext);

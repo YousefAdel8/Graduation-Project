@@ -1,8 +1,10 @@
 import React from "react";
 import { Card, Row, Col ,Typography} from "antd";
 import FeedbackTable from "./FeedbackTable/FeedbackTable";
+import { useLanguage } from "../../context/LanguageContext";
 const { Title } = Typography;
-export default function FeedbackPage({En = false}) {
+export default function FeedbackPage() {
+	const { isEnglish: En } = useLanguage();
 	return (
 		<>
 			<Title level={3} style={{ marginBottom: 24 }} className="fw-bold">

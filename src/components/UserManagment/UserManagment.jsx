@@ -2,9 +2,11 @@ import React from "react";
 import { Card, Row, Col, Typography } from "antd";
 import UserTable from "./UserTable";
 import AddNewUser from "./AddNewUser";
+import { useLanguage } from "../../context/LanguageContext";
 const { Title } = Typography;
 
-export default function UserManagment({ En = false }) {
+export default function UserManagment() {
+	const { isEnglish: En } = useLanguage();
 	
 	return (
 		<>

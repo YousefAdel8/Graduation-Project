@@ -19,10 +19,12 @@ import logo from "../../assests/citio.png";
 import DropdownProfile from "../DropdownProfile/DropdownProfile.jsx";
 import FullScreen from "../FullScreenFeature/FullScreen.jsx";
 import LanguageToggle from "../LanguageButton/LanguageButton.jsx";
+import { useLanguage } from "../../context/LanguageContext.jsx";
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
-const AppLayout = ({ En = false }) => {
+const AppLayout = () => {
+	const { isEnglish: En } = useLanguage();
 	const [collapsed, setCollapsed] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [isMobile, setIsMobile] = useState(window.innerWidth < 768);

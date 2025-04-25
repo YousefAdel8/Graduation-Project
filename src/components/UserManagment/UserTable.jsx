@@ -2,7 +2,9 @@ import React, {  useState } from "react";
 import { Form, Modal, Popconfirm, Table } from "antd";
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons";
 import NewUser from "../NewUser/NewUser";
-export default function UserTable({ En = false }) {
+import { useLanguage } from "../../context/LanguageContext";
+export default function UserTable() {
+	const { isEnglish: En } = useLanguage();
 	const columns = [
 		{
 			title: "#",

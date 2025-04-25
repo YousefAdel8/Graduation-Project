@@ -7,19 +7,13 @@ import { Button, Input, Space, Table,Rate, Tooltip,DatePicker } from 'antd';
 //import { Print } from "../../../utils/exportFunctions";
 import Highlighter from 'react-highlight-words';
 import axios from "axios";
+import { useLanguage } from '../../../context/LanguageContext';
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 const { RangePicker } = DatePicker;
 
 
-const En = false;
-const fieldTranslations = {
-    'name': 'الاسم',
-    'service': 'نوع الخدمة',
-    'resolutionTime': 'وقت التحليل',
-    'date': 'التاريخ',
-    'rating': 'التقييم',
-  };
+
   
   
 
@@ -30,6 +24,14 @@ const cancelDelete=(e)=>{
   console.log("cancel");
 }*/
 const FeedbackTable = () => {
+  const { isEnglish: En } = useLanguage();
+const fieldTranslations = {
+    'name': 'الاسم',
+    'service': 'نوع الخدمة',
+    'resolutionTime': 'وقت التحليل',
+    'date': 'التاريخ',
+    'rating': 'التقييم',
+  };
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
@@ -226,7 +228,10 @@ const FeedbackTable = () => {
         format={dateFormat}
         onChange={handleDateRangeChange}
         style={{ marginBottom: 16 }}
-        placeholder={['تاريخ البداية', 'تاريخ النهاية']}
+        placeholder={[
+          En ? "Start Date" : "تاريخ البداية",
+          En ? "End Date" : "تاريخ النهاية",
+        ]}
         allowClear={true}
         showToday={true}
         className='me-2'

@@ -2,8 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, Space } from 'antd';
 import { useNavigate } from "react-router-dom";
-  import { UserContext } from "../../context/usercontext.jsx";
-const DropdownProfile= ({ En = false }) => {
+import { UserContext } from "../../context/usercontext.jsx";
+import { useLanguage } from '../../context/LanguageContext.jsx';
+const DropdownProfile= () => {
+  const { isEnglish: En } = useLanguage();
     const navigate = useNavigate();
     const { setUserToken } = useContext(UserContext);
     const [clickedItem, setClickedItem] = useState(null);
