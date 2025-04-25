@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FileExcelOutlined, FilePdfOutlined, PrinterOutlined, SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import { Button, Input, Space, Table,Rate, Tooltip,DatePicker } from 'antd';
+import { Button, Input, Space, Table,Rate, DatePicker } from 'antd';
 //import { Print } from "../../../utils/exportFunctions";
 import Highlighter from 'react-highlight-words';
 import axios from "axios";
