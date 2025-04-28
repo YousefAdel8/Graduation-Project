@@ -19,7 +19,7 @@ export default function LanguageToggle() {
         onChange={handleToggle}
         checkedChildren="EN"
         unCheckedChildren="AR"
-        style={{ backgroundColor: isEnglish ? '#1890ff' : '#f5222d' }}
+        style={{ backgroundColor: isEnglish ? '#1890ff' : '#504142' }}
       />
   );
 }

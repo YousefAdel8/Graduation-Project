@@ -136,15 +136,15 @@ const fieldTranslations = {
   const columns = [
     {
       title: En?'User Name':' اسم المستخدم',
-      dataIndex: 'mobileUser',
-      key: 'mobileUser',
-      ...getColumnSearchProps('mobileUser'),
+      dataIndex: 'mobileUserName',
+      key: 'mobileUserName',
+      ...getColumnSearchProps('mobileUserName'),
     },
     {
-      title: En?'User ID':' معرف المستخدم',
-      dataIndex: 'mobileUserId',
-      key: 'mobileUserId',
-      ...getColumnSearchProps('mobileUserId'),
+      title: En?'User Phone Number':'هاتف المستخدم',
+      dataIndex: 'mobileUserPhone',
+      key: 'mobileUserPhone',
+      ...getColumnSearchProps('mobileUserPhone'),
     },
     {
       title: En ? 'Date Submitted' : 'تاريخ الاضافة',

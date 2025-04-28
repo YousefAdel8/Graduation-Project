@@ -24,6 +24,7 @@ import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { useLanguage } from "../../../context/LanguageContext";
+import axios from "axios";
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 const { RangePicker } = DatePicker;
@@ -40,6 +41,9 @@ const ReportTable = () => {
 	};
 
 	const { Option } = Select;
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+
 	const [searchText, setSearchText] = useState("");
 	const [searchedColumn, setSearchedColumn] = useState("");
 	const [tableData, setTableData] = useState([
@@ -70,6 +74,15 @@ const ReportTable = () => {
 	]);
 	const [filteredData, setFilteredData] = useState(tableData);
 	const [dateRange, setDateRange] = useState([null, null]);
+	const [pageSize, setPageSize] = useState(10);
+	const [pageNumber, setPageNumber] = useState(1);
+	const [filters, setFilters] = useState({
+		From: null,
+		To: null,
+		Keyword: "",
+	});
+	const [total, setTotal] = useState(0);
+
 	const searchInput = useRef(null);
 
 	useEffect(() => {
@@ -201,32 +214,45 @@ const ReportTable = () => {
 	const columns = [
 		{
 			title: En ? "User Name" : "اسم المستخدم",
-			dataIndex: "name",
-			key: "name",
-			...getColumnSearchProps("name"),
+			dataIndex: "mobileUserName",
+			key: "mobileUserName",
+			...getColumnSearchProps("mobileUserName"),
 		},
 		{
-			title: En ? "Service Type" : "نوع الخدمة",
-			dataIndex: "service",
-			key: "service",
-			...getColumnSearchProps("service"),
+			title: En ? "Issue Category" : "نوع المشكلة",
+
+			dataIndex: En ? "issueCategoryEN" : "issueCategoryAR",
+			key: En ? "issueCategoryEN" : "issueCategoryAR",
+			...getColumnSearchProps(En ? "issueCategoryEN" : "issueCategoryAR"),
 		},
 		{
-			title: En ? "Priority" : "الأولوية",
-			dataIndex: "priority",
-			key: "priority",
+			title: En ? "User Phone Number" : "هاتف المستخدم",
+			dataIndex: "mobileUserPhone",
+			key: "mobileUserPhone",
+			...getColumnSearchProps("mobileUserPhone"),
 		},
 		{
 			title: En ? "Status" : "الحالة",
-			dataIndex: "status",
-			key: "status",
-			render: (status) => {
+			dataIndex: "reportStatus",
+			key: "reportStatus",
+			render: (reportStatus) => {
+				let translatedStatus = reportStatus;
+
+				if (!En) {
+					if (reportStatus === "In progress") {
+						translatedStatus = "قيد التنفيذ";
+					} else if (reportStatus === "Reported") {
+						translatedStatus = "تم الإبلاغ عنه";
+					} else if (reportStatus === "Active") {
+						translatedStatus = "نشط";
+					}
+				}
 				let color = "";
 				let icon = null;
-				if (status === (En ? "In progress" : "قيد التنفيذ")) {
+				if (reportStatus === (En ? "In progress" : "قيد التنفيذ")) {
 					color = "orange";
 					icon = <SyncOutlined />;
-				} else if (status === (En ? "Reported" : "تم الإبلاغ عنه")) {
+				} else if (reportStatus === (En ? "Reported" : "تم الإبلاغ عنه")) {
 					color = "blue";
 					icon = <ExclamationCircleOutlined />;
 				} else {
@@ -235,15 +261,18 @@ const ReportTable = () => {
 				}
 				return (
 					<Tag icon={icon} color={color}>
-						{status}
+						{translatedStatus}
 					</Tag>
 				);
 			},
 		},
 		{
-			title: En ? "Date" : "التاريخ",
-			dataIndex: "date",
-			key: "date",
+			title: En ? "Date Submitted" : "تاريخ الاضافة",
+			dataIndex: "dateIssued",
+			key: "dateIssued",
+			render: (dateIssued) => {
+				return new Date(dateIssued).toLocaleDateString();
+			},
 		},
 		{
 			title: En ? "Action" : "العمليات",
@@ -305,6 +334,49 @@ const ReportTable = () => {
 	const handleDateRangeChange = (dates) => {
 		setDateRange(!dates || dates.length !== 2 ? [null, null] : dates);
 	};
+
+	const fetchData = async (
+		page = pageNumber,
+		size = pageSize,
+		filtersObj = filters
+	) => {
+		setLoading(true);
+
+		const params = {
+			PageNumber: page,
+			PageSize: size,
+		};
+
+		if (filtersObj.From) params.From = filtersObj.From;
+		if (filtersObj.To) params.To = filtersObj.To;
+		if (filtersObj.Keyword) params.Keyword = filtersObj.Keyword;
+
+		try {
+			const { data } = await axios.get(
+				"https://cms-reporting.runasp.net/api/Report",
+				{
+					params,
+				}
+			);
+
+			const formattedData = data.value.map((item, index) => ({
+				...item,
+				key: item.id || index,
+			}));
+
+			setTableData(formattedData);
+			setTotal(data.value.length);
+			setError(null);
+		} catch (err) {
+			setError("Failed to load data. Please try again later.");
+			setTableData([]);
+		} finally {
+			setLoading(false);
+		}
+	};
+	useEffect(() => {
+		fetchData();
+	}, [pageNumber, pageSize, filters]);
 
 	return (
 		<>
@@ -380,6 +452,9 @@ const ReportTable = () => {
 					</div>
 				</div>
 			)}
+			{error && (
+				<div style={{ color: "red", marginBottom: "16px" }}>{error}</div>
+			)}
 			<div className="w-100 my-3" dir={En ? "ltr" : "rtl"}>
 				<RangePicker
 					format={dateFormat}
@@ -414,14 +489,30 @@ const ReportTable = () => {
 				<Table
 					columns={columns}
 					dataSource={filteredData}
+					loading={loading}
 					scroll={{ x: 500 }}
 					pagination={{
-						pageSize: 7,
+						current: pageNumber,
+						pageSize: pageSize,
+						showSizeChanger: true,
+						total: total,
+
+						onChange: (page, size) => {
+							setPageNumber(page);
+							setPageSize(size);
+						},
 						position: ["bottomCenter"],
 						className: "custom-pagination",
 					}}
 					rowKey="key"
 				/>
+				{/*<Table 
+				columns={columns} 
+				dataSource={filteredData}
+				 loading={loading} 
+				 scroll={{ x: 500 }} 
+				 pagination={{ pageSize: 7,  }} 
+				rowKey="key" /> */}
 			</div>
 		</>
 	);
