@@ -93,9 +93,6 @@ const ReportTable = () => {
 		setTableData(newData);
 	};
 
-
-	
-
 	const handleView = (record) => {
 		console.log(record);
 	};
@@ -177,6 +174,22 @@ const ReportTable = () => {
 			),
 	});
 
+	const statusTranslations = {
+		Active: En ? "Active" : "تم الإبلاغ عنه",
+		InProgress: En ? "In Progress" : "قيد التنفيذ",
+		Resolved: En ? "Resolved" : "تم الحل",
+	  };
+	const statusColors = {
+		Active: "blue",
+		InProgress: "orange",
+		Resolved: "green",
+	};
+	const statusIcons = {
+		Active: <ExclamationCircleOutlined />,
+		InProgress: <SyncOutlined />,
+		Resolved: <CheckCircleOutlined />,
+	};
+
 	const columns = [
 		{
 			title: En ? "User Name" : "اسم المستخدم",
@@ -202,32 +215,13 @@ const ReportTable = () => {
 			dataIndex: "reportStatus",
 			key: "reportStatus",
 			render: (reportStatus) => {
-				let translatedStatus = reportStatus;
+				const label = statusTranslations[reportStatus] || reportStatus;
+				const color = statusColors[reportStatus] || "default";
+				const icon = statusIcons[reportStatus] || null;
 
-				if (!En) {
-					if (reportStatus === "In progress") {
-						translatedStatus = "قيد التنفيذ";
-					} else if (reportStatus === "Reported") {
-						translatedStatus = "تم الإبلاغ عنه";
-					} else if (reportStatus === "Active") {
-						translatedStatus = "نشط";
-					}
-				}
-				let color = "";
-				let icon = null;
-				if (reportStatus === (En ? "In progress" : "قيد التنفيذ")) {
-					color = "orange";
-					icon = <SyncOutlined />;
-				} else if (reportStatus === (En ? "Reported" : "تم الإبلاغ عنه")) {
-					color = "blue";
-					icon = <ExclamationCircleOutlined />;
-				} else {
-					color = "green";
-					icon = <CheckCircleOutlined />;
-				}
 				return (
 					<Tag icon={icon} color={color}>
-						{translatedStatus}
+						{label}
 					</Tag>
 				);
 			},
@@ -282,76 +276,86 @@ const ReportTable = () => {
 	];
 
 	const STATUS_TO_CODE = {
-		"Reported": 0,
+		Active: 0,
 		"تم الإبلاغ عنه": 0,
-		"In progress": 1,
+		InProgress: 1,
 		"قيد التنفيذ": 1,
-		"Resolved": 2,
+		Resolved: 2,
 		"تم الحل": 2,
-	};
-	
-	const CODE_TO_STATUS = {
-		0: En ? "Reported" : "تم الإبلاغ عنه",
-		1: En ? "In progress" : "قيد التنفيذ",
-		2: En ? "Resolved" : "تم الحل",
-	};
+	  };
+	  
+	  const CODE_TO_STATUS = {
+		0: "Active",
+		1: "InProgress",
+		2: "Resolved"
+	  };
 	const [editModal, setEditModal] = useState({
-        open: false,
-        row: null,
-        newStatus: "",
-        loading: false,
-    });
+		open: false,
+		row: null,
+		newStatus: "",
+		loading: false,
+	});
+	const statusOptions = [
+		{ value: "Active", labelEn: "Active", labelAr: "تم الإبلاغ عنه" },
+		{ value: "InProgress", labelEn: "In Progress", labelAr: "قيد التنفيذ" },
+		{ value: "Resolved", labelEn: "Resolved", labelAr: "تم الحل" },
+	];
 	const handleStatusChange = (value) => {
-        setEditModal(prev => ({ ...prev, newStatus: value }));
-    };
+		setEditModal((prev) => ({ ...prev, newStatus: value }));
+	};
 	const handleModalOk = async () => {
-        if (!editModal.row) return;
-        const statusValue = editModal.newStatus;
-        const statusCode = STATUS_TO_CODE[statusValue];
-        setEditModal(prev => ({ ...prev, loading: true }));
-		const token = localStorage.getItem('userToken');
+		if (!editModal.row) return;
+		const statusValue = editModal.newStatus;
+		const statusCode = STATUS_TO_CODE[statusValue];
+		setEditModal((prev) => ({ ...prev, loading: true }));
+		const token = localStorage.getItem("userToken");
 		console.log(token, statusCode, editModal.row.id);
-        try {
-            await axios.put(
+		try {
+			await axios.put(
 				"https://cms-reporting.runasp.net/api/Report",
 				{
-					"reportId": editModal.row.id,
-					"status": statusCode
+					reportId: editModal.row.id,
+					status: statusCode,
 				},
 				{
 					headers: {
 						"Content-Type": "application/json",
-						"Authorization": `Bearer ${token}`
-					}
+						Authorization: `Bearer ${token}`,
+					},
 				}
-			)
-            setTableData(prev =>
-                prev.map(row =>
-                    row.id === editModal.row.id
-                        ? { ...row, reportStatus: En ? CODE_TO_STATUS[statusCode] : statusValue }
-                        : row
-                )
-            );
-            setEditModal({ open: false, row: null, newStatus: "", loading: false });
-        } catch (e) {
-            Modal.error({
-                title: En ? "Error" : "خطأ",
-                content:
-                    En
-                        ? "Failed to update status. Please try again."
-                        : "لم يتم تحديث الحالة، حاول مجددًا.",
-            });
-            setEditModal(prev => ({ ...prev, loading: false }));
-        }
-    };
+			);
+			setTableData((prev) =>
+				prev.map((row) =>
+					row.id === editModal.row.id
+						? {
+								...row,
+								reportStatus: statusValue ,
+						  }
+						: row
+				)
+			);
+			setEditModal({ open: false, row: null, newStatus: "", loading: false });
+		} catch (e) {
+			Modal.error({
+				title: En ? "Error" : "خطأ",
+				content: En
+					? "Failed to update status. Please try again."
+					: "لم يتم تحديث الحالة، حاول مجددًا.",
+			});
+			setEditModal((prev) => ({ ...prev, loading: false }));
+		}
+	};
 	const showEditModal = (row) => {
-        setEditModal({
-            open: true,
-            row,
-            newStatus: row.reportStatus,
-            loading: false
-        });
-    };
+		let stat = row.reportStatus;
+		if(stat === "تم الإبلاغ عنه") stat = "Active";
+		else if(stat === "قيد التنفيذ") stat = "InProgress";
+		else if(stat === "تم الحل") stat = "Resolved";
+		setEditModal({
+		  open: true,
+		  row,
+		  newStatus: stat
+		});
+	  };
 
 	const dateFormat = "DD/MM/YYYY";
 	const handleDateRangeChange = (dates) => {
@@ -381,7 +385,7 @@ const ReportTable = () => {
 					params,
 				}
 			);
-
+			console.log(data);
 			const formattedData = data.value.map((item, index) => ({
 				...item,
 				key: item.id || index,
@@ -404,35 +408,38 @@ const ReportTable = () => {
 	return (
 		<>
 			<Modal
-            title={En ? "Update Status" : "تحديث الحالة"}
-            open={editModal.open}
-            onCancel={() => setEditModal({ ...editModal, open: false })}
-            onOk={handleModalOk}
-            confirmLoading={editModal.loading}
-            okText={En ? "Save" : "حفظ"}
-            cancelText={En ? "Cancel" : "إلغاء"}
-            centered
-            destroyOnClose
-            maskClosable={false}
-            afterClose={() => setEditModal({ open: false, row: null, newStatus: "", loading: false })}
-            dir={En ? "ltr" : "rtl"}
-        >
-            <Select
-                style={{ width: "100%" }}
-                value={editModal.newStatus}
-                onChange={handleStatusChange}
-            >
-                <Option value={En ? "Reported" : "تم الإبلاغ عنه"}>
-                    {En ? "Reported" : "تم الإبلاغ عنه"}
-                </Option>
-                <Option value={En ? "In progress" : "قيد التنفيذ"}>
-                    {En ? "In Progress" : "قيد التنفيذ"}
-                </Option>
-                <Option value={En ? "Resolved" : "تم الحل"}>
-                    {En ? "Resolved" : "تم الحل"}
-                </Option>
-            </Select>
-        </Modal>
+				title={En ? "Update Status" : "تحديث الحالة"}
+				open={editModal.open}
+				onCancel={() => setEditModal({ ...editModal, open: false })}
+				onOk={handleModalOk}
+				confirmLoading={editModal.loading}
+				okText={En ? "Save" : "حفظ"}
+				cancelText={En ? "Cancel" : "إلغاء"}
+				centered
+				destroyOnClose
+				maskClosable={false}
+				afterClose={() =>
+					setEditModal({
+						open: false,
+						row: null,
+						newStatus: "",
+						loading: false,
+					})
+				}
+				dir={En ? "ltr" : "rtl"}
+			>
+				<Select
+					style={{ width: "100%" }}
+					value={editModal.newStatus}
+					onChange={handleStatusChange}
+				>
+					{statusOptions.map((st) => (
+						<Option value={st.value} key={st.value}>
+							{En ? st.labelEn : st.labelAr}
+						</Option>
+					))}
+				</Select>
+			</Modal>
 
 			{error && (
 				<div style={{ color: "red", marginBottom: "16px" }}>{error}</div>
