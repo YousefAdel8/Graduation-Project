@@ -16,7 +16,7 @@ import {
 	Tooltip,
 	DatePicker,
 	Select,
-	Form,
+	Modal,
 } from "antd";
 import Highlighter from "react-highlight-words";
 import { Print } from "../../../utils/exportFunctions";
@@ -46,32 +46,7 @@ const ReportTable = () => {
 
 	const [searchText, setSearchText] = useState("");
 	const [searchedColumn, setSearchedColumn] = useState("");
-	const [tableData, setTableData] = useState([
-		{
-			key: "1",
-			name: En ? "John Brown" : "جون براون",
-			service: En ? "Street Light" : "ضوء الشارع",
-			priority: En ? "High" : "عالي",
-			status: En ? "In progress" : "قيد التنفيذ",
-			date: "01/01/2023",
-		},
-		{
-			key: "2",
-			name: En ? "Jane Doe" : "جان دو",
-			service: En ? "Water Leak" : "تسرب المياة",
-			priority: En ? "Medium" : "متوسط",
-			status: En ? "Reported" : "تم الإبلاغ عنه",
-			date: "02/02/2023",
-		},
-		{
-			key: "3",
-			name: En ? "Bob Smith" : "بوب سميث",
-			service: En ? "Electricity Outage" : "انقطاع الكهرباء",
-			priority: En ? "Low" : "منخفضة",
-			status: En ? "Resolved" : "تم الحل",
-			date: "03/03/2023",
-		},
-	]);
+	const [tableData, setTableData] = useState([]);
 	const [filteredData, setFilteredData] = useState(tableData);
 	const [dateRange, setDateRange] = useState([null, null]);
 	const [pageSize, setPageSize] = useState(10);
@@ -118,17 +93,8 @@ const ReportTable = () => {
 		setTableData(newData);
 	};
 
-	const [showUpdateDiv, setShowUpdateDiv] = useState(false);
-	const [selectedRowId, setSelectedRowId] = useState(null);
-	const [selectedStatus, setSelectedStatus] = useState("");
-	const [statusForm] = Form.useForm();
 
-	const handleEdit = (record) => {
-		setSelectedRowId(record.key);
-		setSelectedStatus(record.status);
-		statusForm.setFieldsValue({ status: record.status });
-		setShowUpdateDiv(true);
-	};
+	
 
 	const handleView = (record) => {
 		console.log(record);
@@ -299,7 +265,7 @@ const ReportTable = () => {
 					<Button
 						color="primary"
 						variant="filled"
-						onClick={() => handleEdit(record)}
+						onClick={() => showEditModal(record)}
 					>
 						{En ? "Edit" : "تعديل"}
 					</Button>
@@ -315,20 +281,77 @@ const ReportTable = () => {
 		},
 	];
 
-	const updateStatus = async () => {
-		try {
-			const values = await statusForm.validateFields();
-			setTableData((prevData) =>
-				prevData.map((row) =>
-					row.key === selectedRowId ? { ...row, status: values.status } : row
-				)
-			);
-			setShowUpdateDiv(false);
-			setSelectedRowId(null);
-		} catch (err) {
-			// ignore
-		}
+	const STATUS_TO_CODE = {
+		"Reported": 0,
+		"تم الإبلاغ عنه": 0,
+		"In progress": 1,
+		"قيد التنفيذ": 1,
+		"Resolved": 2,
+		"تم الحل": 2,
 	};
+	
+	const CODE_TO_STATUS = {
+		0: En ? "Reported" : "تم الإبلاغ عنه",
+		1: En ? "In progress" : "قيد التنفيذ",
+		2: En ? "Resolved" : "تم الحل",
+	};
+	const [editModal, setEditModal] = useState({
+        open: false,
+        row: null,
+        newStatus: "",
+        loading: false,
+    });
+	const handleStatusChange = (value) => {
+        setEditModal(prev => ({ ...prev, newStatus: value }));
+    };
+	const handleModalOk = async () => {
+        if (!editModal.row) return;
+        const statusValue = editModal.newStatus;
+        const statusCode = STATUS_TO_CODE[statusValue];
+        setEditModal(prev => ({ ...prev, loading: true }));
+		const token = localStorage.getItem('userToken');
+		console.log(token, statusCode, editModal.row.id);
+        try {
+            await axios.put(
+				"https://cms-reporting.runasp.net/api/Report",
+				{
+					"reportId": editModal.row.id,
+					"status": statusCode
+				},
+				{
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${token}`
+					}
+				}
+			)
+            setTableData(prev =>
+                prev.map(row =>
+                    row.id === editModal.row.id
+                        ? { ...row, reportStatus: En ? CODE_TO_STATUS[statusCode] : statusValue }
+                        : row
+                )
+            );
+            setEditModal({ open: false, row: null, newStatus: "", loading: false });
+        } catch (e) {
+            Modal.error({
+                title: En ? "Error" : "خطأ",
+                content:
+                    En
+                        ? "Failed to update status. Please try again."
+                        : "لم يتم تحديث الحالة، حاول مجددًا.",
+            });
+            setEditModal(prev => ({ ...prev, loading: false }));
+        }
+    };
+	const showEditModal = (row) => {
+        setEditModal({
+            open: true,
+            row,
+            newStatus: row.reportStatus,
+            loading: false
+        });
+    };
 
 	const dateFormat = "DD/MM/YYYY";
 	const handleDateRangeChange = (dates) => {
@@ -380,78 +403,37 @@ const ReportTable = () => {
 
 	return (
 		<>
-			{showUpdateDiv && (
-				<div
-					style={{
-						position: "fixed",
-						top: 0,
-						left: 0,
-						bottom: 0,
-						right: 0,
-						width: "100vw",
-						height: "100vh",
-						backgroundColor: "rgba(0,0,0,0.5)",
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						zIndex: 1000,
-					}}
-					onClick={() => setShowUpdateDiv(false)}
-					dir={En ? "ltr" : "rtl"}
-				>
-					<div
-						className="bg-white p-4 rounded"
-						style={{ width: "350px", boxShadow: "0 4px 6px rgba(0,0,0,.1)" }}
-						onClick={(e) => e.stopPropagation()}
-					>
-						<h3 style={{ fontWeight: 600, marginBottom: 20 }}>
-							{En ? "Update Status" : "تحديث الحالة"}
-						</h3>
-						<Form
-							form={statusForm}
-							layout="vertical"
-							initialValues={{ status: selectedStatus }}
-						>
-							<Form.Item
-								name="status"
-								label={En ? "Select Status" : "حدد الحالة"}
-								rules={[
-									{
-										required: true,
-										message: En ? "Please select status" : "اختر الحالة",
-									},
-								]}
-							>
-								<Select>
-									<Option value={En ? "Reported" : "تم الإبلاغ عنه"}>
-										{En ? "Reported" : "تم الإبلاغ عنه"}
-									</Option>
-									<Option value={En ? "In progress" : "قيد التنفيذ"}>
-										{En ? "In Progress" : "قيد التنفيذ"}
-									</Option>
-									<Option value={En ? "Resolved" : "تم الحل"}>
-										{En ? "Resolved" : "تم الحل"}
-									</Option>
-								</Select>
-							</Form.Item>
-							<Space
-								style={{
-									width: "100%",
-									justifyContent: En ? "flex-end" : "flex-start",
-									direction: En ? "ltr" : "rtl",
-								}}
-							>
-								<Button onClick={() => setShowUpdateDiv(false)} type="default">
-									{En ? "Cancel" : "إلغاء"}
-								</Button>
-								<Button type="primary" onClick={updateStatus}>
-									{En ? "Save" : "حفظ"}
-								</Button>
-							</Space>
-						</Form>
-					</div>
-				</div>
-			)}
+			<Modal
+            title={En ? "Update Status" : "تحديث الحالة"}
+            open={editModal.open}
+            onCancel={() => setEditModal({ ...editModal, open: false })}
+            onOk={handleModalOk}
+            confirmLoading={editModal.loading}
+            okText={En ? "Save" : "حفظ"}
+            cancelText={En ? "Cancel" : "إلغاء"}
+            centered
+            destroyOnClose
+            maskClosable={false}
+            afterClose={() => setEditModal({ open: false, row: null, newStatus: "", loading: false })}
+            dir={En ? "ltr" : "rtl"}
+        >
+            <Select
+                style={{ width: "100%" }}
+                value={editModal.newStatus}
+                onChange={handleStatusChange}
+            >
+                <Option value={En ? "Reported" : "تم الإبلاغ عنه"}>
+                    {En ? "Reported" : "تم الإبلاغ عنه"}
+                </Option>
+                <Option value={En ? "In progress" : "قيد التنفيذ"}>
+                    {En ? "In Progress" : "قيد التنفيذ"}
+                </Option>
+                <Option value={En ? "Resolved" : "تم الحل"}>
+                    {En ? "Resolved" : "تم الحل"}
+                </Option>
+            </Select>
+        </Modal>
+
 			{error && (
 				<div style={{ color: "red", marginBottom: "16px" }}>{error}</div>
 			)}

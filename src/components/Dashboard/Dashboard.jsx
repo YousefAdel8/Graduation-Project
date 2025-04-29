@@ -15,10 +15,6 @@ import {
 	Col,
 	Statistic,
 	Typography,
-	Badge,
-	Select,
-	Progress,
-	Divider,
 } from "antd";
 import {
 	ClockCircleOutlined,
@@ -28,66 +24,16 @@ import {
 } from "@ant-design/icons";
 import axios from "axios";
 import { useLanguage } from "../../context/LanguageContext";
+import TopCategoriesCard from "./TopCategoriesCard";
 const { Title, Text } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const Dashboard = () => {
 	const { isEnglish: En } = useLanguage();
-	const { Option } = Select;
+	
 
-	const [timeRange, setTimeRange] = useState("day");
-
-	const reportData = {
-		day: {
-			criticalReports: 17,
-			responseTime: 34,
-			change: 5,
-			improvementDirection: "down",
-			emergencyTypes: [
-				{ type: En ? "Electricity" : "كهرباء", count: 8, color: "#1677ff" },
-				{ type: En ? "Gas" : "غاز", count: 5, color: "#ff4d4f" },
-				{ type: En ? "Water" : "مياه", count: 4, color: "#52c41a" },
-			],
-		},
-		week: {
-			criticalReports: 86,
-			responseTime: 38,
-			change: 2,
-			improvementDirection: "down",
-			emergencyTypes: [
-				{ type: En ? "Electricity" : "كهرباء", count: 38, color: "#1677ff" },
-				{ type: En ? "Gas" : "غاز", count: 22, color: "#ff4d4f" },
-				{ type: En ? "Water" : "مياه", count: 26, color: "#52c41a" },
-			],
-		},
-		month: {
-			criticalReports: 253,
-			responseTime: 41,
-			change: 8,
-			improvementDirection: "up",
-			emergencyTypes: [
-				{ type: En ? "Electricity" : "كهرباء", count: 112, color: "#1677ff" },
-				{ type: En ? "Gas" : "غاز", count: 86, color: "#ff4d4f" },
-				{ type: En ? "Water" : "مياه", count: 55, color: "#52c41a" },
-			],
-		},
-	};
-
-	const currentData = reportData[timeRange];
-
-	const totalEmergencies = currentData.emergencyTypes.reduce(
-		(acc, item) => acc + item.count,
-		0
-	);
-	const emergencyTypeWithPercent = currentData.emergencyTypes.map((item) => ({
-		...item,
-		percent: Math.round((item.count / totalEmergencies) * 100),
-	}));
-
-	const mostCommonType = [...currentData.emergencyTypes].sort(
-		(a, b) => b.count - a.count
-	)[0];
+	
 
 	const data = {
 		labels: En
@@ -237,154 +183,7 @@ const Dashboard = () => {
 					</Card>
 				</Col>
 				<Col xs={24} lg={10}>
-					<Card
-          
-						title={
-							<div
-								style={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "space-between",
-								}}
-							>
-								<div style={{ display: "flex", alignItems: "center" }}>
-									<span style={{ marginRight: 8, fontWeight: "bold" }}>
-										{" "}
-										{En ? "Emergency Reports" : "التقارير الطارئة"}
-									</span>
-								</div>
-								<Select
-									defaultValue={timeRange}
-									style={{ width: 100 }}
-									onChange={setTimeRange}
-								>
-									<Option value="day">{En ? "Day" : "يوم"}</Option>
-									<Option value="week">{En ? "Week" : "أسبوع"}</Option>
-									<Option value="month">{En ? "Month" : "شهر"}</Option>
-								</Select>
-							</div>
-						}
-						Style={{ padding: "16px" ,height:isMobile?"": "440px"}}
-						className="shadow-sm"
-					>
-						<Row gutter={[16, 16]}>
-							<Col xs={24} sm={12}>
-								<Card
-									bordered={false}
-									style={{ backgroundColor: "#fff7e6", borderRadius: 6 }}
-								>
-									<Statistic
-										title={
-											<Text strong style={{ fontSize: 16 }}>
-												{" "}
-												{En ? "Critical Reports" : "التقارير الحرجة"}
-											</Text>
-										}
-										value={currentData.criticalReports}
-										valueStyle={{ color: "#fa8c16", fontWeight: "bold" }}
-										prefix={<Badge status="error" />}
-									/>
-								</Card>
-							</Col>
-
-							<Col xs={24} sm={12}>
-								<Card
-									bordered={false}
-									style={{ backgroundColor: "#f6ffed", borderRadius: 6 }}
-								>
-									<Statistic
-										title={
-											<Text strong style={{ fontSize: 16 }}>
-												{En ? "Average Response Time" : "متوسط وقت الاستجابة"}
-											</Text>
-										}
-										value={currentData.responseTime}
-										valueStyle={{ color: "#52c41a", fontWeight: "bold" }}
-										prefix={
-											<ClockCircleOutlined style={{ fontSize: "18px" }} />
-										}
-										suffix={En ? "min" : "دقيقة"}
-									/>
-									<div
-										style={{
-											marginTop: 5,
-											display: "flex",
-											alignItems: "center",
-										}}
-									>
-										{currentData.improvementDirection === "down" ? (
-											<>
-												<ArrowDownOutlined
-													style={{ color: "#52c41a", fontSize: "14px" }}
-												/>
-												<Text type="success" style={{ marginRight: 4 }}>
-													{En ? " Decrease " : "انخفاض"} {currentData.change}%
-												</Text>
-											</>
-										) : (
-											<>
-												<ArrowUpOutlined
-													style={{ color: "#ff4d4f", fontSize: "14px" }}
-												/>
-												<Text type="danger" style={{ marginRight: 4 }}>
-													{En ? " Increase " : "ارتفاع"} {currentData.change}%
-												</Text>
-											</>
-										)}
-									</div>
-								</Card>
-							</Col>
-						</Row>
-
-						<Divider style={{ margin: "16px 0" }} />
-
-						<div>
-							<div
-								style={{
-									display: "flex",
-									alignItems: "center",
-									marginBottom: 12,
-								}}
-							>
-								<LineChartOutlined style={{ fontSize: "18px" }} />
-								<Title level={5} style={{ margin: "0 8px" }}>
-									{En
-										? " Most Common Types of Emergencies "
-										: " أكثر أنواع المشاكل الطارئة"}
-								</Title>
-								<Badge
-									count={mostCommonType.type}
-									style={{
-										backgroundColor: mostCommonType.color,
-										marginRight: "auto",
-									}}
-								/>
-							</div>
-
-							{emergencyTypeWithPercent.map((item, index) => (
-								<div key={index} style={{ marginBottom: 10 }}>
-									<div
-										style={{
-											display: "flex",
-											justifyContent: "space-between",
-											marginBottom: 4,
-										}}
-									>
-										<Text>{item.type}</Text>
-										<Text strong>
-											{item.count} ({item.percent}%)
-										</Text>
-									</div>
-									<Progress
-										percent={item.percent}
-										showInfo={false}
-										strokeColor={item.color}
-										size="small"
-									/>
-								</div>
-							))}
-						</div>
-					</Card>
+					<TopCategoriesCard/>
 				</Col>
 			</Row>
 		</>
