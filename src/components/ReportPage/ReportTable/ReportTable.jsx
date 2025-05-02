@@ -77,84 +77,6 @@ const ReportTable = () => {
 		setTableData(newData);
 	};
 
-
-	const getColumnSearchProps = (dataIndex) => ({
-		filterDropdown: ({
-			setSelectedKeys,
-			selectedKeys,
-			confirm,
-			clearFilters,
-			close,
-		}) => (
-			<div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-				<Input
-					ref={searchInput}
-					placeholder={
-						En
-							? `Search ${dataIndex}`
-							: `بحث عن ${fieldTranslations[dataIndex] ?? dataIndex}`
-					}
-					value={selectedKeys[0]}
-					onChange={(e) =>
-						setSelectedKeys(e.target.value ? [e.target.value] : [])
-					}
-					onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-					style={{ marginBottom: 8, display: "block" }}
-				/>
-				<Space>
-					<Button
-						type="primary"
-						onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-						icon={<SearchOutlined />}
-						size="small"
-						style={{ width: 90 }}
-					>
-						{En ? "Search" : "بحث"}
-					</Button>
-					<Button
-						onClick={() => clearFilters && handleReset(clearFilters)}
-						size="small"
-						style={{ width: 90 }}
-					>
-						{En ? "Reset" : "اعادة تعيين"}
-					</Button>
-					<Button
-						type="link"
-						size="small"
-						onClick={() => {
-							close();
-						}}
-					>
-						{En ? "Close" : "اغلاق"}
-					</Button>
-				</Space>
-			</div>
-		),
-		filterIcon: (filtered) => (
-			<SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-		),
-		onFilter: (value, record) =>
-			record[dataIndex]?.toString().toLowerCase().includes(value.toLowerCase()),
-		filterDropdownProps: {
-			onOpenChange(open) {
-				if (open) {
-					setTimeout(() => searchInput.current?.select(), 100);
-				}
-			},
-		},
-		render: (text) =>
-			searchedColumn === dataIndex ? (
-				<Highlighter
-					highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-					searchWords={[searchText]}
-					autoEscape
-					textToHighlight={text ? text.toString() : ""}
-				/>
-			) : (
-				text
-			),
-	});
-
 	const statusTranslations = {
 		Active: En ? "Active" : "تم الإبلاغ عنه",
 		InProgress: En ? "In Progress" : "قيد التنفيذ",
@@ -176,20 +98,17 @@ const ReportTable = () => {
 			title: En ? "User Name" : "اسم المستخدم",
 			dataIndex: "mobileUserName",
 			key: "mobileUserName",
-			...getColumnSearchProps("mobileUserName"),
 		},
 		{
 			title: En ? "Issue Category" : "نوع المشكلة",
 
 			dataIndex: En ? "issueCategoryEN" : "issueCategoryAR",
 			key: En ? "issueCategoryEN" : "issueCategoryAR",
-			...getColumnSearchProps(En ? "issueCategoryEN" : "issueCategoryAR"),
 		},
 		{
 			title: En ? "User Phone Number" : "هاتف المستخدم",
 			dataIndex: "mobileUserPhone",
 			key: "mobileUserPhone",
-			...getColumnSearchProps("mobileUserPhone"),
 		},
 		{
 			title: En ? "Status" : "الحالة",
@@ -385,7 +304,7 @@ const ReportTable = () => {
 		if (filtersObj.From) params.From = filtersObj.From;
 		if (filtersObj.To) params.To = filtersObj.To;
 		if (filtersObj.Keyword) params.Keyword = filtersObj.Keyword;
-		console.log("براميترز الـ API:", params);
+		console.log( params);
 		try {
 			const { data } = await axios.get(
 				"https://cms-reporting.runasp.net/api/Report",
