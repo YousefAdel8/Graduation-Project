@@ -60,28 +60,12 @@ const ReportTable = () => {
 
 	const searchInput = useRef(null);
 
-	useEffect(() => {
-		if (dateRange[0] && dateRange[1]) {
-			const [start, end] = dateRange;
-			const dateFormat = "DD/MM/YYYY";
-			setFilteredData(
-				tableData.filter((item) => {
-					const itemDate = dayjs(item.date, dateFormat);
-					return (
-						itemDate.isSameOrAfter(start, "day") &&
-						itemDate.isSameOrBefore(end, "day")
-					);
-				})
-			);
-		} else {
-			setFilteredData(tableData);
-		}
-	}, [tableData, dateRange]);
-
-	const handleSearch = (selectedKeys, confirm, dataIndex) => {
-		confirm();
-		setSearchText(selectedKeys[0]);
-		setSearchedColumn(dataIndex);
+	const handleSearch = (value) => {
+		setFilters((prev) => ({
+			...prev,
+			Keyword: value,
+		}));
+		setPageNumber(1); // نرجع للصفحة الأولى لما نبحث
 	};
 	const handleReset = (clearFilters) => {
 		clearFilters();
@@ -178,7 +162,7 @@ const ReportTable = () => {
 		Active: En ? "Active" : "تم الإبلاغ عنه",
 		InProgress: En ? "In Progress" : "قيد التنفيذ",
 		Resolved: En ? "Resolved" : "تم الحل",
-	  };
+	};
 	const statusColors = {
 		Active: "blue",
 		InProgress: "orange",
@@ -282,9 +266,8 @@ const ReportTable = () => {
 		"قيد التنفيذ": 1,
 		Resolved: 2,
 		"تم الحل": 2,
-	  };
-	  
-	 
+	};
+
 	const [editModal, setEditModal] = useState({
 		open: false,
 		row: null,
@@ -325,7 +308,7 @@ const ReportTable = () => {
 					row.id === editModal.row.id
 						? {
 								...row,
-								reportStatus: statusValue ,
+								reportStatus: statusValue,
 						  }
 						: row
 				)
@@ -343,21 +326,53 @@ const ReportTable = () => {
 	};
 	const showEditModal = (row) => {
 		let stat = row.reportStatus;
-		if(stat === "تم الإبلاغ عنه") stat = "Active";
-		else if(stat === "قيد التنفيذ") stat = "InProgress";
-		else if(stat === "تم الحل") stat = "Resolved";
+		if (stat === "تم الإبلاغ عنه") stat = "Active";
+		else if (stat === "قيد التنفيذ") stat = "InProgress";
+		else if (stat === "تم الحل") stat = "Resolved";
 		setEditModal({
-		  open: true,
-		  row,
-		  newStatus: stat
+			open: true,
+			row,
+			newStatus: stat,
 		});
-	  };
-
-	const dateFormat = "DD/MM/YYYY";
-	const handleDateRangeChange = (dates) => {
-		setDateRange(!dates || dates.length !== 2 ? [null, null] : dates);
 	};
 
+	const dateFormat = "YYYY-MM-DD";
+	const handleDateRangeChange = (dates, dateStrings) => {
+		if (dates) {
+			const fromDate = dateStrings[0]
+				? dayjs(dateStrings[0], dateFormat).format("YYYY-MM-DD")
+				: null;
+			const toDate = dateStrings[1]
+				? dayjs(dateStrings[1], dateFormat).format("YYYY-MM-DD")
+				: null;
+
+			console.log("تواريخ مرسلة للـ API:", { fromDate, toDate });
+
+			setDateRange(dates);
+			setFilters((prev) => ({
+				...prev,
+				From: fromDate,
+				To: toDate,
+			}));
+
+			setPageNumber(1);
+		} else {
+			setDateRange([]);
+			setFilters((prev) => ({
+				...prev,
+				From: null,
+				To: null,
+			}));
+		}
+	};
+	const handleKeywordSearch = (value) => {
+		console.log("بحث بكلمة:", value);
+		setFilters((prev) => ({
+			...prev,
+			Keyword: value,
+		}));
+		setPageNumber(1);
+	};
 	const fetchData = async (
 		page = pageNumber,
 		size = pageSize,
@@ -373,7 +388,7 @@ const ReportTable = () => {
 		if (filtersObj.From) params.From = filtersObj.From;
 		if (filtersObj.To) params.To = filtersObj.To;
 		if (filtersObj.Keyword) params.Keyword = filtersObj.Keyword;
-
+		console.log("براميترز الـ API:", params);
 		try {
 			const { data } = await axios.get(
 				"https://cms-reporting.runasp.net/api/Report",
@@ -398,8 +413,12 @@ const ReportTable = () => {
 		}
 	};
 	useEffect(() => {
-		fetchData();
-	}, [pageNumber, pageSize, filters]);
+		console.log("فلاتر تغيرت:", filters);
+		fetchData(pageNumber, pageSize, filters);
+	  }, [pageNumber, pageSize, filters.From, filters.To, filters.Keyword]);
+	useEffect(() => {
+		setFilteredData(tableData);
+	}, [tableData]);
 
 	return (
 		<>
@@ -440,6 +459,15 @@ const ReportTable = () => {
 			{error && (
 				<div style={{ color: "red", marginBottom: "16px" }}>{error}</div>
 			)}
+			<div className="w-100 my-3" dir={En ? "ltr" : "rtl"}>
+				<Input.Search
+					placeholder={En ? "Search" : "بحث"}
+					allowClear
+					onSearch={handleKeywordSearch}
+					style={{ width: 200, marginRight: 16 }}
+					className="mx-2"
+				/>
+			</div>
 			<div className="w-100 my-3" dir={En ? "ltr" : "rtl"}>
 				<RangePicker
 					format={dateFormat}
