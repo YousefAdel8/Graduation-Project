@@ -284,11 +284,7 @@ const ReportTable = () => {
 		"تم الحل": 2,
 	  };
 	  
-	  const CODE_TO_STATUS = {
-		0: "Active",
-		1: "InProgress",
-		2: "Resolved"
-	  };
+	 
 	const [editModal, setEditModal] = useState({
 		open: false,
 		row: null,

@@ -156,9 +156,9 @@ const Dashboard = () => {
 								value={stat.value}
 								style={{ marginBottom: 8 }}
 							/>
-							<Text type="secondary">
+							{/*<Text type="secondary">
 								<Text type="success">{stat.percentage}%</Text> {stat.period}
-							</Text>
+							</Text>*/}
 						</Card>
 					</Col>
 				))}
