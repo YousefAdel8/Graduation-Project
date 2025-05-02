@@ -92,13 +92,13 @@ export default function TopCategoriesCard() {
 	const reportData = {
 		day: {
 			criticalReports: CriticalReportsApi.todayReports,
-			responseTime: formatAverageResponseTimeMinutes(30),
+			responseTime: formatAverageResponseTimeMinutes(CriticalReportsApi.averageResponseTimeMinutes),
 			change: CriticalReportsApi.dailyChangePercentage,
 			improvementDirection: "down",
 		},
 		month: {
 			criticalReports: CriticalReportsApi.monthReports,
-			responseTime: formatAverageResponseTimeMinutes(50),
+			responseTime: formatAverageResponseTimeMinutes(CriticalReportsApi.averageResponseTimeMinutes),
 			change: CriticalReportsApi.monthlyChangePercentage,
 			improvementDirection: "up",
 		},

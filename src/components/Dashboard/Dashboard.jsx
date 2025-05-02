@@ -25,6 +25,7 @@ import {
 import axios from "axios";
 import { useLanguage } from "../../context/LanguageContext";
 import TopCategoriesCard from "./TopCategoriesCard";
+import MonthlyRateChart from "./MonthlyRateChart";
 const { Title, Text } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
@@ -35,53 +36,6 @@ const Dashboard = () => {
 
 	
 
-	const data = {
-		labels: En
-			? ["January", "February", "March", "April", "May"]
-			: ["يناير", "فبراير", "مارس", "أبريل", "مايو"],
-		datasets: [
-			{
-				label: En ? "Reports" : "التقارير",
-				data: [10, 20, 15, 30, 25],
-				backgroundColor: "rgb(2, 8, 23)",
-			},
-		],
-	};
-
-	const options = {
-		responsive: true,
-		maintainAspectRatio: false,
-    Layout:{
-      padding:{ bottom:10},
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          drawerBorder:false,
-        },
-		ticks: {
-			callback: function (value) {
-				return value;
-			},
-		},
-      },
-    },
-		plugins: {
-			legend: {
-				display: false,
-			},
-			title: {
-				display: false,
-			},
-		},
-		
-	};
 
 	
 	const [summaryData,setSummaryData]=useState(null);
@@ -166,21 +120,7 @@ const Dashboard = () => {
 
 			<Row gutter={[16, 16]} style={{ marginTop: 16 }} dir={En ? "ltr" : "rtl"}>
 				<Col xs={24} lg={14}>
-					<Card
-						title={
-							En
-								? "Monthly rate of receiving reports"
-								: "معدل استقبال التقارير شهريا"
-						}
-						Style={{ padding: isMobile?"10px": "30px", height:isMobile?"230px": "400px" }} 
-						className="shadow-sm" 
-					>
-						{
-							<div className="w-100 h-100" >
-								<Bar data={data} options={options} className={`w-100 h-100`} />
-							</div>
-						}
-					</Card>
+					<MonthlyRateChart/>
 				</Col>
 				<Col xs={24} lg={10}>
 					<TopCategoriesCard/>
