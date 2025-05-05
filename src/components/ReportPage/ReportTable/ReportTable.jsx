@@ -1,9 +1,8 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	CheckCircleOutlined,
 	ExclamationCircleOutlined,
 	PrinterOutlined,
-	SearchOutlined,
 	SyncOutlined,
 } from "@ant-design/icons";
 import {
@@ -18,13 +17,13 @@ import {
 	Select,
 	Modal,
 } from "antd";
-import Highlighter from "react-highlight-words";
 import { Print } from "../../../utils/exportFunctions";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { useLanguage } from "../../../context/LanguageContext";
 import axios from "axios";
+import ReportTableDetails from "./ReportTableDetails";
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 const { RangePicker } = DatePicker;
@@ -32,20 +31,12 @@ const { RangePicker } = DatePicker;
 const ReportTable = () => {
 	const { isEnglish: En } = useLanguage();
 
-	const fieldTranslations = {
-		name: "الاسم",
-		service: "نوع الخدمة",
-		resolutionTime: "وقت التحليل",
-		date: "التاريخ",
-		rating: "التقييم",
-	};
+	
 
 	const { Option } = Select;
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
-	const [searchText, setSearchText] = useState("");
-	const [searchedColumn, setSearchedColumn] = useState("");
 	const [tableData, setTableData] = useState([]);
 	const [filteredData, setFilteredData] = useState(tableData);
 	const [dateRange, setDateRange] = useState([null, null]);
@@ -58,19 +49,6 @@ const ReportTable = () => {
 	});
 	const [total, setTotal] = useState(0);
 
-	const searchInput = useRef(null);
-
-	const handleSearch = (value) => {
-		setFilters((prev) => ({
-			...prev,
-			Keyword: value,
-		}));
-		setPageNumber(1); 
-	};
-	const handleReset = (clearFilters) => {
-		clearFilters();
-		setSearchText("");
-	};
 
 	const confirmDelete = (record) => {
 		const newData = tableData.filter((item) => item.key !== record.key);
@@ -304,7 +282,7 @@ const ReportTable = () => {
 		if (filtersObj.From) params.From = filtersObj.From;
 		if (filtersObj.To) params.To = filtersObj.To;
 		if (filtersObj.Keyword) params.Keyword = filtersObj.Keyword;
-		console.log( params);
+		console.log(params);
 		try {
 			const { data } = await axios.get(
 				"https://cms-reporting.runasp.net/api/Report",
@@ -336,293 +314,24 @@ const ReportTable = () => {
 		setFilteredData(tableData);
 	}, [tableData]);
 
-
-
-
-	//Modal of Details
-	const [viewModal, setViewModal] = useState({
+	
+	const [detailsModal, setDetailsModal] = useState({
 		open: false,
-		loading: false,
-		reportDetails: null
-	  });
-const fetchReportDetails = async (id) => {
-	setViewModal(prev => ({ ...prev, loading: true }));
-	try {
-	  const { data } = await axios.get(`https://cms-reporting.runasp.net/api/Report/${id}`);
-	  console.log("تفاصيل التقرير:", data);
-	  if (data.isSuccess && data.value) {
-		setViewModal(prev => ({
-		  ...prev,
-		  reportDetails: data.value,
-		  loading: false
-		}));
-	  } else {
-		throw new Error("Failed to load report details");
-	  }
-	} catch (err) {
-	  console.error(err);
-	  Modal.error({
-		title: En ? "Error" : "خطأ",
-		content: En 
-		  ? "Failed to load report details. Please try again." 
-		  : "فشل في تحميل تفاصيل التقرير. يرجى المحاولة مرة أخرى."
-	  });
-	  setViewModal(prev => ({ ...prev, loading: false }));
-	}
-  };
-  const handleView = (record) => {
-	console.log("عرض تفاصيل التقرير:", record);
-	setViewModal(prev => ({ ...prev, open: true }));
-	fetchReportDetails(record.id);
-  };
+		reportId: null,
+	});
+	const handleView = (record) => {
+		setDetailsModal({
+			open: true,
+			reportId: record.id,
+		});
+	};
 	return (
 		<>
-			<Modal
-  title={
-    <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#1890ff' }}>
-      {En ? "Report Details" : "تفاصيل التقرير"}
-    </div>
-  }
-  open={viewModal.open}
-  onCancel={() =>
-    setViewModal({ open: false, loading: false, reportDetails: null })
-  }
-  footer={[
-    <Button
-      key="close"
-      type="primary"
-      onClick={() =>
-        setViewModal({ open: false, loading: false, reportDetails: null })
-      }
-    >
-      {En ? "Close" : "إغلاق"}
-    </Button>,
-  ]}
-  width={700}
-  centered
-  destroyOnClose
-  maskClosable={false}
-  dir={En ? "ltr" : "rtl"}
-  bodyStyle={{ padding: '20px' }}
->
-  {viewModal.loading ? (
-    <div style={{ 
-      textAlign: "center", 
-      padding: "40px 20px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center"
-    }}>
-      <div className="ant-spin ant-spin-spinning">
-        <span className="ant-spin-dot">
-          <i className="ant-spin-dot-item"></i>
-          <i className="ant-spin-dot-item"></i>
-          <i className="ant-spin-dot-item"></i>
-          <i className="ant-spin-dot-item"></i>
-        </span>
-      </div>
-      <div style={{ marginTop: "15px", color: "#666" }}>
-        {En ? "Loading report details..." : "جاري تحميل تفاصيل التقرير..."}
-      </div>
-    </div>
-  ) : viewModal.reportDetails ? (
-    <div style={{ 
-      backgroundColor: "#f9f9f9", 
-      borderRadius: "8px", 
-      padding: "15px",
-      boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)"
-    }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '15px' }}>
-        <div style={{ 
-          padding: '12px 15px', 
-          borderBottom: '1px solid #eee', 
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: 'white',
-          borderRadius: '6px'
-        }}>
-          <span style={{ fontWeight: 'bold', color: '#555' }}>
-            {En ? "User Name:" : "اسم المستخدم:"}
-          </span>
-          <span>{viewModal.reportDetails.mobileUserName}</span>
-        </div>
-        
-        <div style={{ 
-          padding: '12px 15px', 
-          borderBottom: '1px solid #eee', 
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: 'white',
-          borderRadius: '6px'
-        }}>
-          <span style={{ fontWeight: 'bold', color: '#555' }}>
-            {En ? "Phone Number:" : "رقم الهاتف:"}
-          </span>
-          <span dir="ltr">{viewModal.reportDetails.mobileUserPhone}</span>
-        </div>
-        
-        <div style={{ 
-          padding: '12px 15px', 
-          borderBottom: '1px solid #eee', 
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: 'white',
-          borderRadius: '6px'
-        }}>
-          <span style={{ fontWeight: 'bold', color: '#555' }}>
-            {En ? "Issue Category:" : "نوع المشكلة:"}
-          </span>
-          <span>
-            {En
-              ? viewModal.reportDetails.issueCategoryEN
-              : viewModal.reportDetails.issueCategoryAR}
-          </span>
-        </div>
-        
-        <div style={{ 
-          padding: '12px 15px', 
-          borderBottom: '1px solid #eee',
-          backgroundColor: 'white',
-          borderRadius: '6px'
-        }}>
-          <div style={{ fontWeight: 'bold', color: '#555', marginBottom: '5px' }}>
-            {En ? "Description:" : "الوصف:"}
-          </div>
-          <div style={{ 
-            padding: '10px', 
-            backgroundColor: '#f5f5f5', 
-            borderRadius: '4px',
-            minHeight: '60px',
-            lineHeight: '1.5'
-          }}>
-            {viewModal.reportDetails.description}
-          </div>
-        </div>
-        
-        <div style={{ 
-          padding: '12px 15px', 
-          borderBottom: '1px solid #eee', 
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          backgroundColor: 'white',
-          borderRadius: '6px'
-        }}>
-          <span style={{ fontWeight: 'bold', color: '#555' }}>
-            {En ? "Status:" : "الحالة:"}
-          </span>
-          <Tag
-            icon={statusIcons[viewModal.reportDetails.reportStatus]}
-            color={statusColors[viewModal.reportDetails.reportStatus]}
-            style={{ fontSize: '14px', padding: '4px 8px' }}
-          >
-            {statusTranslations[viewModal.reportDetails.reportStatus] ||
-              viewModal.reportDetails.reportStatus}
-          </Tag>
-        </div>
-        
-        <div style={{ 
-          padding: '12px 15px', 
-          borderBottom: '1px solid #eee', 
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: 'white',
-          borderRadius: '6px'
-        }}>
-          <span style={{ fontWeight: 'bold', color: '#555' }}>
-            {En ? "Submission Date:" : "تاريخ الإضافة:"}
-          </span>
-          <span>{new Date(viewModal.reportDetails.dateIssued).toLocaleString()}</span>
-        </div>
-        
-        <div style={{ 
-          padding: '12px 15px', 
-          borderBottom: '1px solid #eee', 
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: 'white',
-          borderRadius: '6px'
-        }}>
-          <span style={{ fontWeight: 'bold', color: '#555' }}>
-            {En ? "Address:" : "العنوان:"}
-          </span>
-          <span>{viewModal.reportDetails.address}</span>
-        </div>
-        
-        <div style={{ 
-          padding: '12px 15px', 
-          borderBottom: '1px solid #eee', 
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: 'white',
-          borderRadius: '6px'
-        }}>
-          <span style={{ fontWeight: 'bold', color: '#555' }}>
-            {En ? "Location:" : "الموقع:"}
-          </span>
-          <span>{`${viewModal.reportDetails.latitude}, ${viewModal.reportDetails.longitude}`}</span>
-        </div>
-        
-        {viewModal.reportDetails.imageUrl && (
-          <div style={{ 
-            padding: '12px 15px',  
-            backgroundColor: 'white',
-            borderRadius: '6px'
-          }}>
-            <div style={{ fontWeight: 'bold', color: '#555', marginBottom: '10px' }}>
-              {En ? "Issue Image:" : "صورة المشكلة:"}
-            </div>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              padding: '15px',
-              backgroundColor: '#f5f5f5',
-              borderRadius: '4px'
-            }}>
-              <img
-                src={
-                  viewModal.reportDetails.imageUrl.startsWith("http")
-                    ? viewModal.reportDetails.imageUrl
-                    : `https://cms-reporting.runasp.net/${viewModal.reportDetails.imageUrl}`
-                }
-                alt={En ? "Issue image" : "صورة المشكلة"}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "350px",
-                  objectFit: "contain",
-                  borderRadius: "4px",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
-                }}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    "https://placehold.co/400x300?text=Image+Not+Available";
-                }}
-              />
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  ) : (
-    <div style={{ 
-      textAlign: "center", 
-      padding: "30px 20px",
-      color: "#999",
-      backgroundColor: "#f9f9f9",
-      borderRadius: "8px",
-      fontSize: "16px"
-    }}>
-      <div style={{ fontSize: '24px', marginBottom: '10px' }}>
-        <SearchOutlined />
-      </div>
-      {En
-        ? "No report details available"
-        : "لا توجد تفاصيل متاحة للتقرير"}
-    </div>
-  )}
-</Modal>
+			<ReportTableDetails
+				open={detailsModal.open}
+				reportId={detailsModal.reportId}
+				onClose={() => setDetailsModal({ open: false, reportId: null })}
+			/>
 			<Modal
 				title={En ? "Update Status" : "تحديث الحالة"}
 				open={editModal.open}

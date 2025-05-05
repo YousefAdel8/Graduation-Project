@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Bar } from "react-chartjs-2";
 import {
 	Chart as ChartJS,
 	CategoryScale,
@@ -16,24 +15,18 @@ import {
 	Statistic,
 	Typography,
 } from "antd";
-import {
-	ClockCircleOutlined,
-	ArrowUpOutlined,
-	ArrowDownOutlined,
-	LineChartOutlined,
-} from "@ant-design/icons";
 import axios from "axios";
 import { useLanguage } from "../../context/LanguageContext";
 import TopCategoriesCard from "./TopCategoriesCard";
 import MonthlyRateChart from "./MonthlyRateChart";
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const Dashboard = () => {
 	const { isEnglish: En } = useLanguage();
 	
-
+	const [isLoading, setIsLoading] = useState(true);
 	
 
 
@@ -41,11 +34,15 @@ const Dashboard = () => {
 	const [summaryData,setSummaryData]=useState(null);
 	const summaryCardsApi=async()=>{
 		
-			let { data } = await axios.get(
-				"https://cms-reporting.runasp.net/api/home/summary"
-		)
-		//console.log(data);
-		setSummaryData(data);
+			try {
+				const { data } = await axios.get(
+					"https://cms-reporting.runasp.net/api/Home/summary"
+				);
+				setSummaryData(data);
+				setIsLoading(false);
+			} catch (err) {
+				setIsLoading(false);
+			}
 		
 	}
 
@@ -53,19 +50,7 @@ const Dashboard = () => {
 		summaryCardsApi();
 	}, []);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-    
-    useEffect(() => {
-      const handleResize = () => {
-        setIsMobile(window.innerWidth < 768);
-      };
   
-      window.addEventListener("resize", handleResize);
-      
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
-    }, []);
 
 	const stats = summaryData?
 	[
@@ -105,6 +90,7 @@ const Dashboard = () => {
 				{stats.map((stat, index) => (
 					<Col xs={24} sm={12} lg={6} key={index}>
 						<Card Style={{ padding: "20px" }} className="shadow-sm" >
+							{/*add loading here for api */}
 							<Statistic
 								title={<Typography.Text>{stat.title}</Typography.Text>}
 								value={stat.value}
