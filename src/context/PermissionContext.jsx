@@ -8,6 +8,7 @@ export const PermissionProvider = ({ children }) => {
         "report",
 		"social media",
         "users",
+		"emergency",
 		
       ]);
 	return (

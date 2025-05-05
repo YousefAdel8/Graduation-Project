@@ -58,7 +58,7 @@ const AppLayout = () => {
 		switch (path) {
 			case "":
 				return "1";
-			case "feedback":
+			case "emergency":
 				return "2";
 			case "report":
 				return "3";
@@ -66,6 +66,9 @@ const AppLayout = () => {
 				return "4";
 			case "users":
 				return "5";
+			case "feedback":
+				return "6";
+				
 			default:
 				return "0";
 		}
@@ -79,11 +82,12 @@ const AppLayout = () => {
 			icon: <DashboardOutlined />,
 			label: En ? "Dashboard" : "لوحة التحكم",
 		},
-		permissions.includes("feedback") && {
+		permissions.includes("emergency") && {
 			key: "2",
-			icon: <StarOutlined />,
-			label: En ? "Feedback" : "التقييمات",
+			icon: <TeamOutlined />,
+			label: En ? "Emergency" : "الطوارئ",
 		},
+		
 		permissions.includes("report") && {
 			key: "3",
 			icon: <FormOutlined />,
@@ -99,6 +103,12 @@ const AppLayout = () => {
 			icon: <TeamOutlined />,
 			label: En ? "Users" : "المستخدمين",
 		},
+		permissions.includes("feedback") && {
+			key: "6",
+			icon: <StarOutlined />,
+			label: En ? "Feedback" : "التقييمات",
+		},
+		
 	].filter(Boolean);
 
 	const handleMenuClick = ({ key }) => {
@@ -108,7 +118,7 @@ const AppLayout = () => {
 				navigate("/");
 				break;
 			case "2":
-				navigate("/feedback");
+				navigate("/emergency");
 				break;
 			case "3":
 				navigate("/report");
@@ -118,6 +128,9 @@ const AppLayout = () => {
 				break;
 			case "5":
 				navigate("/users");
+				break;
+			case "6":
+				navigate("/feedback");
 				break;
 			default:
 				break;
