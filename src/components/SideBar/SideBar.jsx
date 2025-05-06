@@ -20,6 +20,7 @@ import DropdownProfile from "../DropdownProfile/DropdownProfile.jsx";
 import FullScreen from "../FullScreenFeature/FullScreen.jsx";
 import LanguageToggle from "../LanguageButton/LanguageButton.jsx";
 import { useLanguage } from "../../context/LanguageContext.jsx";
+import NotificationButton from "../NotificationButton/NotificationButton.jsx";
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
@@ -68,7 +69,7 @@ const AppLayout = () => {
 				return "5";
 			case "feedback":
 				return "6";
-				
+
 			default:
 				return "0";
 		}
@@ -87,7 +88,7 @@ const AppLayout = () => {
 			icon: <TeamOutlined />,
 			label: En ? "Emergency" : "الطوارئ",
 		},
-		
+
 		permissions.includes("report") && {
 			key: "3",
 			icon: <FormOutlined />,
@@ -108,7 +109,6 @@ const AppLayout = () => {
 			icon: <StarOutlined />,
 			label: En ? "Feedback" : "التقييمات",
 		},
-		
 	].filter(Boolean);
 
 	const handleMenuClick = ({ key }) => {
@@ -204,11 +204,10 @@ const AppLayout = () => {
 								padding: "12px",
 								display: "flex",
 								alignItems: "center",
-								cursor:"pointer",
+								cursor: "pointer",
 								justifyContent: collapsed ? "center" : "flex-start",
 							}}
 							onClick={handleLogoClick}
-							
 						>
 							{!collapsed && (
 								<Title
@@ -274,6 +273,7 @@ const AppLayout = () => {
 							/>
 
 							<div className="d-flex align-items-center gap-3 ms-4">
+								<NotificationButton />
 								<LanguageToggle />
 								<FullScreen />
 								<DropdownProfile />
