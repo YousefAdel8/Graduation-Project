@@ -1,16 +1,21 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { getTokenData } from "../components/TokenEncode/Token";
 export const PermissionContext = createContext();
 export const PermissionProvider = ({ children }) => {
-	//const permissions = ['dashboard', 'feedback', 'report', 'users', 'social media'];
-	const [permissions, setPermissions] = useState([
-        "dashboard",
-        "feedback",
-        "report",
-		"social media",
-        "users",
-		"emergency",
-		
-      ]);
+	const tokenData = getTokenData();
+	const [permissions, setPermissions] = useState(["dashboard"]);
+	useEffect(() => {
+		if (tokenData?.role === "Admin") {
+			setPermissions([
+				"dashboard",
+				"feedback",
+				"report",
+				"social media",
+				"users",
+				"emergency",
+			]);
+		}
+	}, [tokenData]);
 	return (
 		<PermissionContext.Provider value={{ permissions }}>
 			{children}

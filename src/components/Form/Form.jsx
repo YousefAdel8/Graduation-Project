@@ -127,7 +127,7 @@ export default function Form() {
 					
 					
 						<p className="text-muted mb-4" style={{ fontSize: "14px" }}>
-							{En? "Enter your email and password below": "أدخل بريدك الإلكتروني وكلمة المرور التالية"}
+							{En? "Enter your email and password below": "أدخل بريدك الإلكتروني وكلمة المرور أدناه"}
 							<br />
 							{En? "to log into your account" : "لتسجيل الدخول في حسابك"}
 						</p>
