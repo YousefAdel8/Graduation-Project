@@ -2,9 +2,9 @@ import React, { createContext, useEffect, useState } from "react";
 import { getTokenData } from "../components/TokenEncode/Token";
 export const PermissionContext = createContext();
 export const PermissionProvider = ({ children }) => {
-	const tokenData = getTokenData();
 	const [permissions, setPermissions] = useState(["dashboard"]);
 	useEffect(() => {
+		const tokenData = getTokenData();
 		if (tokenData?.role === "Admin") {
 			setPermissions([
 				"dashboard",
@@ -14,8 +14,10 @@ export const PermissionProvider = ({ children }) => {
 				"users",
 				"emergency",
 			]);
+		} else {
+			setPermissions(["dashboard"]);
 		}
-	}, [tokenData]);
+	}, []);
 	return (
 		<PermissionContext.Provider value={{ permissions }}>
 			{children}

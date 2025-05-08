@@ -31,8 +31,6 @@ const { RangePicker } = DatePicker;
 const ReportTable = () => {
 	const { isEnglish: En } = useLanguage();
 
-	
-
 	const { Option } = Select;
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -48,7 +46,6 @@ const ReportTable = () => {
 		Keyword: "",
 	});
 	const [total, setTotal] = useState(0);
-
 
 	const confirmDelete = (record) => {
 		const newData = tableData.filter((item) => item.key !== record.key);
@@ -167,6 +164,7 @@ const ReportTable = () => {
 		row: null,
 		newStatus: "",
 		loading: false,
+		comment: "",
 	});
 	const statusOptions = [
 		{ value: "Active", labelEn: "Active", labelAr: "تم الإبلاغ عنه" },
@@ -314,7 +312,6 @@ const ReportTable = () => {
 		setFilteredData(tableData);
 	}, [tableData]);
 
-	
 	const [detailsModal, setDetailsModal] = useState({
 		open: false,
 		reportId: null,
@@ -364,6 +361,23 @@ const ReportTable = () => {
 						</Option>
 					))}
 				</Select>
+				{/*Adding Optional Comment or The Reason of Edit Status */}
+				<label
+					style={{ marginTop: "16px", display: "block", fontWeight: "500" }}
+				>
+					{En ? "Comment" : "ملاحظة"}
+				</label>
+				<Input.TextArea
+					rows={4}
+					style={{ width: "100%", marginTop: 8 }}
+					value={editModal.comment}
+					onChange={(e) =>
+						setEditModal({
+							...editModal,
+							comment: e.target.value,
+						})
+					}
+				/>
 			</Modal>
 
 			{error && (

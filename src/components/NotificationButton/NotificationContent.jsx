@@ -42,20 +42,13 @@ export default function NotificationContent() {
 			isRead: true,
 			user: "النظام",
 		},
-		{
-			id: 5,
-			title: "تحديث النظام",
-			description: "تم تحديث النظام إلى الإصدار الجديد v2.0",
-			time: "منذ يومين",
-			isRead: true,
-			user: "النظام",
-		},
 	];
 	return (
 		<>
 			<List
 				itemLayout="horizontal"
 				dataSource={dummyNotifications}
+				locale={{ emptyText: "لا يوجد اشعارات" }}
 				renderItem={(item, index) => (
 					<List.Item
 						style={{
