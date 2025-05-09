@@ -18,6 +18,7 @@ import { PermissionProvider } from "./context/PermissionContext.jsx";
 import UnAuthorized from "./components/UnAuthorized/UnAuthorized.jsx";
 import RequirePermission from "./components/Auth/RequirePermission.jsx";
 import EmergencyPage from "./components/Emergency/EmergencyPage.jsx";
+import NotificationPage from "./components/NotificationButton/NotificationPage.jsx";
 function App() {
 	const routers = createBrowserRouter([
 		{
@@ -87,6 +88,10 @@ function App() {
 				{
 					path: "/Emergency",
 					element: <EmergencyPage />,
+				},
+				{
+					path: "/Notifications",
+					element: <NotificationPage />,
 				}
 			],
 		},

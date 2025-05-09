@@ -4,10 +4,16 @@ import { useLanguage } from "../../context/LanguageContext";
 import { 
     ExclamationCircleOutlined, 
   } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 const { Text } = Typography;
 
 export default function NotificationContent() {
     const { isEnglish: En } = useLanguage();
+	const navigate = useNavigate();
+	
+	const HandleAllNotificationsButton = () => {
+		navigate("/notifications");
+	}
 	const dummyNotifications = [
 		{
 			id: 1,
@@ -98,7 +104,7 @@ export default function NotificationContent() {
 				}}
 			>
 				<Space>
-					<Button type="link" size="small">
+					<Button type="link" size="small" onClick={HandleAllNotificationsButton}>
 						عرض جميع الإشعارات
 					</Button>
 					<Button type="link" size="small">
