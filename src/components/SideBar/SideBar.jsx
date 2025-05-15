@@ -240,9 +240,17 @@ const AppLayout = () => {
 						style={{
 							padding: "0 16px",
 							background: colorBgContainer,
+							minHeight: 60,
 						}}
 					>
-						<div className="d-flex flex-row align-items-center justify-content-between">
+						<div
+							style={{
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "space-between",
+								width: "100%",
+							}}
+						>
 							<Button
 								type="text"
 								icon={
@@ -266,13 +274,22 @@ const AppLayout = () => {
 									isMobile ? setOpen(true) : setCollapsed(!collapsed)
 								}
 								style={{
-									fontSize: "16px",
-									width: 64,
-									height: 64,
+									fontSize: "18px",
+									width: 48,
+									height: 48,
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							/>
 
-							<div className="d-flex align-items-center gap-3 ms-4">
+							<div
+								style={{
+									display: "flex",
+									alignItems: "center",
+									gap: 14,
+								}}
+							>
 								<NotificationButton />
 								<LanguageToggle />
 								<FullScreen />

@@ -47,64 +47,87 @@ export default function TopCategoriesCard() {
 		getCriticalReportsApi();
 		getTopCategories();
 	}, []);
-	  
+
 	const formatAverageResponseTimeMinutes = (minutes) => {
 		if (!minutes || isNaN(minutes)) return "-";
-		
+
 		const timeUnits = [
-		  { en: 'year', ar: 'سنة', inMins: 60*24*365 },
-		  { en: 'month', ar: 'شهر', inMins: 60*24*30 },
-		  { en: 'day', ar: 'يوم', inMins: 60*24 },
-		  { en: 'hour', ar: 'ساعة', inMins: 60 },
-		  { en: 'minute', ar: 'دقيقة', inMins: 1 },
+			{ en: "year", ar: "سنة", inMins: 60 * 24 * 365 },
+			{ en: "month", ar: "شهر", inMins: 60 * 24 * 30 },
+			{ en: "day", ar: "يوم", inMins: 60 * 24 },
+			{ en: "hour", ar: "ساعة", inMins: 60 },
+			{ en: "minute", ar: "دقيقة", inMins: 1 },
 		];
-		
+
 		const getArabicUnit = (val, unit) => {
-		  const units = {
-			'سنة': val === 1 ? 'سنة' : val === 2 ? 'سنتين' : val < 11 ? 'سنوات' : 'سنة',
-			'شهر': val === 1 ? 'شهر' : val === 2 ? 'شهرين' : val < 11 ? 'شهور' : 'شهر',
-			'يوم': val === 1 ? 'يوم' : val === 2 ? 'يومين' : val < 11 ? 'أيام' : 'يوم',
-			'ساعة': val === 1 ? 'ساعة' : val === 2 ? 'ساعتين' : val < 11 ? 'ساعات' : 'ساعة',
-			'دقيقة': val === 1 ? 'دقيقة' : val === 2 ? 'دقيقتين' : val < 11 ? 'دقائق' : 'دقيقة',
-		  };
-		  return units[unit];
+			const units = {
+				سنة:
+					val === 1 ? "سنة" : val === 2 ? "سنتين" : val < 11 ? "سنوات" : "سنة",
+				شهر:
+					val === 1 ? "شهر" : val === 2 ? "شهرين" : val < 11 ? "شهور" : "شهر",
+				يوم:
+					val === 1 ? "يوم" : val === 2 ? "يومين" : val < 11 ? "أيام" : "يوم",
+				ساعة:
+					val === 1
+						? "ساعة"
+						: val === 2
+						? "ساعتين"
+						: val < 11
+						? "ساعات"
+						: "ساعة",
+				دقيقة:
+					val === 1
+						? "دقيقة"
+						: val === 2
+						? "دقيقتين"
+						: val < 11
+						? "دقائق"
+						: "دقيقة",
+			};
+			return units[unit];
 		};
-		
+
 		let remain = Math.floor(minutes);
 		let result = [];
-	  
+
 		for (const { en, ar, inMins } of timeUnits) {
-		  const val = Math.floor(remain / inMins);
-		  if (val > 0) {
-			result.push(
-			  En
-				? `${val} ${en}${val > 1 ? 's' : ''}`
-				: `${val} ${getArabicUnit(val, ar)}`
-			);
-			remain = remain % inMins;
-		  }
-		  if (result.length === 2) break; 
+			const val = Math.floor(remain / inMins);
+			if (val > 0) {
+				result.push(
+					En
+						? `${val} ${en}${val > 1 ? "s" : ""}`
+						: `${val} ${getArabicUnit(val, ar)}`
+				);
+				remain = remain % inMins;
+			}
+			if (result.length === 2) break;
 		}
-		
+
 		return En ? result.join(" and ") : result.reverse().join(" و ");
-	  };
+	};
 
 	const reportData = {
 		day: {
 			criticalReports: CriticalReportsApi.todayReports,
-			responseTime: formatAverageResponseTimeMinutes(CriticalReportsApi.averageResponseTimeMinutes),
+			responseTime: formatAverageResponseTimeMinutes(
+				CriticalReportsApi.averageResponseTimeMinutes
+			),
 			change: CriticalReportsApi.dailyChangePercentage,
 			improvementDirection: "down",
 		},
 		month: {
 			criticalReports: CriticalReportsApi.monthReports,
-			responseTime: formatAverageResponseTimeMinutes(CriticalReportsApi.averageResponseTimeMinutes),
+			responseTime: formatAverageResponseTimeMinutes(
+				CriticalReportsApi.averageResponseTimeMinutes
+			),
 			change: CriticalReportsApi.monthlyChangePercentage,
 			improvementDirection: "up",
 		},
 		year: {
 			criticalReports: CriticalReportsApi.yearReports,
-			responseTime: formatAverageResponseTimeMinutes(CriticalReportsApi.averageResponseTimeMinutes),
+			responseTime: formatAverageResponseTimeMinutes(
+				CriticalReportsApi.averageResponseTimeMinutes
+			),
 			change: CriticalReportsApi.yearlyChangePercentage,
 			improvementDirection: "down",
 		},
@@ -162,33 +185,43 @@ export default function TopCategoriesCard() {
 				<Col xs={24} sm={12}>
 					<Card
 						bordered={false}
-						style={{ backgroundColor: "#f6ffed", borderRadius: 6 }}
+						style={{ backgroundColor: "#f6ffed", borderRadius: 6 ,minWidth:"190px"}}
 					>
 						<Statistic
-  title={
-    <Text strong style={{ fontSize: 16, textAlign: En ? "left" : "right" }}>
-      {En ? "Average Response Time" : "متوسط وقت الاستجابة"}
-    </Text>
-  }
-  value={" "} // فارغة لأننا هنستخدم formatter
-  formatter={() => (
-    <div style={{ 
-      fontSize: 24, 
-      fontWeight: "bold", 
-      color: "#52c41a",
-      direction: En ? "ltr" : "rtl", 
-      textAlign: En ? "left" : "right",
-      width: "100%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: En ? "flex-start" : "flex-end" 
-    }}>
-      <ClockCircleOutlined style={{ fontSize: "18px", marginInlineEnd: 8 }} />
-      {formatAverageResponseTimeMinutes(CriticalReportsApi.averageResponseTimeMinutes)}
-    </div>
-  )}
-  prefix={null} 
-/>
+							
+							title={
+								<Text
+									strong
+									style={{ fontSize: 16, textAlign: En ? "left" : "right" }}
+								>
+									{En ? "Average Response Time" : "متوسط وقت الاستجابة"}
+								</Text>
+							}
+							value={" "}
+							formatter={() => (
+								<div
+									style={{
+										fontSize: 24,
+										fontWeight: "bold",
+										color: "#52c41a",
+										direction: En ? "ltr" : "rtl",
+										textAlign: En ? "left" : "right",
+										width: "100%",
+										display: "flex",
+										alignItems: "center",
+										justifyContent: En ? "flex-start" : "flex-end",
+									}}
+								>
+									<ClockCircleOutlined
+										style={{ fontSize: "18px", marginInlineEnd: 8 }}
+									/>
+									{formatAverageResponseTimeMinutes(
+										CriticalReportsApi.averageResponseTimeMinutes
+									)}
+								</div>
+							)}
+							prefix={null}
+						/>
 						<div
 							style={{
 								marginTop: 5,

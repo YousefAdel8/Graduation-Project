@@ -19,6 +19,7 @@ import axios from "axios";
 import { useLanguage } from "../../context/LanguageContext";
 import TopCategoriesCard from "./TopCategoriesCard";
 import MonthlyRateChart from "./MonthlyRateChart";
+import Loading from "../LoadingPage/LoadingPage";
 const { Title } = Typography;
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
@@ -35,6 +36,7 @@ const Dashboard = () => {
 	const summaryCardsApi=async()=>{
 		
 			try {
+				setIsLoading(true);
 				const { data } = await axios.get(
 					"https://cms-reporting.runasp.net/api/Home/summary"
 				);
@@ -83,7 +85,10 @@ const Dashboard = () => {
 
 	return (
 		<>
-			<Title level={3} style={{ marginBottom: 24 }} className={En ? "text-start fw-bold" : "text-end fw-bold"} >
+		{isLoading?
+		<Loading/>:
+		<>
+		<Title level={3} style={{ marginBottom: 24 }} className={En ? "text-start fw-bold" : "text-end fw-bold"} >
 				{En ? "Dashboard" : "لوحة التحكم"}
 			</Title>
 			<Row gutter={[16, 16]} dir={En ? "ltr" : "rtl"}>
@@ -112,6 +117,9 @@ const Dashboard = () => {
 					<TopCategoriesCard/>
 				</Col>
 			</Row>
+			</>
+		}
+			
 		</>
 	);
 };

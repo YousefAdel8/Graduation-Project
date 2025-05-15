@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Tag, Avatar, Spin, Image, List, Typography } from "antd";
+import { Modal, Button, Tag, Avatar, Spin, Image, List, Typography, Row, Col } from "antd";
 import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
@@ -134,108 +134,106 @@ const ReportTableDetails = ({ open, reportId, onClose }) => {
         </div>
       ) : (
         <div style={{ padding: "5px 0" }}>
-          <div style={{ display: "flex", gap: 24, marginBottom: 25 }}>
-            <div style={{ width: "40%" }}>
-              <div style={{ 
-                border: "1px solid #eee", 
-                borderRadius: 8, 
-                padding: 5, 
-                backgroundColor: "#fafafa",
-                height: 200,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden"
-              }}>
-                <Image
-                  src={getImageUrl()}
-                  alt={En ? "Issue image" : "صورة المشكلة"}
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "100%",
-                    objectFit: "contain",
-                    borderRadius: 6,
-                  }}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "https://placehold.co/300x200?text=Image+Error";
-                  }}
-                />
-              </div>
-              <div style={{
-                fontSize: 13,
-                color: "#777",
-                fontWeight: "bold",
-                textAlign: "center",
-                marginTop: 8,
-              }}>
-                {En ? "Report ID" : "رقم التقرير"}: 
-                <span style={{ color: "#1a3353", marginRight: 5 }}>
-                  {report.reportNumber || `#${reportId}`}
-                </span>
-              </div>
-            </div>
+          {/* --- الصورة والتفاصيل الأساسية --- */}
+          <div style={{ marginBottom: 25 }}>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} md={10}>
+                <div style={{ 
+                  border: "1px solid #eee", 
+                  borderRadius: 8, 
+                  padding: 5, 
+                  backgroundColor: "#fafafa",
+                  height: 200,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  overflow: "hidden"
+                }}>
+                  <Image
+                    src={getImageUrl()}
+                    alt={En ? "Issue image" : "صورة المشكلة"}
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      objectFit: "contain",
+                      borderRadius: 6,
+                    }}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "https://placehold.co/300x200?text=Image+Error";
+                    }}
+                  />
+                </div>
+                <div style={{
+                  fontSize: 13,
+                  color: "#777",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginTop: 8,
+                }}>
+                  {En ? "Report ID" : "رقم التقرير"}: 
+                  <span style={{ color: "#1a3353", marginRight: 5 }}>
+                    {report.reportNumber || `#${reportId}`}
+                  </span>
+                </div>
+              </Col>
 
-            {/*  Report details */}
-            <div style={{
-              flex: 1,
-              display: "grid",
-              gridTemplateColumns: "repeat(2,1fr)",
-              gap: 16,
-            }}>
-              <div className="detail-item">
-                <div style={{ color: "#777", marginBottom: 3 }}>{En ? "Location" : "الموقع"}</div>
-                <div style={{ fontWeight: "500", fontSize: 15 }}>{report.address || "—"}</div>
-              </div>
-              
-              <div className="detail-item">
-                <div style={{ color: "#777", marginBottom: 3 }}>{En ? "Current Status" : "الحالة الحالية"}</div>
-                <Tag 
-                  icon={statusMap[report.reportStatus]?.icon} 
-                  color={statusMap[report.reportStatus]?.color}
-                  style={{ padding: "3px 10px", fontSize: 14 }}
-                >
-                  {statusMap[report.reportStatus]?.label[En ? "en" : "ar"] || report.reportStatus}
-                </Tag>
-              </div>
-              
-              <div className="detail-item">
-                <div style={{ color: "#777", marginBottom: 3 }}>{En ? "Submission Date" : "تاريخ الإضافة"}</div>
-                <div>{formatDate(report.dateIssued)}</div>
-              </div>
-              
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <Avatar 
-                  size={36} 
-                  icon={<UserOutlined />} 
-                  style={{ backgroundColor: "#1a3353" }}
-                  src={report.userAvatarUrl} 
-                />
-                <div>
-                  <div style={{ color: "#777", fontSize: 12 }}>{En ? "Submitted By" : "بواسطة"}</div>
-                  <div style={{ fontWeight: "600" }}>{report.mobileUserName}</div>
-                  <div style={{ fontSize: 12, color: "#666" }}>{report.mobileUserPhone || ""}</div>
+              <Col xs={24} md={14}>
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2,1fr)",
+                  gap: 16,
+                }}>
+                  <div className="detail-item">
+                    <div style={{ color: "#777", marginBottom: 3 }}>{En ? "Location" : "الموقع"}</div>
+                    <div style={{ fontWeight: "500", fontSize: 15 }}>{report.address || "—"}</div>
+                  </div>
+                  <div className="detail-item">
+                    <div style={{ color: "#777", marginBottom: 3 }}>{En ? "Current Status" : "الحالة الحالية"}</div>
+                    <Tag 
+                      icon={statusMap[report.reportStatus]?.icon} 
+                      color={statusMap[report.reportStatus]?.color}
+                      style={{ padding: "3px 10px", fontSize: 14 }}
+                    >
+                      {statusMap[report.reportStatus]?.label[En ? "en" : "ar"] || report.reportStatus}
+                    </Tag>
+                  </div>
+                  <div className="detail-item">
+                    <div style={{ color: "#777", marginBottom: 3 }}>{En ? "Submission Date" : "تاريخ الإضافة"}</div>
+                    <div>{formatDate(report.dateIssued)}</div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <Avatar 
+                      size={36} 
+                      icon={<UserOutlined />} 
+                      style={{ backgroundColor: "#1a3353" }}
+                      src={report.userAvatarUrl} 
+                    />
+                    <div>
+                      <div style={{ color: "#777", fontSize: 12 }}>{En ? "Submitted By" : "بواسطة"}</div>
+                      <div style={{ fontWeight: "600" }}>{report.mobileUserName}</div>
+                      <div style={{ fontSize: 12, color: "#666" }}>{report.mobileUserPhone || ""}</div>
+                    </div>
+                  </div>
+                  <div className="detail-item">
+                    <div style={{ color: "#777", marginBottom: 3 }}>{En ? "Coordinates" : "الإحداثيات"}</div>
+                    <div style={{ fontSize: 14 }}>
+                      {report.latitude}, {report.longitude}
+                    </div>
+                  </div>
+                  <div className="detail-item">
+                    <div style={{ color: "#777", marginBottom: 3 }}>
+                      {En ? "Issue Category" : "نوع المشكلة"}
+                    </div>
+                    <div style={{ fontWeight: "500" }}>
+                      {En ? report.issueCategoryEN : report.issueCategoryAR}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="detail-item">
-                <div style={{ color: "#777", marginBottom: 3 }}>{En ? "Coordinates" : "الإحداثيات"}</div>
-                <div style={{ fontSize: 14 }}>
-                  {report.latitude}, {report.longitude}
-                </div>
-              </div>
-              
-              <div className="detail-item">
-                <div style={{ color: "#777", marginBottom: 3 }}>
-                  {En ? "Issue Category" : "نوع المشكلة"}
-                </div>
-                <div style={{ fontWeight: "500" }}>
-                  {En ? report.issueCategoryEN : report.issueCategoryAR}
-                </div>
-              </div>
-            </div>
+              </Col>
+            </Row>
           </div>
-          
+
           {/*  Description */}
           <div style={{ marginBottom: 24 }}>
             <div style={{ 
@@ -262,81 +260,81 @@ const ReportTableDetails = ({ open, reportId, onClose }) => {
           
           {/*  Status History */}
           <div>
-  <div style={{
-    marginBottom: 14,
-    fontWeight: "600",
-    fontSize: 16,
-    color: "#1a3353",
-    borderBottom: "1px solid #eee",
-    paddingBottom: 8
-  }}>
-    {En ? "Status History" : "تاريخ الحالة"}
-  </div>
-  
-  <List
-    itemLayout="horizontal"
-    dataSource={statusHistory}
-    renderItem={(item, index) => (
-      <List.Item
-        style={{
-          borderBottom: index !== statusHistory.length - 1 ? "1px solid #f0f0f0" : "none",
-          padding: "12px 0",
-          backgroundColor: "#fff",
-        }}
-        actions={[
-          <Text type="secondary" style={{ fontSize: "12px" }}>
-            {formatDate(item.date)}
-          </Text>,
-        ]}
-      >
-        <List.Item.Meta
-          avatar={
-            <div style={{ 
-              fontSize: 20, 
-              color: statusMap[item.status]?.color || "#999",
-              marginRight: 8
+            <div style={{
+              marginBottom: 14,
+              fontWeight: "600",
+              fontSize: 16,
+              color: "#1a3353",
+              borderBottom: "1px solid #eee",
+              paddingBottom: 8
             }}>
-              {statusMap[item.status]?.icon || <CheckCircleOutlined />}
+              {En ? "Status History" : "تاريخ الحالة"}
             </div>
-          }
-          title={
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ fontWeight: "600", color: "#333" }}>
-                {statusMap[item.status]?.label[En ? "en" : "ar"] || item.status}
-              </span>
-            </div>
-          }
-          description={
-            <div>
-              <div style={{ 
-                display: "flex", 
-                alignItems: "center", 
-                gap: 8, 
-                margin: "5px 0" 
-              }}>
-                <Avatar 
-                  size={24} 
-                  icon={<UserOutlined />} 
-                  src={item.user.avatar} 
-                  style={{ backgroundColor: "#5a6b84" }}
-                />
-                <span style={{ fontWeight: "500", color: "#444" }}>
-                  {item.user.name}
-                </span>
-                <span style={{ color: "#777", fontSize: 12 }}>
-                  {item.user.role}
-                </span>
-              </div>
-              <div style={{ color: "#555", fontSize: 13, lineHeight: 1.4, marginTop: 3 }}>
-                {item.description}
-              </div>
-            </div>
-          }
-        />
-      </List.Item>
-    )}
-  />
-</div>
+            
+            <List
+              itemLayout="horizontal"
+              dataSource={statusHistory}
+              renderItem={(item, index) => (
+                <List.Item
+                  style={{
+                    borderBottom: index !== statusHistory.length - 1 ? "1px solid #f0f0f0" : "none",
+                    padding: "12px 0",
+                    backgroundColor: "#fff",
+                  }}
+                  actions={[
+                    <Text type="secondary" style={{ fontSize: "12px" }}>
+                      {formatDate(item.date)}
+                    </Text>,
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={
+                      <div style={{ 
+                        fontSize: 20, 
+                        color: statusMap[item.status]?.color || "#999",
+                        marginRight: 8
+                      }}>
+                        {statusMap[item.status]?.icon || <CheckCircleOutlined />}
+                      </div>
+                    }
+                    title={
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <span style={{ fontWeight: "600", color: "#333" }}>
+                          {statusMap[item.status]?.label[En ? "en" : "ar"] || item.status}
+                        </span>
+                      </div>
+                    }
+                    description={
+                      <div>
+                        <div style={{ 
+                          display: "flex", 
+                          alignItems: "center", 
+                          gap: 8, 
+                          margin: "5px 0" 
+                        }}>
+                          <Avatar 
+                            size={24} 
+                            icon={<UserOutlined />} 
+                            src={item.user.avatar} 
+                            style={{ backgroundColor: "#5a6b84" }}
+                          />
+                          <span style={{ fontWeight: "500", color: "#444" }}>
+                            {item.user.name}
+                          </span>
+                          <span style={{ color: "#777", fontSize: 12 }}>
+                            {item.user.role}
+                          </span>
+                        </div>
+                        <div style={{ color: "#555", fontSize: 13, lineHeight: 1.4, marginTop: 3 }}>
+                          {item.description}
+                        </div>
+                      </div>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
+          </div>
         </div>
       )}
     </Modal>

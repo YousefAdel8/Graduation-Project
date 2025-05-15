@@ -22,7 +22,7 @@ export default function NotificationButton() {
 				open={open}
 				onOpenChange={handleOpenChange}
 				placement="bottomRight"
-				overlayStyle={{width: window.innerWidth <= 600 ? "310px" : "350px"}} 
+				overlayStyle={{width: window.innerWidth <= 600 ? "290px" : "350px"}} 
 			>
 				<Button
 					type="text"
