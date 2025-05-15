@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import {UserContext} from "../../context/usercontext";
 import {  Outlet } from 'react-router-dom';
-import SideBar from '../SideBar/SideBar';
+import AppLayout from '../SideBar/AppLayout';
 import Signin from '../Form/Form';
 import Loading from '../LoadingPage/LoadingPage';
 export default function RequireAuth({children}) {
@@ -15,7 +15,7 @@ export default function RequireAuth({children}) {
     if (!userToken) {
         return <Signin />;
       }
-    return <SideBar><Outlet /></SideBar>;
+    return <AppLayout><Outlet /></AppLayout>;
     
   
 }
