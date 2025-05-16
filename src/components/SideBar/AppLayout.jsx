@@ -9,6 +9,7 @@ import { PermissionContext } from "../../context/PermissionContext";
 const { Content } = Layout;
 
 const AppLayout = () => {
+  
   const { isEnglish: En } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
