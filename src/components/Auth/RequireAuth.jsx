@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import {UserContext} from "../../context/usercontext";
 import {  Outlet } from 'react-router-dom';
-import AppLayout from '../Sidebar/AppLayout';
+import AppLayout from '../AppLayout/AppLayout';
 import Signin from '../Form/Form';
 import Loading from '../LoadingPage/LoadingPage';
 export default function RequireAuth({children}) {
