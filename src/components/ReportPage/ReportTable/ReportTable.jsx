@@ -249,7 +249,7 @@ const ReportTable = () => {
 					]}
 					allowClear showToday className="mx-2"
 				/>
-				<Space.Compact style={{ marginBottom: 16 }}>
+				<Space.Compact style={{ marginBottom: 16 , marginRight: 8 }}>
 					<Tooltip title={En ? "Print" : "طباعة"}>
 						<Button
 							onClick={() => Print(

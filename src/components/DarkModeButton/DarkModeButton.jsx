@@ -6,9 +6,13 @@ import { BulbOutlined, BulbFilled } from '@ant-design/icons';
 export default function DarkModeButton() {
   const { isDark, toggleToDark, toggleToLight } = useTheme();
 
-  const handleToggle = () => {
-    isDark ? toggleToLight() : toggleToDark();
-  };
+ const handleToggle = () => {
+  if (isDark) {
+    toggleToLight();
+  } else {
+    toggleToDark();
+  }
+};
 
   return (
     <Tooltip title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
