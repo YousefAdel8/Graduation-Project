@@ -4,6 +4,7 @@ import {
   DashboardOutlined, CommentOutlined, TeamOutlined, StarOutlined, FormOutlined,
 } from "@ant-design/icons";
 import logo from "../../assests/citio.png";
+import { useTheme } from "../../context/ThemeContext";
 
 const { Sider } = Layout;
 const { Title } = Typography;
@@ -47,6 +48,8 @@ const Sidebar = ({
   // Side logo click
   const handleLogoClick = () => navigate("/");
 
+  const { isDark } = useTheme(); 
+  const siderBg = isDark ? "#15191f" : "#fff";
   // Drawer for mobile, Sider for desktop
   return isMobile ? (
     <Drawer
@@ -68,7 +71,7 @@ const Sidebar = ({
       onClose={() => setDrawerOpen(false)}
       open={drawerOpen}
       placement={En ? "left" : "right"}
-      style={{ background: colorBgContainer }}
+      style={{ background: siderBg }}
       width={230}
     >
       <Menu
@@ -76,7 +79,7 @@ const Sidebar = ({
         selectedKeys={[getKey(location.pathname)]}
         onClick={handleMenuClick}
         items={menuItems}
-        style={{ background: colorBgContainer }}
+        style={{ background: siderBg }}
       />
     </Drawer>
   ) : (
@@ -84,7 +87,8 @@ const Sidebar = ({
       collapsible trigger={null}
       width={230}
       collapsed={collapsed}
-      style={{ background: colorBgContainer }}
+      style={{ background: siderBg }}
+      
     >
       <div
 				style={{
@@ -108,7 +112,7 @@ const Sidebar = ({
         selectedKeys={[getKey(location.pathname)]}
         onClick={handleMenuClick}
         items={menuItems}
-        style={{ background: colorBgContainer, borderRight: 0 }}
+        style={{ background: siderBg , borderRight: 0 }}
       />
     </Sider>
   );

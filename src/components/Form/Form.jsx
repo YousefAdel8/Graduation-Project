@@ -1,241 +1,244 @@
-import React, { useContext } from "react";
-import { useState,useEffect } from "react";
-import { useFormik } from "formik";
-import * as yup from "yup";
-import axios from "axios";
+import React, { useContext, useState, useEffect } from "react";
+import { Form, Input, Button, Spin, message } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import styles from "./Form.module.css";
-import { message,Spin } from "antd";
-import { LoadingOutlined } from '@ant-design/icons';
-import { UserContext } from '../../context/usercontext';
+import { UserContext } from "../../context/usercontext";
 import { useLanguage } from "../../context/LanguageContext";
-export default function Form() {
+import { useTheme } from "../../context/ThemeContext";
+import axios from "axios";
+
+export default function AntdLoginForm() {
 	const [loading, setLoading] = useState(false);
-	const [apiError, setApiError] = useState(false);
+	const [apiError, setApiError] = useState("");
 	const { isEnglish: En } = useLanguage();
-    const [messageApi, contextHolder] = message.useMessage();
-	const [SuccessMessageLogin, setSuccessMessageLogin] = useState(false);
+	const [successMsgShown, setSuccessMsgShown] = useState(false);
 	const { setUserToken } = useContext(UserContext);
+	const { isDark } = useTheme();
+	const [messageApi, contextHolder] = message.useMessage();
 
-	/*const errorTranslations = {
-		"Can't Find This User": "لم يتم العثور على المستخدم",
-		"Invalid Email Or Password": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+	useEffect(() => {
+		if (successMsgShown) {
+			messageApi.success(En ? "Login successful" : "تم تسجيل الدخول بنجاح");
+		}
+	}, [successMsgShown, En, messageApi]);
 
-	}
-	const translateError = (error) => {
-		return errorTranslations[error] || error;
-	}*/
-	const SignInSubmit = async (values) => {
+	const handleFinish = async (values) => {
+		setLoading(true);
+		setApiError("");
 		try {
-			setLoading(true);
-			setApiError(false);
-			let { data } = await axios.post(
+			const { data } = await axios.post(
 				"https://cms-reporting.runasp.net/api/Auth/login",
 				values
 			);
-			//console.log(data.value.token);
 			if (data.isSuccess === true) {
-				setLoading(false);
-				setSuccessMessageLogin(true);
+				setSuccessMsgShown(true);
 				setTimeout(() => {
 					localStorage.setItem("userToken", data.value.token);
 					setUserToken(data.value.token);
-					//navigate("/");
 				}, 1000);
-				
-				
-				
 			} else {
-				setLoading(false);
-				setApiError(data.message || "Login failed. Please try again.");
+				setApiError(
+					data.message ||
+						(En
+							? "Login failed. Please try again."
+							: "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.")
+				);
 			}
 		} catch (error) {
-			console.log(error.response.data);
 			if (error.response) {
-				//setApiError(En?error.response.data?.detail:translateError(error.response.data?.detail)); //"?" is optional chaining operator (Runtime error protection)
-				setApiError(error.response.data?.detail);
-				/*switch (error.response.status) {
-					
-					case 400:
-						setApiError(En?"Invalid Email or Password":"البريد الالكتروني او كلمة المرور غير صحيحة");
-						break;
-					case 401:
-						setApiError(error);
-						break;
-					case 404:
-						setApiError(En?"Service not found":"الخدمة غير موجودة");
-						break;
-					case 500:
-						setApiError(En?"Internal server error":"خطأ في الخادم");
-						break;
-					default:
-						setApiError(error.response.data.message);
-						console.log(error.response);
-						break;
-				}*/
+				setApiError(
+					error.response.data?.detail ||
+						(En
+							? "Invalid Email Or Password"
+							: "البريد الإلكتروني أو كلمة المرور غير صحيحة")
+				);
 			} else if (error.request) {
-				setApiError(En?"Network error. Please check your internet connection.":"خطأ في الشبكة. يرجى التحقق من اتصال الانترنت");
+				setApiError(
+					En
+						? "Network error. Please check your internet connection."
+						: "خطأ في الشبكة. يرجى التحقق من اتصال الانترنت"
+				);
 			}
-		} finally {
-			setLoading(false);
 		}
+		setLoading(false);
 	};
 
-	let validationSchema = yup.object({
-		email: yup
-			.string()
-			.required(En?"Please enter your email":"يرجى ادخال البريد الالكتروني")
-			.email(En?"Invalid Email":"البريد الالكتروني غير صحيح"),
-		password: yup.string().required(En?"Please enter your password":"يرجى ادخال كلمة المرور"),
-	});
-
-	let formik = useFormik({
-		initialValues: {
-			email: "",
-			password: "",
-		},
-		validationSchema,
-		onSubmit: SignInSubmit,
-	});
-
-	const Success = () => {
-		messageApi.open({
-			type: "success",
-			content: En?"Login successful":"تم تسجيل الدخول بنجاح",
-		});
-	}
-	
-	useEffect(() => {
-		if (SuccessMessageLogin) {
-			Success();
-		}
-	} , [SuccessMessageLogin]);
 	return (
 		<>
-		 	{contextHolder}
-			<div className="min-vh-100 d-flex flex-column justify-content-center align-items-center bg-light" 
-			dir={En ? "ltr" : "rtl"}
+			{contextHolder}
+			<div
+				className={`min-vh-100 d-flex flex-column justify-content-center align-items-center ${
+					isDark ? styles["dark-bg"] : "bg-light"
+				}`}
+				dir={En ? "ltr" : "rtl"}
 			>
-				
-					<h5 className={`${styles["head-Form"]} fw-bold mb-0 pb-4 ${En ? "" : "fs-4"}`}>
-					{En ? "Welcome Back, Administrator": "مرحبا بعودتك" }
-					</h5>
-				
-				<div className={`${styles["div-Form"]} bg-white p-4 rounded-3 shadow`}>
-						<h4 className="fw-bold mb-2">
-							{En? "Sign In": "تسجيل الدخول"}
-						</h4>
-					
-					
-						<p className="text-muted mb-4" style={{ fontSize: "14px" }}>
-							{En? "Enter your email and password below": "أدخل بريدك الإلكتروني وكلمة المرور أدناه"}
-							<br />
-							{En? "to log into your account" : "لتسجيل الدخول في حسابك"}
-						</p>
-					
+				<h5
+					className={`${styles["head-Form"]} fw-bold mb-0 pb-4 ${
+						En ? "" : "fs-4"
+					} ${isDark ? "text-white" : "text-dark"}`}
+				>
+					{En ? "Welcome Back, Administrator" : "مرحبا بعودتك"}
+				</h5>
 
-					<form onSubmit={formik.handleSubmit}>
-						
-							<div
-								className={`mb-3`}
-								
-							>
-								<label
-									className={`mb-2 fw-semibold ${formik.touched.email && formik.errors.email ?"text-danger":""}`}
-									style={{ fontSize: "13px" }}
+				<div
+  className={`${styles["div-Form"]} ${isDark ? "bg-dark" : "bg-white"} p-4 rounded-3`}
+  style={
+    isDark
+      ? {
+          boxShadow: "0 8px 40px 0 rgba(255,255,255,0.04)", border: "1px solid #202949",
+        }
+      : {
+          boxShadow: "0 6px 32px 0 rgba(0,0,0,0.09), 0 1.5px 6px 0 rgba(0,0,0,0.03)",
+        }
+  }
+>
+					<h4 className={`fw-bold mb-2 ${isDark ? "text-white" : "text-dark"}`}>
+						{En ? "Sign In" : "تسجيل الدخول"}
+					</h4>
+					<p
+						className={`mb-4 ${isDark ? "text-white" : "text-muted"}`}
+						style={{ fontSize: "14px" }}
+					>
+						{En
+							? "Enter your email and password below"
+							: "أدخل بريدك الإلكتروني وكلمة المرور أدناه"}
+						<br />
+						{En ? "to log into your account" : "لتسجيل الدخول في حسابك"}
+					</p>
+
+					<Form
+						name="login"
+						layout="vertical"
+						onFinish={handleFinish}
+						autoComplete="off"
+						className="mt-2"
+						style={{ minWidth: 285 }}
+					>
+						<Form.Item
+							label={
+								<span
+									className={isDark ? "text-white" : "text-dark"}
 								>
 									{En ? "Email" : "البريد الإلكتروني"}
-								</label>
-								<input
-									type="email"
-									name="email"
-									className="form-control"
-									placeholder={En ? "name@example.com" : "name@example.com"}
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									style={{ fontSize: "14px", padding: "8px 12px" }}
-								/>
-								{formik.touched.email && formik.errors.email ? (
-									<small
-									className="d-inline-block text-danger mt-2 px-2 py-1 bg-danger bg-opacity-10 rounded-1"
-									style={{ fontSize: "12px" }}
-								>
-									{formik.errors.email}
-								</small>
-								) : null}
-								
-							</div>
-						
-
-						
-							<div className="mb-3">
-								<div className="d-flex justify-content-between align-items-center mb-2">
-									<label
-										className={`fw-semibold ${formik.touched.password && formik.errors.password ?"text-danger":""}`}
-										style={{ fontSize: "13px" }}
-									>
-										{En? "Password": "كلمة المرور"} 
-									</label>
-								</div>
-								<input
-									type="password"
-									name="password"
-									className="form-control"
-									placeholder="Password"
-									onChange={formik.handleChange}
-									onBlur={formik.handleBlur}
-									style={{ fontSize: "14px", padding: "8px 12px" }}
-								/>
-								{formik.touched.password && formik.errors.password  ?(
-									<small
-										className="d-inline-block text-danger mt-2 px-2 py-1 bg-danger bg-opacity-10 rounded-1"
-										style={{ fontSize: "12px" }}
-									>
-										{formik.errors.password}
-									</small>
-								):null}
-								
-								
-							</div>
-						
-
-						{loading ? (
-							<button
-								type="submit"
-								className="btn w-100 text-white mb-3 form-control"
+								</span>
+							}
+							name="email"
+							rules={[
+								{
+									required: true,
+									message: En
+										? "Please enter your email"
+										: "يرجى ادخال البريد الالكتروني",
+								},
+								{
+									type: "email",
+									message: En ? "Invalid Email" : "البريد الالكتروني غير صحيح",
+								},
+							]}
+							labelCol={{
+								style: {
+									fontSize: "13px",
+									fontWeight: 600,
+									color: isDark ? "white" : "black",
+								},
+							}}
+						>
+							<Input
+								type="email"
+								size="large"
 								style={{
-									backgroundColor: "#0f1426",
-									padding: "10px",
-								}}
-							>
-								<Spin indicator={<LoadingOutlined spin />} className="text-white" />
-							</button>
-						) : (
-							<button
-								type="submit"
-								className={`${styles["Button-Form"]} btn w-100 text-white mb-3 form-control`}
-								style={{
-									backgroundColor: "#0f1426",
-									padding: "10px",
 									fontSize: "14px",
-									fontWeight: "600",
+									padding: "8px 12px",
+									background: isDark ? "#23272f" : "",
+									color: isDark ? "#fff" : "#222",
 								}}
-							>
-								{En ? "Login" : "تسجيل الدخول"}
-							</button>
-						)}
-						{apiError &&  (
-							<div className="d-flex align-items-center gap-2 mt-3 p-3 rounded-2 bg-danger bg-opacity-10 border border-danger animate__animated animate__fadeIn">
-								<i className="bi bi-exclamation-circle-fill text-danger"></i>
+								className={isDark ? "bg-dark text-white" : "bg-light text-dark"}
+								placeholder={En ? "name@example.com" : "name@example.com"}
+							/>
+						</Form.Item>
+
+						<Form.Item
+							label={
 								<span
-									className="text-danger"
-									style={{ fontSize: "13px", fontWeight: "500" }}
+									className={isDark ? "text-white" : "text-dark"}
 								>
-									{apiError} 
+									{En ? "Password" : "كلمة المرور"}
+								</span>
+							}
+							name="password"
+							rules={[
+								{
+									required: true,
+									message: En
+										? "Please enter your password"
+										: "يرجى ادخال كلمة المرور",
+								},
+							]}
+							labelCol={{
+								style: {
+									fontSize: "13px",
+									fontWeight: 600,
+									color: isDark ? "white" : "black",
+								},
+							}}
+						>
+							<Input.Password
+								size="large"
+								placeholder={En ? "Password" : "كلمة المرور"}
+								style={{
+									fontSize: "14px",
+									padding: "8px 12px",
+									background: isDark ? "#23272f" : "",
+									color: isDark ? "#fff" : "#222",
+								}}
+								className={isDark ? "bg-dark text-white" : "bg-light text-dark"}
+							/>
+						</Form.Item>
+
+						<Form.Item shouldUpdate>
+							{() => (
+								<Button
+									type="primary"
+									htmlType="submit"
+									block
+									style={{
+										backgroundColor: "#0f1426",
+										padding: "10px",
+										fontSize: "14px",
+										fontWeight: "600",
+										border: 0,
+									}}
+									disabled={loading}
+									className={`${styles["Button-Form"]} w-100 mb-3`}
+								>
+									{loading ? (
+										<Spin
+											indicator={<LoadingOutlined spin />}
+											className="text-white"
+										/>
+									) : En ? (
+										"Login"
+									) : (
+										"تسجيل الدخول"
+									)}
+								</Button>
+							)}
+						</Form.Item>
+
+						{apiError && (
+							<div className="d-flex align-items-center gap-2 mt-3 p-3 rounded-2 bg-danger bg-opacity-25 border border-danger animate__animated animate__fadeIn">
+								<i
+									className="bi bi-exclamation-circle-fill"
+									style={{ color: "red" }}
+								></i>
+								<span
+									style={{ fontSize: "13px", fontWeight: "500", color: "red" }}
+								>
+									{apiError}
 								</span>
 							</div>
-							
 						)}
-					</form>
+					</Form>
 				</div>
 			</div>
 		</>

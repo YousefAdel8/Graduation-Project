@@ -13,3 +13,20 @@
         font-size: 17px !important;
     }
 }
+/* Dark background for wrapper */
+.dark-bg {
+  background-color: #161b22 !important;
+}
+
+/* make input placeholder white in dark */
+input.bg-dark::placeholder,
+input[type="email"].bg-dark::placeholder,
+input[type="password"].bg-dark::placeholder {
+  color: #e9e9e9 !important;
+  opacity: 1 !important;
+}
+
+.ant-input-affix-wrapper.bg-dark input::placeholder {
+  color: #e9e9e9 !important;
+  opacity: 1 !important;
+}

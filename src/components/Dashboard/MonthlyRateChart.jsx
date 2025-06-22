@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2';
 import { useLanguage } from '../../context/LanguageContext';
 import axios from 'axios';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function MonthlyRateChart() {
     const { isEnglish: En } = useLanguage();
@@ -10,6 +11,8 @@ export default function MonthlyRateChart() {
     const [chartLabels, setChartLabels] = useState([]);
     const [chartData, setChartData] = useState([]);
         
+     const { isDark } = useTheme(); 
+     
         useEffect(() => {
           const handleResize = () => {
             setIsMobile(window.innerWidth < 768);
@@ -21,7 +24,7 @@ export default function MonthlyRateChart() {
             window.removeEventListener("resize", handleResize);
           };
         }, []);
-
+       
         const getMonthlyRate = async () => {
             try {
                 const { data } = await axios.get("https://cms-reporting.runasp.net/api/Home/monthly-report-counts");
@@ -46,7 +49,7 @@ export default function MonthlyRateChart() {
                 {
                     label: En ? "Reports" : "التقارير",
                     data: chartData,
-                    backgroundColor: "rgb(2, 8, 23)",
+                    backgroundColor: isDark?"rgb(241, 241, 241)":"rgb(2, 8, 23)",
                 },
             ],
         };

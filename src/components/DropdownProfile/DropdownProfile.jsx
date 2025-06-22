@@ -17,7 +17,6 @@ const DropdownProfile= () => {
               <div
                 style={{
                   padding: '8px 12px',
-                  color: '#000',
                   cursor: 'default',
                 }}
                 className='d-flex flex-column'

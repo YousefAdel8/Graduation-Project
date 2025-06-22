@@ -19,6 +19,7 @@ import UnAuthorized from "./components/UnAuthorized/UnAuthorized.jsx";
 import RequirePermission from "./components/Auth/RequirePermission.jsx";
 import EmergencyPage from "./components/Emergency/EmergencyPage.jsx";
 import NotificationPage from "./components/NotificationButton/NotificationPage.jsx";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
 function App() {
 	const routers = createBrowserRouter([
 		{
@@ -102,9 +103,11 @@ function App() {
 	]);
 
 	return (
+		<ThemeProvider>
 		<PermissionProvider>
 			<RouterProvider router={routers} />
 		</PermissionProvider>
+		</ThemeProvider>
 	);
 }
 

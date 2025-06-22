@@ -17,6 +17,7 @@ import {
 } from "@ant-design/icons";
 import { useLanguage } from "../../context/LanguageContext";
 import axios from "axios";
+import { useTheme } from "../../context/ThemeContext";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -26,7 +27,7 @@ export default function TopCategoriesCard() {
 	const [timeRange, setTimeRange] = useState("day");
 	const [CriticalReportsApi, setCriticalReportsApi] = useState({});
 	const [categories, setCategories] = useState([]);
-
+	 const { isDark } = useTheme(); 
 	const getCriticalReportsApi = async () => {
 		const { data } = await axios.get(
 			"https://cms-reporting.runasp.net/api/Home/critical-reports-dashboard"
@@ -146,7 +147,7 @@ export default function TopCategoriesCard() {
 					}}
 				>
 					<div style={{ display: "flex", alignItems: "center" }}>
-						<span style={{ marginRight: 8, fontWeight: "bold" }}>
+						<span style={{ marginRight: 8, fontWeight: "bold" }} >
 							{En ? "Emergency Reports" : "التقارير الطارئة"}
 						</span>
 					</div>
@@ -172,7 +173,7 @@ export default function TopCategoriesCard() {
 					>
 						<Statistic
 							title={
-								<Text strong style={{ fontSize: 16 }}>
+								<Text strong style={{ fontSize: 16 }} className={`text-dark`}>
 									{En ? "Critical Reports" : "التقارير الحرجة"}
 								</Text>
 							}
@@ -193,6 +194,7 @@ export default function TopCategoriesCard() {
 								<Text
 									strong
 									style={{ fontSize: 16, textAlign: En ? "left" : "right" }}
+									className={`text-dark`}
 								>
 									{En ? "Average Response Time" : "متوسط وقت الاستجابة"}
 								</Text>
