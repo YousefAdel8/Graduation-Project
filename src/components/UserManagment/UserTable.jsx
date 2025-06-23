@@ -1,37 +1,29 @@
-import React, {  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Modal, Popconfirm, Table } from "antd";
-import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import NewUser from "../NewUser/NewUser";
 import { useLanguage } from "../../context/LanguageContext";
+import getUserTableApi from "./UserApi";
+import EditPasswordModel from "./ChangePassword/EditPasswordModel";
+import editUserApi from "./EditUserApi";
 export default function UserTable() {
 	const { isEnglish: En } = useLanguage();
 	const columns = [
 		{
-			title: "#",
-			dataIndex: "index",
-			key: "index",
-			width: 50,
-		},
-		{
 			title: En ? "Username" : "اسم المستخدم",
-			dataIndex: "username",
-			key: "username",
+			dataIndex: "fullName",
+			key: "fullName",
 		},
 		{
-			title: En ? "Name" : "الاسم",
-			dataIndex: "name",
-			key: "name",
+			title: En ? "email" : "البريد الالكتروني",
+			dataIndex: "email",
+			key: "email",
 		},
 		{
-			title: En ? "User Type" : "نوع المستخدم",
-			dataIndex: "userType",
-			key: "userType",
-		},
-		{
-			title: En ? "Password" : "كلمة السر",
-			dataIndex: "password",
-			key: "password",
-			render: () => <LockOutlined />,
+			title: En ? "User Role" : "دور المستخدم",
+			dataIndex: "roles",
+			key: "roles",
+			render: (roles) => roles?.join(" And "),
 		},
 		{
 			title: En ? "Edit" : "تعديل",
@@ -63,57 +55,52 @@ export default function UserTable() {
 				</span>
 			),
 		},
+		{
+			title: En ? "Change Password" : "تغيير الباسورد",
+			key: "changePassword",
+			render: (_, record) => (
+				<button
+					type="button"
+					onClick={() => openPasswordModal(record)}
+					style={{
+						border: "none",
+						background: "none",
+						color: "#faad14",
+						cursor: "pointer",
+					}}
+				>
+					{En ? "Change" : "تغيير"}
+				</button>
+			),
+		},
 	];
-	const [tableData, setTableData] = useState([
-		{
-			key: "1",
-			index: 1,
-			username: "ahmed123",
-			name: "أحمد فتحي",
-			userType: "مشرف",
-			password: "123456",
-		},
-		{
-			key: "2",
-			index: 2,
-			username: "sara_22",
-			name: "سارة محمد",
-			userType: "مستخدم عادي",
-			password: "abcdef",
-		},
-		{
-			key: "3",
-			index: 3,
-			username: "karim_dev",
-			name: "كريم السيد",
-			userType: "مدير النظام",
-			password: "pass123",
-		},
-		{
-			key: "4",
-			index: 4,
-			username: "mona.admin",
-			name: "منى عبدالعزيز",
-			userType: "مشرف",
-			password: "admin2024",
-		},
-		{
-			key: "5",
-			index: 5,
-			username: "youssef98",
-			name: "يوسف مصطفى",
-			userType: "مستخدم عادي",
-			password: "youssef!@#",
-		},
-	]);
+	const [tableData, setTableData] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const fetchData = async () => {
+	setLoading(true);
+	try {
+		const data = await getUserTableApi();
+		if (Array.isArray(data)) {
+			setTableData(data);
+		} else {
+			console.error("Data is not an array:", data);
+		}
+	} catch (error) {
+		console.error("Error fetching data:", error);
+	} finally {
+		setLoading(false);
+	}
+};
+
+useEffect(() => {
+	fetchData();
+}, []);
 
 	const [isEditOpen, setIsEditOpen] = useState(false);
 	const [selectedItemforEdit, setSelectedItemforEdit] = useState(null);
 	const [form] = Form.useForm();
-	const removeItem = (record) => {
-		const newData = tableData.filter((item) => item.key !== record.key);
-		setTableData(newData);
-	};
+
+	const removeItem = (record) => {};
 	const editItem = (record) => {
 		setSelectedItemforEdit(record);
 		setIsEditOpen(true);
@@ -122,29 +109,36 @@ export default function UserTable() {
 		setIsEditOpen(false);
 	};
 
-	const handleOk = () => {
-    form.validateFields()
-      .then(values => {
-        console.log("Validated values:", values);
-        const newData = tableData.map(item => {
-          if (item.key === selectedItemforEdit.key) {
-            return { ...item, ...values };
-          }
-          return item;
-        });
-        setTableData(newData);
-        setIsEditOpen(false);
-      })
-      .catch(info => {
-        console.log('Validate Failed:', info);
-      });
-  };
+	const handleOk = async () => {
+	try {
+		const values = await form.validateFields();
+		await editUserApi(selectedItemforEdit.id, values);
+		await fetchData();
+		setIsEditOpen(false);
+	} catch (err) {
+		console.log("Validation or update failed:", err);
+	}
+};
+
+
+	// Password Modal State
+	const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+	const [selectedUserForPassword, setSelectedUserForPassword] = useState(null);
+
+	const openPasswordModal = (record) => {
+		setSelectedUserForPassword(record);
+		setIsPasswordModalOpen(true);
+	};
+	const closePasswordModal = () => {
+		setIsPasswordModalOpen(false);
+	};
 
 	return (
 		<>
 			<Table
 				columns={columns}
 				dataSource={tableData}
+				loading={loading}
 				scroll={{
 					x: 500,
 					y: 500,
@@ -153,21 +147,30 @@ export default function UserTable() {
 					position: ["none"],
 				}}
 			/>
+			{/*Edit User Modal*/}
 			<Modal
-        title={En ? "Edit User" : "تعديل المستخدم"}
-        open={isEditOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText={En ? "Submit" : "إرسال"}
-        cancelText={En ? "Cancel" : "إلغاء"}
-      >
-        <NewUser
-          En={En}
-          selectedItemforEdit={selectedItemforEdit}
-          form={form} 
-          hideSubmitButton={true}
-        />
-      </Modal>
+				title={En ? "Edit User" : "تعديل المستخدم"}
+				open={isEditOpen}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				okText={En ? "Submit" : "إرسال"}
+				cancelText={En ? "Cancel" : "إلغاء"}
+			>
+				<NewUser
+					En={En}
+					selectedItemforEdit={selectedItemforEdit}
+					form={form}
+					hideSubmitButton={true}
+					hidePassword={true}
+					hideEmail={true}
+				/>
+			</Modal>
+			{/*Edit user Password Modal*/}
+			<EditPasswordModel
+				isPasswordModalOpen={isPasswordModalOpen}
+				selectedUserForPassword={selectedUserForPassword}
+				closePasswordModal={closePasswordModal}
+			/>
 		</>
 	);
 }

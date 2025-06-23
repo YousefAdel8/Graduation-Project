@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Tooltip } from 'antd';
 import { useTheme } from '../../context/ThemeContext';
 import { BulbOutlined, BulbFilled } from '@ant-design/icons';
+import getUserTableApi from '../UserManagment/UserApi';
 
 export default function DarkModeButton() {
   const { isDark, toggleToDark, toggleToLight } = useTheme();
@@ -9,6 +10,7 @@ export default function DarkModeButton() {
  const handleToggle = () => {
   if (isDark) {
     toggleToLight();
+    getUserTableApi();
   } else {
     toggleToDark();
   }

@@ -1,7 +1,6 @@
-import React from 'react';
 import axios from 'axios';
 
-export const  getUserTableApi = async () => {
+export const  postUserApi = async (data) => {
   const token = localStorage.getItem("userToken");
 
   if (!token) {
@@ -10,8 +9,8 @@ export const  getUserTableApi = async () => {
   }
 
   try {
-    const response = await axios.get(
-      "https://cms-reporting.runasp.net/api/users",
+    const response = await axios.post(
+      "https://cms-reporting.runasp.net/api/users",data,
       {
         headers: {
           "Content-Type": "application/json",
@@ -28,4 +27,4 @@ export const  getUserTableApi = async () => {
   }
 };
 
-export default getUserTableApi;
+export default postUserApi;

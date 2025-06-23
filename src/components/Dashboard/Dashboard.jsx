@@ -80,7 +80,7 @@ const Dashboard = () => {
 					<Title
 						level={3}
 						style={{ marginBottom: 24 }}
-					className={`${En ? "text-start" : "text-end"} fw-bold ${isDark ? "text-white" : "text-dark"}`}
+					className={`${En ? "text-start" : "text-end"} fw-bold `}
 >
 						{En ? "Dashboard" : "لوحة التحكم"}
 					</Title>
@@ -97,8 +97,8 @@ const Dashboard = () => {
 									}}
 									className={
 										isDark
-											? "bg-dark text-white"
-											: "bg-white text-dark  shadow-sm"
+											? " "
+											: "shadow-sm"
 									}
 								>
 									<Statistic

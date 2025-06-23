@@ -4,204 +4,328 @@ import {
 	Row,
 	Col,
 	Form,
+	message,
 	Input,
-	Radio,
 	Button,
-	Upload,
 	Select,
+	Typography,
+	Space,
+	Divider,
+	theme,
 } from "antd";
-import { UserOutlined, UploadOutlined } from "@ant-design/icons";
-
+import {
+	UserOutlined,
+	MailOutlined,
+	LockOutlined,
+	TeamOutlined,
+	SaveOutlined,
+} from "@ant-design/icons";
+import { useLanguage } from "../../context/LanguageContext";
+import { useNavigate } from "react-router-dom";
+import postUserApi from "./PostUserApi";
+const { Title, Text } = Typography;
 export default function NewUser({
-	En = false, 
-  selectedItemforEdit = null, 
-  form: externalForm = null,
-  hideSubmitButton = false,
+	selectedItemforEdit = null,
+	form: externalForm = null,
+	hideSubmitButton = false,
+	hidePassword = false,
+	hideEmail = false,
+	hideRole = false,
+	hideName = false,
 }) {
+	const navigate = useNavigate();
 	const [localForm] = Form.useForm();
-	const userTypes = ["Admin", "Manager", "User", "Guest"];
-	const roles = ["Feedback", "Reports", "Social Media", "Users"].map(
-		(role) => ({
-			label: role,
-			value: role,
-		})
-	);
+	const { token } = theme.useToken();
+	const { isEnglish: En } = useLanguage();
+	const roles = ["Dashboard", "Emergency", "Manager", "Admin"].map((role) => ({
+		label: role,
+		value: role,
+	}));
 
-	const formInstance = externalForm || localForm; //take the form instance from the ref(edit) or from here(new user)
-	const onFinish = (values) => {
-		console.log("Form1 values:", values);
+	const formInstance = externalForm || localForm;
+	const [messageApi, contextHolder] = message.useMessage();
+	
+
+	const onFinish = async (values) => {
+		console.log("Form values:", values);
+		const result = await postUserApi(values);
+		console.log("Result from1111:", result);
+
+		if (result === "User created successfully") {
+			messageApi.success(
+				En ? "User created successfully" : "تم انشاء المستخدم بنجاح"
+			);
+			formInstance.resetFields();
+			setTimeout(() => {
+				navigate("/users");
+			}, 1000);
+		} else {
+			messageApi.error(En ? "User creation failed" : "فشل انشاء المستخدم");
+		}
 	};
+
 	useEffect(() => {
 		if (selectedItemforEdit) {
-		  formInstance.setFieldsValue(selectedItemforEdit);
+			formInstance.setFieldsValue(selectedItemforEdit);
 		}
-	  }, [selectedItemforEdit, formInstance]);
+	}, [selectedItemforEdit, formInstance]);
+
 	return (
 		<>
-			<Card className="shadow-sm p-4">
-				<Form
-					form={formInstance}
-					layout="vertical"
-					onFinish={onFinish}
-					initialValues={{ userType: userTypes[0] }}
-				>
-					<Row gutter={[16, 16]}>
-						{/* Username and Image Upload */}
-						<Col xs={24} md={12}>
-							<Form.Item
-								name="username"
-								label={En ? "Username" : "اسم المستخدم"}
-								rules={[
-									{
-										required: true,
-										message: En
-											? "Please enter username"
-											: "الرجاء إدخال اسم المستخدم",
-									},
-								]}
+			{contextHolder}
+			<div style={{ margin: "0 auto" }}>
+				{/* Form Section */}
+				<Card>
+					<Form
+						form={formInstance}
+						layout="vertical"
+						onFinish={onFinish}
+						size="large"
+					>
+						{/* Personal Information Section */}
+						{!hideName && (
+							<div style={{ marginBottom: "32px" }}>
+							<Title
+								level={4}
+								style={{
+									color: token.colorPrimary,
+									marginBottom: "24px",
+									display: "flex",
+									alignItems: "center",
+									gap: "8px",
+								}}
 							>
-								<Input
-									prefix={<UserOutlined />}
-									placeholder={En ? "Username" : "اسم المستخدم"}
-								/>
-							</Form.Item>
-						</Col>
+								<UserOutlined />
+								{En ? "Personal Information" : "المعلومات الشخصية"}
+							</Title>
 
-						<Col xs={24} md={12}>
-							<Form.Item name="avatar" label={En ? "Upload Image" : "رفع صورة"}>
-								<Upload
-									listType="picture"
-									maxCount={1}
-									beforeUpload={() => false}
-								>
-									<Button icon={<UploadOutlined />}>
-										{En ? "Upload" : "رفع"}
-									</Button>
-								</Upload>
-							</Form.Item>
-						</Col>
+							<Row gutter={[24, 24]}>
+								<Col xs={24} md={hideEmail?24:12}>
+									<Form.Item
+										name="fullName"
+										label={
+											<Text strong style={{ fontSize: "16px" }}>
+												{En ? "Full Name" : "الاسم الكامل"}
+											</Text>
+										}
+										rules={[
+											{
+												required: true,
+												message: En
+													? "Please enter full name"
+													: "الرجاء إدخال الاسم الكامل",
+											},
+										]}
+									>
+										<Input
+											prefix={
+												<UserOutlined
+													style={{ color: token.colorTextTertiary }}
+												/>
+											}
+											placeholder={En ? "Enter full name" : "أدخل الاسم الكامل"}
+											style={{ borderRadius: "8px" }}
+										/>
+									</Form.Item>
+								</Col>
 
-						{/* Name and Email */}
-						<Col xs={24} md={12}>
-							<Form.Item
-								name="name"
-								label={En ? "Name" : "الاسم"}
-								rules={[
-									{
-										required: true,
-										message: En ? "Please enter name" : "الرجاء إدخال الاسم",
-									},
-								]}
+								{!hideEmail &&(<Col xs={24} md={12}>
+									<Form.Item
+										name="email"
+										label={
+											<Text strong style={{ fontSize: "16px" }}>
+												{En ? "Email Address" : "البريد الإلكتروني"}
+											</Text>
+										}
+										rules={[
+											{
+												required: true,
+												message: En
+													? "Please enter email address"
+													: "الرجاء إدخال البريد الإلكتروني",
+											},
+											{
+												type: "email",
+												message: En
+													? "Please enter a valid email address"
+													: "الرجاء إدخال بريد إلكتروني صحيح",
+											},
+										]}
+									>
+										<Input
+											prefix={
+												<MailOutlined
+													style={{ color: token.colorTextTertiary }}
+												/>
+											}
+											placeholder={
+												En ? "Enter email address" : "أدخل البريد الإلكتروني"
+											}
+											style={{ borderRadius: "8px" }}
+										/>
+									</Form.Item>
+								</Col> ) }
+							</Row>
+						</div>
+						)}
+						
+						{!hideName && (
+						<Divider style={{ margin: hideEmail?"16px 0":"32px 0" }} />
+						)}
+
+						{/* Access & Permissions Section */}
+						{!hideRole && (
+							<div style={{ marginBottom: "32px" }}>
+							<Title
+								level={4}
+								style={{
+									color: token.colorPrimary,
+									marginBottom: "24px",
+									display: "flex",
+									alignItems: "center",
+									gap: "8px",
+								}}
 							>
-								<Input placeholder={En ? "Name" : "الاسم"} />
-							</Form.Item>
-						</Col>
+								<TeamOutlined />
+								{En ? "Access & Permissions" : "الصلاحيات والأذونات"}
+							</Title>
 
-						<Col xs={24} md={12}>
-							<Form.Item
-								name="email"
-								label={En ? "Email" : "البريد الإلكتروني"}
-								rules={[
-									{
-										required: true,
-										message: En
-											? "Please enter email"
-											: "الرجاء إدخال البريد الإلكتروني",
-									},
-									{
-										type: "email",
-										message: En
-											? "Please enter valid email"
-											: "الرجاء إدخال بريد إلكتروني صحيح",
-									},
-								]}
+							<Row gutter={[24, 24]}>
+								<Col xs={24}>
+									<Form.Item
+										name="roles"
+										label={
+											<Text strong style={{ fontSize: "16px" }}>
+												{En ? "User Roles" : "أدوار المستخدم"}
+											</Text>
+										}
+										rules={[
+											{
+												required: true,
+												type: "array",
+												min: 1,
+												message: En
+													? "Please select at least one role"
+													: "يجب اختيار دور واحد على الأقل",
+											},
+										]}
+									>
+										<Select
+											mode="multiple"
+											allowClear
+											style={{ width: "100%", borderRadius: "8px" }}
+											placeholder={
+												En ? "Select user roles" : "اختر أدوار المستخدم"
+											}
+											options={roles}
+											size="large"
+										/>
+									</Form.Item>
+								</Col>
+							</Row>
+						</div>
+						)}
+						
+						{hidePassword && (
+						<Divider style={{ margin: "32px 0" }} />
+						)}
+						{/* Security Section */}
+						{!hidePassword && (
+							<div style={{ marginBottom: "32px" }}>
+							<Title
+								level={4}
+								style={{
+									color: token.colorPrimary,
+									marginBottom: "24px",
+									display: "flex",
+									alignItems: "center",
+									gap: "8px",
+								}}
 							>
-								<Input placeholder={En ? "Email" : "البريد الإلكتروني"} />
-							</Form.Item>
-						</Col>
+								<LockOutlined />
+								{En ? "Security" : "الأمان"}
+							</Title>
 
-						{/* User Type and Roles */}
-						<Col xs={24} md={12}>
-							<Form.Item
-								name="userType"
-								label={En ? "User Type" : "نوع المستخدم"}
-								rules={[
-									{
-										required: true,
-										message: En
-											? "Please select user type"
-											: "الرجاء اختيار نوع المستخدم",
-									},
-								]}
-							>
-								<Radio.Group>
-									{userTypes.map((type) => (
-										<Radio key={type} value={type}>
-											{type}
-										</Radio>
-									))}
-								</Radio.Group>
-							</Form.Item>
-						</Col>
-
-						<Col xs={24} md={12}>
-							<Form.Item
-								name="roles"
-								label={En ? "Roles" : "الأدوار"}
-								rules={[
-									{
-										required: true,
-										type: "array",
-										min: 1,
-										message: En
-											? "At least one role must be selected"
-											: "يجب اختيار دور واحد على الأقل",
-									},
-								]}
-							>
-								<Select
-									mode="multiple"
-									allowClear
-									style={{ width: "100%" }}
-									placeholder={
-										En ? "Select one or more roles" : "اختر دورًا أو أكثر"
-									}
-									options={roles}
-								/>
-							</Form.Item>
-						</Col>
-
-						{/* Password */}
-						<Col xs={24}>
-							<Form.Item
-								name="password"
-								label={En ? "Password" : "كلمة المرور"}
-								rules={[
-									{
-										required: true,
-										message: En
-											? "Please enter password"
-											: "الرجاء إدخال كلمة المرور",
-									},
-								]}
-							>
-								<Input.Password placeholder={En ? "Password" : "كلمة المرور"} />
-							</Form.Item>
-						</Col>
+							<Row gutter={[24, 24]}>
+								<Col xs={24}>
+									<Form.Item
+										name="password"
+										label={
+											<Text strong style={{ fontSize: "16px" }}>
+												{En ? "Password" : "كلمة المرور"}
+											</Text>
+										}
+										rules={[
+											{
+												required: true,
+												message: En
+													? "Please enter a password"
+													: "الرجاء إدخال كلمة المرور",
+											},
+											{
+												min: 8,
+												message: En
+													? "Password must be at least 8 characters"
+													: "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+											},
+										]}
+									>
+										<Input.Password
+											prefix={
+												<LockOutlined
+													style={{ color: token.colorTextTertiary }}
+												/>
+											}
+											placeholder={En ? "Enter password" : "أدخل كلمة المرور"}
+											style={{ borderRadius: "8px" }}
+										/>
+									</Form.Item>
+								</Col>
+							</Row>
+						</div>
+						)}
+						
 
 						{/* Submit Button */}
 						{!hideSubmitButton && (
-							<Col xs={24}>
-								<Form.Item>
-									<Button type="primary" htmlType="submit" className="mt-4">
-										{En ? "Submit" : "إرسال"}
+							<div style={{ textAlign: "center", marginTop: "40px" }}>
+								<Space size="middle">
+									<Button
+										size="large"
+										style={{
+											minWidth: "120px",
+											borderRadius: "8px",
+										}}
+									>
+										{En ? "Cancel" : "إلغاء"}
 									</Button>
-								</Form.Item>
-							</Col>
+									<Button
+										type="primary"
+										htmlType="submit"
+										size="large"
+										icon={<SaveOutlined />}
+										style={{
+											minWidth: "120px",
+											background: `linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorPrimaryActive} 100%)`,
+											border: "none",
+											borderRadius: "8px",
+											boxShadow: `0 4px 12px ${token.colorPrimary}30`,
+										}}
+									>
+										{selectedItemforEdit
+											? En
+												? "Update User"
+												: "تحديث المستخدم"
+											: En
+											? "Create User"
+											: "إنشاء المستخدم"}
+									</Button>
+								</Space>
+							</div>
 						)}
-					</Row>
-				</Form>
-			</Card>
+					</Form>
+				</Card>
+			</div>
 		</>
 	);
 }
