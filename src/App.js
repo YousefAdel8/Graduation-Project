@@ -20,6 +20,7 @@ import RequirePermission from "./components/Auth/RequirePermission.jsx";
 import EmergencyPage from "./components/Emergency/EmergencyPage.jsx";
 import NotificationPage from "./components/NotificationButton/NotificationPage.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
+import NewAlertPage from "./components/Emergency/NewAlert/NewAlertPage.jsx";
 function App() {
 	const routers = createBrowserRouter([
 		{
@@ -87,8 +88,14 @@ function App() {
 					element: <UnAuthorized />,
 				},
 				{
-					path: "/Emergency",
+					path: "/emergency",
 					element: <EmergencyPage />,
+				},
+				{
+					path: "/emergency/alert",
+					element: (
+							<NewAlertPage />
+					),
 				},
 				{
 					path: "/Notifications",

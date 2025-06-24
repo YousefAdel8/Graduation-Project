@@ -81,17 +81,21 @@ export default function AntdLoginForm() {
 				</h5>
 
 				<div
-  className={`${styles["div-Form"]} ${isDark ? "bg-dark" : "bg-white"} p-4 rounded-3`}
-  style={
-    isDark
-      ? {
-          boxShadow: "0 8px 40px 0 rgba(255,255,255,0.04)", border: "1px solid #202949",
-        }
-      : {
-          boxShadow: "0 6px 32px 0 rgba(0,0,0,0.09), 0 1.5px 6px 0 rgba(0,0,0,0.03)",
-        }
-  }
->
+					className={`${styles["div-Form"]} ${
+						isDark ? "bg-dark" : "bg-white"
+					} p-4 rounded-3`}
+					style={
+						isDark
+							? {
+									boxShadow: "0 8px 40px 0 rgba(255,255,255,0.04)",
+									border: "1px solid #202949",
+							  }
+							: {
+									boxShadow:
+										"0 6px 32px 0 rgba(0,0,0,0.09), 0 1.5px 6px 0 rgba(0,0,0,0.03)",
+							  }
+					}
+				>
 					<h4 className={`fw-bold mb-2 ${isDark ? "text-white" : "text-dark"}`}>
 						{En ? "Sign In" : "تسجيل الدخول"}
 					</h4>
@@ -116,9 +120,7 @@ export default function AntdLoginForm() {
 					>
 						<Form.Item
 							label={
-								<span
-									className={isDark ? "text-white" : "text-dark"}
-								>
+								<span className={isDark ? "text-white" : "text-dark"}>
 									{En ? "Email" : "البريد الإلكتروني"}
 								</span>
 							}
@@ -159,9 +161,7 @@ export default function AntdLoginForm() {
 
 						<Form.Item
 							label={
-								<span
-									className={isDark ? "text-white" : "text-dark"}
-								>
+								<span className={isDark ? "text-white" : "text-dark"}>
 									{En ? "Password" : "كلمة المرور"}
 								</span>
 							}
