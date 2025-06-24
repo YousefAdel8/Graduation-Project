@@ -49,8 +49,9 @@ export default function MonthlyRateChart() {
                 {
                     label: En ? "Reports" : "التقارير",
                     data: chartData,
-                    backgroundColor: isDark?"rgb(241, 241, 241)":"rgb(2, 8, 23)",
-                },
+                    backgroundColor: isDark ? "rgba(96, 165, 250, 0.8)" : "rgb(2, 8, 23)", 
+    borderColor: isDark ? "rgb(97, 125, 148)" : "rgb(2,8, 23)",
+    borderWidth: 1,},
             ],
         };
     

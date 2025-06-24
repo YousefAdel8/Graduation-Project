@@ -1,6 +1,6 @@
 // PostCard.js
 import React from 'react';
-import { Card, Avatar, Button, Typography } from 'antd';
+import { Card, Avatar, Button, Typography, Tag } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpRightFromSquare, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import PostPhotos from './PostPhotos';
@@ -11,7 +11,7 @@ const PostCard = ({ post, En }) => {
 		const parts = text.split(/(#[^\s]+)/g);
 		return parts.map((part, i) =>
 			part.startsWith("#") ? (
-				<Text key={i} style={{ color: "#1976d2", fontWeight: 500 }}>
+				<Text key={i} style={{  fontWeight: 500 }}>
 					{part}
 				</Text>
 			) : (
@@ -24,11 +24,23 @@ const PostCard = ({ post, En }) => {
       style={{
         overflow: "hidden",
         borderRadius: "14px",
-        background: "#fff",
         border: "1.5px solid rgb(215, 212, 212)",
       }}
       bodyStyle={{ padding: 0 }}
     >
+      <div style={{ marginBottom: 12 }} dir={En ? "ltr" : "rtl"}>
+				<Tag 
+					color="blue" 
+					style={{ 
+						fontSize: "12px",
+						padding: "2px 6px",
+						borderRadius: "4px",
+						fontWeight: "500"
+					}}
+				>
+					{post.issueCategory}
+				</Tag>
+			</div>
       {/* Header */}
       <div
         style={{
@@ -77,7 +89,7 @@ const PostCard = ({ post, En }) => {
             textAlign: En ? "left" : "right",
           }}
         >
-          {formatHashtags(post.discription)}
+          {formatHashtags(post.description)}
         </Paragraph>
       </div>
 
@@ -99,7 +111,6 @@ const PostCard = ({ post, En }) => {
           <div
             style={{
               background: "#1976d2",
-              color: "white",
               borderRadius: "50%",
               width: 20,
               height: 20,
@@ -113,7 +124,7 @@ const PostCard = ({ post, En }) => {
           </div>
           <div>
             <Text type="secondary" style={{ fontSize: "14px" }}>
-              {post.likesCount}
+              {post.likes}
             </Text>
             <Text type="secondary" style={{ fontSize: "14px" }}>
               {En ? " likes" : " اعجاب"}
@@ -131,7 +142,7 @@ const PostCard = ({ post, En }) => {
           </div>
           <div>
             <Text type="secondary" style={{ fontSize: "14px" }}>
-              {post.shareCount}
+              {post.shares}
             </Text>
             <Text type="secondary" style={{ fontSize: "14px" }}>
               {En ? " shares" : " مشاركة"}
