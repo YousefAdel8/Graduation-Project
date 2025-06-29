@@ -5,7 +5,7 @@ import { useLanguage } from "../../context/LanguageContext";
 import { Typography } from "antd";
 import SocialMediaApi from "./SocialMediaApi";
 
-const { Title  } = Typography;
+const { Title } = Typography;
 
 const CommunityFeed = () => {
 	const { isEnglish: En } = useLanguage();
@@ -109,20 +109,20 @@ const CommunityFeed = () => {
 	];*/
 	const [posts, setPosts] = useState([]);
 	useEffect(() => {
-  const loadData = async () => {
-    try {
-      const data = await SocialMediaApi();
-      console.log("Data:", data);
-      if (Array.isArray(data)) {
-        setPosts(data);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+		const loadData = async () => {
+			try {
+				const data = await SocialMediaApi();
+				console.log("Data:", data);
+				if (Array.isArray(data)) {
+					setPosts(data);
+				}
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
 
-  loadData();
-}, []);
+		loadData();
+	}, []);
 	return (
 		<div
 			style={{

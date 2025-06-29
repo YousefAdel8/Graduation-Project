@@ -38,9 +38,11 @@ const ReportTableDetails = ({ open, reportId, onClose }) => {
       axios
         .get(`https://cms-reporting.runasp.net/api/Report/${reportId}`)
         .then(({ data }) => {
+          console.log("View Api:",data)
           if (data.isSuccess && data.value) setReport(data.value);
           else setReport(null);
         })
+        
         .catch(() => setReport(null))
         .finally(() => setLoading(false));
     } else if (!open) {
@@ -60,40 +62,21 @@ const ReportTableDetails = ({ open, reportId, onClose }) => {
     });
   };
 
-  const statusHistory = [
-    {
-      status: "InProgress",
-      user: { name: "Ahmed Hossam", avatar: "", role: "Project Manager" },
-      date: "2025-05-06T14:15:00",
-      description: En
-        ? "Review process initiated. Team assigned for implementation."
-        : "تم بدء عملية المراجعة، وتم تعيين الفريق للتنفيذ.",
-    },
-    {
-      status: "Active",
-      user: { name: "Mona Fathy", avatar: "", role: "Quality Supervisor" },
-      date: "2025-05-06T10:30:00",
-      description: En
-        ? "Initial report submitted for review."
-        : "تم تقديم التقرير الأولي للمراجعة.",
-    },
-    {
-      status: "Resolved",
-      user: { name: "Khaled Gamal", avatar: "", role: "Site Engineer" },
-      date: "2025-05-05T17:45:00",
-      description: En
-        ? "Task completed and submitted for final verification."
-        : "تم الانتهاء من المهمة وتم إرسالها للمراجعة النهائية.",
-    },
-    {
-      status: "Resolved",
-      user: { name: "Noura Adel", avatar: "", role: "Operations Coordinator" },
-      date: "2025-05-05T09:00:00",
-      description: En
-        ? "Waiting for manager approval before proceeding."
-        : "في انتظار موافقة المدير قبل المتابعة.",
+  const getStatusHistory = () => {
+    if (!report || !report.statusHistory || report.statusHistory.length === 0) {
+      return [{ status: "No history available", date: new Date(), user: { name: "N/A", avatar: "" }, description: "No status updates" }];
     }
-  ];
+    return report.statusHistory.sort((a, b) => new Date(b.changedAt) - new Date(a.changedAt)).map(item => ({
+      status: item.status,
+      user: {
+        name: item.changedBy || "System User",
+        avatar: "",
+        role: item.role || "System User",
+      },
+      date: new Date(item.changedAt),
+      description: item.comment || "No description provided",
+    }));
+  }
   ;
 
   const getImageUrl = () => {
@@ -134,7 +117,6 @@ const ReportTableDetails = ({ open, reportId, onClose }) => {
         </div>
       ) : (
         <div style={{ padding: "5px 0" }}>
-          {/* --- الصورة والتفاصيل الأساسية --- */}
           <div style={{ marginBottom: 25 }}>
             <Row gutter={[16, 16]}>
               <Col xs={24} md={10}>
@@ -254,7 +236,7 @@ const ReportTableDetails = ({ open, reportId, onClose }) => {
               lineHeight: 1.5,
               border: "1px solid #eee"
             }}>
-              {report.description || (En ? "No description provided" : "لم يتم إضافة وصف")}
+              {report.description  || (En ? "No description provided" : "لم يتم إضافة وصف")}
             </div>
           </div>
           
@@ -273,11 +255,11 @@ const ReportTableDetails = ({ open, reportId, onClose }) => {
             
             <List
               itemLayout="horizontal"
-              dataSource={statusHistory}
+              dataSource={getStatusHistory()}
               renderItem={(item, index) => (
                 <List.Item
                   style={{
-                    borderBottom: index !== statusHistory.length - 1 ? "1px solid #f0f0f0" : "none",
+                    borderBottom: index !== getStatusHistory().length - 1 ? "1px solid #f0f0f0" : "none",
                     padding: "12px 0",
                     backgroundColor: "#fff",
                   }}

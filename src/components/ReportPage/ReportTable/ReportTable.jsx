@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
-	CheckCircleOutlined,
-	ExclamationCircleOutlined,
 	PrinterOutlined,
-	SyncOutlined,
 } from "@ant-design/icons";
 import {
 	Button,
@@ -22,27 +19,13 @@ import dayjs from "dayjs";
 import { useLanguage } from "../../../context/LanguageContext";
 import axios from "axios";
 import ReportTableDetails from "./ReportTableDetails";
+import {STATUS_OPTS,STATUS_TO_CODE,STATUS_ICON,STATUS_COLOR} from "./ReportStatus"
 dayjs.extend(require("dayjs/plugin/isSameOrBefore"));
 dayjs.extend(require("dayjs/plugin/isSameOrAfter"));
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const STATUS_OPTS = [
-	{ value: "Active", en: "Active", ar: "تم الإبلاغ عنه" },
-	{ value: "InProgress", en: "In Progress", ar: "قيد التنفيذ" },
-	{ value: "Resolved", en: "Resolved", ar: "تم الحل" },
-];
-const STATUS_TO_CODE = {
-	Active: 0, "تم الإبلاغ عنه": 0,
-	InProgress: 1, "قيد التنفيذ": 1,
-	Resolved: 2, "تم الحل": 2,
-};
-const STATUS_ICON = {
-	Active: <ExclamationCircleOutlined />,
-	InProgress: <SyncOutlined />,
-	Resolved: <CheckCircleOutlined />,
-};
-const STATUS_COLOR = { Active: "blue", InProgress: "orange", Resolved: "green" };
+
 
 const ReportTable = () => {
 	const { isEnglish: En } = useLanguage();
@@ -57,9 +40,16 @@ const ReportTable = () => {
 	const [total, setTotal] = useState(0);
 
 	const [editModal, setEditModal] = useState({
-		open: false, row: null, newStatus: "", loading: false, comment: "",
+		open: false,
+		row: null,
+		newStatus: "",
+		loading: false,
+		comment: "",
 	});
-	const [detailsModal, setDetailsModal] = useState({ open: false, reportId: null });
+	const [detailsModal, setDetailsModal] = useState({
+		open: false,
+		reportId: null,
+	});
 
 	const handleDelete = (record) =>
 		setTableData((prev) => prev.filter((item) => item.key !== record.key));
@@ -69,29 +59,51 @@ const ReportTable = () => {
 		if (stat === "تم الإبلاغ عنه") stat = "Active";
 		else if (stat === "قيد التنفيذ") stat = "InProgress";
 		else if (stat === "تم الحل") stat = "Resolved";
-		setEditModal({ open: true, row, newStatus: stat, loading: false, comment: "" });
+		setEditModal({
+			open: true,
+			row,
+			newStatus: stat,
+			loading: false,
+			comment: "",
+		});
 	};
 
 	const handleEditSave = async () => {
-		const { row, newStatus } = editModal;
+		const { row, newStatus ,comment} = editModal;
 		if (!row) return;
 		setEditModal((prev) => ({ ...prev, loading: true }));
 
 		const token = localStorage.getItem("userToken");
 		try {
-			await axios.put(
-				"https://cms-reporting.runasp.net/api/Report",
-				{ reportId: row.id, status: STATUS_TO_CODE[newStatus] },
-				{ headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
+			const editstatus=await axios.put(
+				"https://cms-reporting.runasp.net/api/Report/update-ReportStatus",
+				{ reportId: row.id, status: STATUS_TO_CODE[newStatus] ,comment:comment},
+				{
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
 			);
+			console.log("Edit status api:",editstatus);
 			setTableData((prev) =>
-				prev.map((r) => r.id === row.id ? { ...r, reportStatus: newStatus } : r)
+				prev.map((r) =>
+					r.id === row.id ? { ...r, reportStatus: newStatus } : r
+				)
 			);
-			setEditModal({ open: false, row: null, newStatus: "", loading: false, comment: "" });
+			setEditModal({
+				open: false,
+				row: null,
+				newStatus: "",
+				loading: false,
+				comment: "",
+			});
 		} catch {
 			Modal.error({
 				title: En ? "Error" : "خطأ",
-				content: En ? "Failed to update status. Please try again." : "لم يتم تحديث الحالة، حاول مجددًا.",
+				content: En
+					? "Failed to update status. Please try again."
+					: "لم يتم تحديث الحالة، حاول مجددًا.",
 			});
 			setEditModal((prev) => ({ ...prev, loading: false }));
 		}
@@ -108,9 +120,16 @@ const ReportTable = () => {
 		setFilters((f) => ({ ...f, Keyword: value }));
 		setPageNumber(1);
 	};
-	const handleView = (record) => setDetailsModal({ open: true, reportId: record.id });
+	const handleView = (record) =>
+		setDetailsModal({ open: true, reportId: record.id });
 
 	const fetchData = async () => {
+		const token = localStorage.getItem("userToken");
+
+		if (!token) {
+			console.warn("No token found in localStorage.");
+			return;
+		}
 		setLoading(true);
 		const params = {
 			PageNumber: pageNumber,
@@ -118,10 +137,23 @@ const ReportTable = () => {
 			...filters,
 		};
 		try {
-			const { data } = await axios.get("https://cms-reporting.runasp.net/api/Report", { params });
-			const formatted = data.value.map((item, i) => ({ ...item, key: item.id || i }));
+			const { data } = await axios.get(
+				"https://cms-reporting.runasp.net/api/Report",
+				{
+					params,
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			const formatted = data.value.map((item, i) => ({
+				...item,
+				key: item.id || i,
+			}));
+			console.log("data:",data," Formatted",formatted ,"Data Length",data.value.length)
 			setTableData(formatted);
-			setTotal(data.value.length);
+			setTotal(data.length);
 			setError(null);
 		} catch {
 			setError("Failed to load data. Please try again later.");
@@ -130,59 +162,88 @@ const ReportTable = () => {
 			setLoading(false);
 		}
 	};
-	useEffect(() => { fetchData(); }, [pageNumber, pageSize, filters.From, filters.To, filters.Keyword]);
+	useEffect(() => {
+		fetchData();
+	}, [pageNumber, pageSize, filters.From, filters.To, filters.Keyword]);
 
-	const columns = useMemo(() => [
-		{
-			title: En ? "User Name" : "اسم المستخدم",
-			dataIndex: "mobileUserName", key: "mobileUserName",
-		},
-		{
-			title: En ? "Issue Category" : "نوع المشكلة",
-			dataIndex: En ? "issueCategoryEN" : "issueCategoryAR",
-			key: En ? "issueCategoryEN" : "issueCategoryAR",
-		},
-		{
-			title: En ? "User Phone Number" : "هاتف المستخدم",
-			dataIndex: "mobileUserPhone", key: "mobileUserPhone",
-		},
-		{
-			title: En ? "Status" : "الحالة",
-			dataIndex: "reportStatus", key: "reportStatus",
-			render: (status) => (
-				<Tag icon={STATUS_ICON[status]} color={STATUS_COLOR[status] || "default"}>
-					{En ? STATUS_OPTS.find(s => s.value === status)?.en : STATUS_OPTS.find(s => s.value === status)?.ar || status}
-				</Tag>
-			),
-		},
-		{
-			title: En ? "Date Submitted" : "تاريخ الاضافة",
-			dataIndex: "dateIssued", key: "dateIssued",
-			render: (d) => new Date(d).toLocaleDateString(),
-		},
-		{
-			title: En ? "Action" : "العمليات", key: "action",
-			render: (_, rec) => (
-				<Space size="middle">
-					<Popconfirm
-						title={En ? "Delete the report?" : "حذف التقرير؟"}
-						description={En ? "Are you sure to delete this report?" : "هل انت متاكد من حذف هذا التقرير؟"}
-						onConfirm={() => handleDelete(rec)}
-						okText={En ? "Yes" : "نعم"}
-						cancelText={En ? "No" : "لا"}
+	const columns = useMemo(
+		() => [
+			{
+				title: En ? "User Name" : "اسم المستخدم",
+				dataIndex: "mobileUserName",
+				key: "mobileUserName",
+			},
+			{
+				title: En ? "Issue Category" : "نوع المشكلة",
+				dataIndex: En ? "issueCategoryEN" : "issueCategoryAR",
+				key: En ? "issueCategoryEN" : "issueCategoryAR",
+			},
+			{
+				title: En ? "User Phone Number" : "هاتف المستخدم",
+				dataIndex: "mobileUserPhone",
+				key: "mobileUserPhone",
+			},
+			{
+				title: En ? "Status" : "الحالة",
+				dataIndex: "reportStatus",
+				key: "reportStatus",
+				render: (status) => (
+					<Tag
+						icon={STATUS_ICON[status]}
+						color={STATUS_COLOR[status] || "default"}
 					>
-						<Button color="danger" variant="filled">{En ? "Delete" : "حذف"}</Button>
-					</Popconfirm>
-					<Button color="primary" variant="filled" onClick={() => handleEditOpen(rec)}>
-						{En ? "Edit" : "تعديل"}
-					</Button>
-					<Button color="cyan" variant="filled" onClick={() => handleView(rec)}>
-						{En ? "View" : "عرض"}
-					</Button>
-				</Space>
-			),
-		}
-	], [En]);
+						{En
+							? STATUS_OPTS.find((s) => s.value === status)?.en
+							: STATUS_OPTS.find((s) => s.value === status)?.ar || status}
+					</Tag>
+				),
+			},
+			{
+				title: En ? "Date Submitted" : "تاريخ الاضافة",
+				dataIndex: "dateIssued",
+				key: "dateIssued",
+				render: (d) => new Date(d).toLocaleDateString(),
+			},
+			{
+				title: En ? "Action" : "العمليات",
+				key: "action",
+				render: (_, rec) => (
+					<Space size="middle">
+						<Popconfirm
+							title={En ? "Delete the report?" : "حذف التقرير؟"}
+							description={
+								En
+									? "Are you sure to delete this report?"
+									: "هل انت متاكد من حذف هذا التقرير؟"
+							}
+							onConfirm={() => handleDelete(rec)}
+							okText={En ? "Yes" : "نعم"}
+							cancelText={En ? "No" : "لا"}
+						>
+							<Button color="danger" variant="filled">
+								{En ? "Delete" : "حذف"}
+							</Button>
+						</Popconfirm>
+						<Button
+							color="primary"
+							variant="filled"
+							onClick={() => handleEditOpen(rec)}
+						>
+							{En ? "Edit" : "تعديل"}
+						</Button>
+						<Button
+							color="cyan"
+							variant="filled"
+							onClick={() => handleView(rec)}
+						>
+							{En ? "View" : "عرض"}
+						</Button>
+					</Space>
+				),
+			},
+		],
+		[En]
+	);
 
 	return (
 		<>
@@ -202,9 +263,15 @@ const ReportTable = () => {
 				centered
 				destroyOnClose
 				maskClosable={false}
-				afterClose={() => setEditModal({
-					open: false, row: null, newStatus: "", loading: false, comment: "",
-				})}
+				afterClose={() =>
+					setEditModal({
+						open: false,
+						row: null,
+						newStatus: "",
+						loading: false,
+						comment: "",
+					})
+				}
 				dir={En ? "ltr" : "rtl"}
 			>
 				<Select
@@ -218,12 +285,16 @@ const ReportTable = () => {
 						</Option>
 					))}
 				</Select>
-				<label style={{ marginTop: "10px", fontWeight: 500 }}>{En ? "Comment" : "ملاحظة"}</label>
+				<label style={{ marginTop: "10px", fontWeight: 500 }}>
+					{En ? "Comment" : "ملاحظة"}
+				</label>
 				<Input.TextArea
 					rows={3}
 					style={{ width: "100%", marginTop: 8 }}
 					value={editModal.comment}
-					onChange={e => setEditModal({ ...editModal, comment: e.target.value })}
+					onChange={(e) =>
+						setEditModal({ ...editModal, comment: e.target.value })
+					}
 				/>
 			</Modal>
 			{error && (
@@ -247,20 +318,28 @@ const ReportTable = () => {
 						En ? "Start Date" : "تاريخ البداية",
 						En ? "End Date" : "تاريخ النهاية",
 					]}
-					allowClear showToday className="mx-2"
+					allowClear
+					showToday
+					className="mx-2"
 				/>
-				<Space.Compact style={{ marginBottom: 16 , marginRight: 8 }}>
+				<Space.Compact style={{ marginBottom: 16, marginRight: 8 }}>
 					<Tooltip title={En ? "Print" : "طباعة"}>
 						<Button
-							onClick={() => Print(
-								columns,
-								dateRange[0] && dateRange[1] ? tableData.filter(row => {
-									const d = dayjs(row.dateIssued);
-									return d.isSameOrAfter(dateRange[0], "day")
-										&& d.isSameOrBefore(dateRange[1], "day");
-								}) : tableData,
-								En
-							)}
+							onClick={() =>
+								Print(
+									columns,
+									dateRange[0] && dateRange[1]
+										? tableData.filter((row) => {
+												const d = dayjs(row.dateIssued);
+												return (
+													d.isSameOrAfter(dateRange[0], "day") &&
+													d.isSameOrBefore(dateRange[1], "day")
+												);
+										  })
+										: tableData,
+									En
+								)
+							}
 							icon={<PrinterOutlined />}
 							type="primary"
 						>
