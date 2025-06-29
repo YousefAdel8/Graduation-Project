@@ -1,3 +1,35 @@
+import { Image } from "antd";
+
+export default function PostCard({ post }) {
+	return (
+		<>
+			{post.photoUrl && (
+				<div style={{ margin: "8px 0", padding: "3px 0" }}>
+					<div
+						style={{
+							width: "100%",
+							height: "400px",
+							position: "relative",
+							overflow: "hidden",
+						}}
+					>
+						<Image
+							src={`https://cms-reporting.runasp.net/${post.photoUrl}`}
+							alt="post image"
+							style={{
+								width: "100%",
+								height: "100%",
+								objectFit: "cover",
+							}}
+						/>
+					</div>
+				</div>
+			)}
+		</>
+	);
+}
+
+/*
 import { Image } from 'antd';
 import React from 'react';
 
@@ -25,18 +57,18 @@ export default function PostPhotos({ post }) {
       }}>
         {firstMedia.type === "image" ? (
           <Image
-            src={firstMedia.url}
-            alt="post media"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover"
-            }}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "https://via.placeholder.com/400x225?text=No+Image";
-            }}
-          />
+          src={`https://cms-reporting.runasp.net/api/${post.photoUrl}`}
+          alt="post media"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "https://via.placeholder.com/400x225?text=No+Image";
+          }}
+        />
         ) : (
           <video
             controls
@@ -49,8 +81,8 @@ export default function PostPhotos({ post }) {
           />
         )}
         
-        {/* Counter indicator if there are more than 1 media items */}
-        {mediaCount > 1 && (
+        {/* Counter indicator if there are more than 1 media items */
+/*{mediaCount > 1 && (
           <div
             style={{
               position: "absolute",
@@ -71,3 +103,4 @@ export default function PostPhotos({ post }) {
     </div>
   );
 }
+*/
