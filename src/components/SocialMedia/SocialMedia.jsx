@@ -9,28 +9,6 @@ const { Title } = Typography;
 
 const CommunityFeed = () => {
 	const { isEnglish: En } = useLanguage();
-
-	/*const posts = [
-		{
-			id: 1,
-			name: "Ahmed Hassan",
-			icon: "https://img.icons8.com/office/80/000000/user-male-circle.png",
-			time: "قبل ساعتين",
-			discription:
-				"التكدس المروري في شارع الملك فيصل يزداد سوءاً. #ازمة_المرور",
-			likesCount: 13,
-			commentCount: 15,
-			shareCount: 5,
-			media: [
-				{
-					type: "image",
-					url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
-				},
-			],
-			mediaCount: 1,
-			postLink: "https://www.example.com/post/1",
-		}
-	];*/
 	const [posts, setPosts] = useState([]);
 	useEffect(() => {
 		const loadData = async () => {

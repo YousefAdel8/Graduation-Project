@@ -132,14 +132,7 @@ const PostCard = ({ post, En }) => {
           </div>
         </div>
         <div style={{ display: "flex", gap: 10 }}>
-          <div>
-            <Text type="secondary" style={{ fontSize: "14px" }}>
-              {post.commentCount}
-            </Text>
-            <Text type="secondary" style={{ fontSize: "14px" }}>
-              {En ? " comments" : " تعليق"}
-            </Text>
-          </div>
+          
           <div>
             <Text type="secondary" style={{ fontSize: "14px" }}>
               {post.shares}
