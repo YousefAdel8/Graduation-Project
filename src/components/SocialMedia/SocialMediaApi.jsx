@@ -19,7 +19,7 @@ export const SocialMediaApi = async () => {
 				},
 			}
 		);
-
+		console.log("Social Media Reports:", response.data);
 		return response.data;
 	} catch (error) {
 		throw error;

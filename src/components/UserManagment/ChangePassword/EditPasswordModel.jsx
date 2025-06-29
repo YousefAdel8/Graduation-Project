@@ -43,32 +43,6 @@ export default function EditPasswordModel({
 					<Row gutter={[24, 24]}>
 						<Col xs={24}>
 							<Form.Item
-								name="oldPassword"
-								label={
-									<Text strong style={{ fontSize: "16px" }}>
-										{En ? "Current Password" : "كلمة المرور الحالية"}
-									</Text>
-								}
-								rules={[
-									{
-										required: true,
-										message: En
-											? "Please enter current password"
-											: "الرجاء إدخال كلمة المرور الحالية",
-									},
-								]}
-							>
-								<Input.Password
-									prefix={<LockOutlined />}
-									placeholder={
-										En ? "Enter current password" : "أدخل كلمة المرور الحالية"
-									}
-									style={{ borderRadius: "8px" }}
-								/>
-							</Form.Item>
-						</Col>
-						<Col xs={24}>
-							<Form.Item
 								name="newPassword"
 								label={
 									<Text strong style={{ fontSize: "16px" }}>
