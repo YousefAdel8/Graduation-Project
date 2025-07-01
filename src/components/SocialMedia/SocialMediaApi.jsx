@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const SocialMediaApi = async () => {
+export const SocialMediaApi = async (keyword) => {
 	const token = localStorage.getItem("userToken");
 
 	if (!token) {
@@ -17,6 +17,9 @@ export const SocialMediaApi = async () => {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
+				params: {
+          			search: keyword, 
+       		 },
 			}
 		);
 		console.log("Social Media Reports:", response.data);
