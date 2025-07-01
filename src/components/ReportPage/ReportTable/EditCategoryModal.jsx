@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Modal, Select, Button, Spin } from "antd";
+import { Modal, Select, Spin } from "antd";
 import { useLanguage } from "../../../context/LanguageContext";
 
 const EditCategoryModal = ({ open, row, onClose, onUpdateSuccess }) => {
