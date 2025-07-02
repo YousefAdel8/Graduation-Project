@@ -2,6 +2,7 @@ import React from "react";
 import { Layout, Menu, Drawer, Typography, Image } from "antd";
 import {
   DashboardOutlined, CommentOutlined, TeamOutlined, StarOutlined, FormOutlined,
+  AlertOutlined,
 } from "@ant-design/icons";
 import logo from "../../assests/citio.png";
 import { useTheme } from "../../context/ThemeContext";
@@ -31,7 +32,7 @@ const Sidebar = ({
   // Generate menu based on user permissions
   const menuItems = [
     permissions.includes("dashboard") && { key: "1", icon: <DashboardOutlined />, label: En ? "Dashboard" : "لوحة التحكم" },
-    permissions.includes("emergency") && { key: "2", icon: <TeamOutlined />, label: En ? "Emergency" : "الطوارئ" },
+    permissions.includes("emergency") && { key: "2", icon: < AlertOutlined />, label: En ? "Emergency" : "الطوارئ" },
     permissions.includes("report") && { key: "3", icon: <FormOutlined />, label: En ? "Reports" : "التقارير" },
     permissions.includes("social media") && { key: "4", icon: <CommentOutlined />, label: En ? "Social Media" : "منصة المجتمع" },
     permissions.includes("users") && { key: "5", icon: <TeamOutlined />, label: En ? "Users" : "المستخدمين" },

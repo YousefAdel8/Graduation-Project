@@ -22,8 +22,8 @@ export const SocialMediaApi = async (keyword) => {
        		 },
 			}
 		);
-		console.log("Social Media Reports:", response.data);
-		return response.data;
+		console.log("Social Media Reports:", response.data.value);
+		return response.data.value;
 	} catch (error) {
 		throw error;
 	}
