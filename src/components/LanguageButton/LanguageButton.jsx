@@ -1,25 +1,25 @@
 import React from 'react';
-import { Switch } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { useLanguage } from '../../context/LanguageContext';
+import { GlobalOutlined } from '@ant-design/icons';
 
 export default function LanguageToggle() {
   const { isEnglish, toggleToEnglish, toggleToArabic } = useLanguage();
 
-  const handleToggle = (checked) => {
-    if (checked) {
-      toggleToEnglish();
-    } else {
+  const handleToggle = () => {
+    if (isEnglish) {
       toggleToArabic();
+    } else {
+      toggleToEnglish();
     }
   };
 
   return (
-      <Switch
-        checked={isEnglish}
-        onChange={handleToggle}
-        checkedChildren="EN"
-        unCheckedChildren="AR"
-        style={{ backgroundColor: isEnglish ? '#1890ff' : '#504142' }}
-      />
+    <Tooltip title={isEnglish ? 'Switch to Arabic' : 'تبديل إلى اللغة الإنجليزية'}>
+      <div style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0',paddingLeft: 10,marginTop: 10}} onClick={handleToggle}>
+          <GlobalOutlined style={{ fontSize: 18 }}/>
+          <span>{isEnglish ? "Arabic Language" : "اللغة الانجليزية"}</span>
+        </div>
+    </Tooltip>
   );
 }

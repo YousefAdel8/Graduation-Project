@@ -1,37 +1,38 @@
 import React from 'react';
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, theme } from 'antd';
 import { useTheme } from '../../context/ThemeContext';
 import { BulbOutlined, BulbFilled } from '@ant-design/icons';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function DarkModeButton() {
   const { isDark, toggleToDark, toggleToLight } = useTheme();
-
- const handleToggle = () => {
-  if (isDark) {
-    toggleToLight();
-  } else {
-    toggleToDark();
-  }
-};
+  const { token } = theme.useToken();
+  const { isEnglish: En } = useLanguage();
+  const handleToggle = () => {
+    if (isDark) {
+      toggleToLight();
+    } else {
+      toggleToDark();
+    }
+  };
 
   return (
     <Tooltip title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
-      <Button
-        onClick={handleToggle}
-        icon={isDark ? <BulbFilled /> : <BulbOutlined />}
+      <div onClick={handleToggle} style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0'}}>
+        <Button
+        icon={isDark ? <BulbFilled style={{ fontSize: 18 }} /> : <BulbOutlined style={{ fontSize: 18 }} />}
+        shape="circle"
+        size="large"
         style={{
-          backgroundColor: isDark ? '#001529' : '#f0f0f0',
-          color: isDark ? '#ffffff' : '#000000',
-          border: isDark ? '1px solid #1890ff' : '1px solid #ccc',
-          boxShadow: isDark ? '0 0 6px #1890ff' : '0 0 4px #aaa',
+          backgroundColor: isDark ? token.colorBgElevated : token.colorBgContainer,
+          color: isDark ? token.colorTextLightSolid : token.colorText,
+          border: `1px solid ${token.colorBorder}`,
           transition: 'all 0.3s ease',
-          padding: '6px 16px',
-          borderRadius: '6px',
-          fontWeight: 'bold',
         }}
-      >
-        {isDark ? 'Dark Mode' : 'Light Mode'}
-      </Button>
+      /> <span>{isDark ? (En ? "Light Mode" : "الوضع الفاتح") : (En ? "Dark Mode" : "الوضع الداكن")}</span>
+      </div>
+      
+
     </Tooltip>
   );
 }

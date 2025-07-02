@@ -46,6 +46,7 @@ const EditStatusModal = ({
 
       // Call onUpdateSuccess to notify parent of successful update
       onUpdateSuccess(row.id, newStatus);
+      setLoading(false);
       onClose();
       message.success(En ? "Status updated successfully" : "تم تحديث الحالة بنجاح");
     } catch (error) {

@@ -100,7 +100,6 @@ export default function NotificationContent() {
 					textAlign: "center",
 					padding: "10px 0",
 					borderTop: "1px solid #f0f0f0",
-					background: "#fafafa",
 				}}
 			>
 				<Space>
