@@ -1,18 +1,34 @@
-.div-Form{
-    width: 400px !important;
+.div-Form {
+  width: 400px !important;
+  max-width: 90vw; /* إضافة هذه الخاصية */
 }
 
 .Button-Form:hover {
-    background-color: #202949 !important;
+  background-color: #202949 !important;
 }
+
 @media screen and (max-width: 600px) {
-    .div-Form {
-        width: 300px !important;
-    }
-    .head-Form{
-        font-size: 17px !important;
-    }
+  .div-Form {
+    width: 90% !important;
+    padding: 20px 15px !important;
+  }
+  
+  .head-Form {
+    font-size: 17px !important;
+  }
+  
+  /* تعديلات حقول الإدخال للجوال */
+  .ant-input, 
+  .ant-input-password {
+    font-size: 14px !important;
+    padding: 8px 10px !important;
+  }
+  
+  .ant-form-item-label label {
+    font-size: 12px !important;
+  }
 }
+
 /* Dark background for wrapper */
 .dark-bg {
   background-color: #161b22 !important;
