@@ -7,7 +7,7 @@ export const PermissionContext = createContext();
 export const PermissionProvider = ({ children }) => {
 	const [permissions, setPermissions] = useState([]);
 	const [isLoading, setIsLoading] = useState(true); 
-	const clearPermissions = () => setPermissions([]);
+	const clearPermissions = () => setPermissions(["dashboard"]); 
 	 const { userToken, isTokenChecked } = useContext(UserContext);
 	useEffect(() => {
 		if (!isTokenChecked) return;
