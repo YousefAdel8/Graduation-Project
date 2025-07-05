@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/usercontext.jsx";
 import { useLanguage } from '../../context/LanguageContext.jsx';
 import { getTokenData } from '../TokenEncode/Token.jsx';
+import { PermissionContext } from '../../context/PermissionContext.jsx';
 const DropdownProfile= () => {
   const { isEnglish: En } = useLanguage();
     const navigate = useNavigate();
@@ -12,6 +13,8 @@ const DropdownProfile= () => {
     const [clickedItem, setClickedItem] = useState(null);
     const userName= getTokenData()?.name || 'User';
     const firstName = userName.split(" ")[0];
+    const { clearPermissions } = useContext(PermissionContext);
+
     const items = [
         {
             label: (
@@ -56,6 +59,7 @@ const DropdownProfile= () => {
           window.location.href = '/profile';
         } else if (clickedItem === 'logout') {
           localStorage.removeItem('userToken');
+          clearPermissions();
           setUserToken(null);
           navigate('/');
         }
