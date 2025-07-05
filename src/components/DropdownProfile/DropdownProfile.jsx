@@ -4,12 +4,13 @@ import { Avatar, Dropdown, Space } from 'antd';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/usercontext.jsx";
 import { useLanguage } from '../../context/LanguageContext.jsx';
+import { getTokenData } from '../TokenEncode/Token.jsx';
 const DropdownProfile= () => {
   const { isEnglish: En } = useLanguage();
     const navigate = useNavigate();
     const { setUserToken } = useContext(UserContext);
     const [clickedItem, setClickedItem] = useState(null);
-    const userName="Yousef Adel";
+    const userName= getTokenData()?.name || 'User';
     const firstName = userName.split(" ")[0];
     const items = [
         {
@@ -67,7 +68,6 @@ const DropdownProfile= () => {
     <Space>
           <Avatar
            size={40}
-            src="https://i.pravatar.cc/150?img=3" 
             icon={<UserOutlined />}
           />
           <span className='fw-bold '>{firstName}</span>

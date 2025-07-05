@@ -9,12 +9,12 @@ export default function UnAuthorized() {
 		navigate("/");
 	};
 	return (
-		<div className="vh-100 d-flex flex-column justify-content-center align-items-center text-center bg-light px-3">
+		<div className="vh-100 d-flex flex-column justify-content-center align-items-center text-center px-3">
 			<h1 className="display-3 fw-bold mb-3" style={{ color: "#03333d" }}>
 				401
 			</h1>
 			<h2 className="mb-2"> {En ? "Unauthorized" : "غير مصرح"}</h2>
-			<p className="text-muted mb-4">
+			<p className=" mb-4">
 				{En
 					? "Unauthorized access. You don't have permission to access this page."
 					: "غير مصرح لك بالدخول. ليس لديك صلاحية للوصول إلى هذه الصفحة."}
