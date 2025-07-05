@@ -4,7 +4,7 @@ import { getTokenData } from "../components/TokenEncode/Token";
 export const PermissionContext = createContext();
 
 export const PermissionProvider = ({ children }) => {
-	const [permissions, setPermissions] = useState(["dashboard"]);
+	const [permissions, setPermissions] = useState([]);
 
 	useEffect(() => {
 		const tokenData = getTokenData();

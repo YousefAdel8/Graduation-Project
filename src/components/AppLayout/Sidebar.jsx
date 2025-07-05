@@ -75,15 +75,19 @@ const Sidebar = ({
       style={{ background: siderBg }}
       width={230}
     >
-      <Menu
-        mode="inline"
-        selectedKeys={[getKey(location.pathname)]}
-        onClick={handleMenuClick}
-        items={menuItems}
-        style={{ background: siderBg }}
-      />
+      {menuItems.length > 0 && (
+  <Menu
+    mode="inline"
+    selectedKeys={[getKey(location.pathname)]}
+    onClick={handleMenuClick}
+    items={menuItems}
+    style={{ background: siderBg }}
+  />
+)}
+
     </Drawer>
   ) : (
+    
     <Sider
       collapsible trigger={null}
       width={230}
@@ -108,13 +112,16 @@ const Sidebar = ({
 				)}
 				<Image width={40} src={logo} preview={false} />
 			</div>
-      <Menu
-        mode="inline"
-        selectedKeys={[getKey(location.pathname)]}
-        onClick={handleMenuClick}
-        items={menuItems}
-        style={{ background: siderBg , borderRight: 0 }}
-      />
+      {menuItems.length > 0 && (
+  <Menu
+    mode="inline"
+    selectedKeys={[getKey(location.pathname)]}
+    onClick={handleMenuClick}
+    items={menuItems}
+    style={{ background: siderBg , borderRight: 0 }}
+  />
+)}
+
     </Sider>
   );
 };
