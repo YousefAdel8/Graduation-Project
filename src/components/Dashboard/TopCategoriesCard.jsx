@@ -37,7 +37,29 @@ export default function TopCategoriesCard() {
 	};
 
 	const getTopCategories = async () => {
+		const token = localStorage.getItem("userToken");
 		
+			if (!token) {
+				console.warn("No token found in localStorage.");
+				return;
+			}
+		
+			try {
+				const response = await axios.get(
+					`https://cms-reporting.runasp.net/api/Category/top-reported`,
+					
+					{
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				);
+				console.log("Response Data2:", response.data);
+				setCategories(response.data);
+			} catch (error) {
+				throw error;
+			}
 		};
 	
 

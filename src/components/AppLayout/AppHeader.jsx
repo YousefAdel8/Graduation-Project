@@ -82,7 +82,7 @@ const AppHeader = ({
 						flexShrink: 0,
 					}}
 				>
-					<NotificationButton />
+					{/*<NotificationButton />*/}
 					<DropdownProfile />
 
 					<Dropdown
