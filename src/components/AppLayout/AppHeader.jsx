@@ -87,20 +87,19 @@ const AppHeader = ({
 
 					<Dropdown
 						overlay={
-							<div 
-  style={{ 
-    display: "flex", 
-    flexDirection: "column", 
-    padding: 15, 
-    background: isDark ? "#15191f" : "#fff", 
-    border: isDark ? "1px solid #303030" : "1px solid #e8e8e8",
-  }}
->
-  <DarkModeButton />
-  <LanguageToggle />
-  <FullScreen />
-</div>
-
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									padding: 15,
+									background: isDark ? "#15191f" : "#fff",
+									border: isDark ? "1px solid #303030" : "1px solid #e8e8e8",
+								}}
+							>
+								<DarkModeButton />
+								<LanguageToggle />
+								<FullScreen />
+							</div>
 						}
 						trigger={["click"]}
 						placement="bottomRight"

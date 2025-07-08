@@ -1,6 +1,10 @@
 import React from "react";
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+	createBrowserRouter,
+	Navigate,
+	RouterProvider,
+} from "react-router-dom";
 
 // Import components
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
@@ -93,27 +97,25 @@ function App() {
 				},
 				{
 					path: "/emergency/alert",
-					element: (
-							<NewAlertPage />
-					),
+					element: <NewAlertPage />,
 				},
 				{
 					path: "/Notifications",
 					element: <NotificationPage />,
-				}
+				},
+				{
+					path: "*",
+					element: <Navigate to="/" replace />,
+				},
 			],
-		},
-		{
-			path: "*",
-			element: <Loading />,
 		},
 	]);
 
 	return (
 		<ThemeProvider>
-		<PermissionProvider>
-			<RouterProvider router={routers} />
-		</PermissionProvider>
+			<PermissionProvider>
+				<RouterProvider router={routers} />
+			</PermissionProvider>
 		</ThemeProvider>
 	);
 }
