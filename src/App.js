@@ -11,7 +11,6 @@ import Dashboard from "./components/Dashboard/Dashboard.jsx";
 import FeedbackPage from "./components/FeedbackPage/FeedbackPage.jsx";
 import ReportPage from "./components/ReportPage/ReportPage.jsx";
 import SocialMedia from "./components/SocialMedia/SocialMedia.jsx";
-import Loading from "./components/LoadingPage/LoadingPage.jsx";
 import UserManagment from "./components/UserManagment/UserManagment.jsx";
 import NewUserPage from "./components/NewUser/NewUserPage.jsx";
 import Profile from "./components/Profile/Profile.jsx";
