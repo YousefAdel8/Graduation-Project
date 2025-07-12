@@ -30,9 +30,8 @@ const EditUserModal = ({
   const { token } = theme.useToken();
 
   const defaultRoles = [
-    { label: En ? 'Admin' : 'مدير', value: 'Admin' },
+    { label: En ? 'Admin' : 'أدمن', value: 'Admin' },
     { label: En ? 'Dashboard' : 'لوحة التحكم', value: 'Dashboard' },
-    { label: En ? 'Feedback' : 'التقييمات', value: 'Feedback' },
     { label: En ? 'Manager' : 'مدير', value: 'Manager' },
   ];
 

@@ -31,7 +31,7 @@ export default function NewUser() {
   const [form] = Form.useForm();
   const { token } = theme.useToken();
   const { isEnglish: En } = useLanguage();
-  const roles = ["Dashboard", "Emergency", "Manager", "Admin"].map((role) => ({
+  const roles = ["Dashboard", "Manager", "Admin"].map((role) => ({
     label: role,
     value: role,
   }));

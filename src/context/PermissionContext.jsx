@@ -30,12 +30,11 @@ export const PermissionProvider = ({ children }) => {
 				setPermissions(["dashboard", "feedback", "report", "social media", "users", "emergency"]);
 				console.log("permissions set to admin permissions");
 			} else if (roles.includes("Manager")) {
-				setPermissions(["dashboard", "feedback", "social media", "emergency"]);
+				setPermissions(["dashboard", "feedback", "report", "social media", "emergency"]);
 				console.log("permissions set to manager permissions");
 			} else {
 				const perms = [];
 				if (roles.includes("Dashboard")) perms.push("dashboard");
-				if (roles.includes("Emergency")) perms.push("emergency");
 				setPermissions(perms);
 				console.log("permissions set to:", perms);
 			}
